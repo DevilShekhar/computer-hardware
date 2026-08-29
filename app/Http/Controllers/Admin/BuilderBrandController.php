@@ -52,7 +52,7 @@ class BuilderBrandController extends Controller
             'meta_description' => $request->meta_description,
         ]);
 
-        return redirect()->route('builder-brands.index')->with('success', 'Builder brand created successfully.');
+        return redirect()->route('builder-brands.index')->with('success', 'PC Builder brand created successfully.');
     }
 
     public function show(BuilderBrand $builderBrand)
@@ -99,7 +99,7 @@ class BuilderBrandController extends Controller
             'meta_keyword' => $request->meta_keyword,
             'meta_description' => $request->meta_description,
         ]);
-        return redirect()->route('builder-brands.index')->with('success', 'Builder brand updated successfully.');
+        return redirect()->route('builder-brands.index')->with('success', 'PC Builder brand updated successfully.');
     }
 
     public function destroy(BuilderBrand $builderBrand)
@@ -108,7 +108,7 @@ class BuilderBrandController extends Controller
             'status' => 0,
             'updated_by' => Auth::id(),
         ]);
-        return redirect()->route('builder-brands.index')->with('success', 'Builder brand deactivated successfully.');
+        return redirect()->route('builder-brands.index')->with('success', 'PC Builder brand deactivated successfully.');
     }
 
     public function activate(BuilderBrand $builderBrand)
@@ -117,6 +117,6 @@ class BuilderBrandController extends Controller
             'status' => 1,
             'updated_by' => Auth::id(),
         ]);
-        return redirect()->route('builder-brands.index')->with('success', 'Builder brand activated successfully.');
+        return redirect()->route('builder-brands.index')->with('success', 'PC Builder brand activated successfully.');
     }
 }

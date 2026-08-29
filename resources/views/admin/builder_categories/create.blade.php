@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Create Builder Category</h4>
+                        <h4>Create PC Builder Category</h4>
                         <div class="card-header-action">
                             <a href="{{ route('builder-categories.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Back
@@ -60,7 +60,7 @@
                                     <small class="form-text text-muted">
                                         JPG, JPEG, PNG or WEBP. Maximum size: 2MB.
                                     </small>
-                                </div>                             
+                                </div>
 
                                 <div class="form-group col-md-6">
                                     <label>Meta Title</label>

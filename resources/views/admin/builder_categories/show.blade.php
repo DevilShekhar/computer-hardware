@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Builder Category Details</h4>
+                        <h4>PC Builder Category Details</h4>
                         <div class="card-header-action">
                             <a href="{{ route('builder-categories.edit', $builderCategory->id) }}" class="btn btn-primary">
                                 <i class="fas fa-edit"></i> Edit Category

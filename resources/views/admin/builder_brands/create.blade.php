@@ -4,12 +4,12 @@
 
 <section class="section">
     <div class="section-header">
-        <h1>Create Builder Brand</h1>
+        <h1>Create PC Builder Brand</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item">
                 <a href="{{ route('builder-brands.index') }}">PC Builder</a>
             </div>
-            <div class="breadcrumb-item active">Create Builder Brand</div>
+            <div class="breadcrumb-item active">Create PC Builder Brand</div>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Add Builder Brand</h4>
+                        <h4>Add PC Builder Brand</h4>
                     </div>
 
                     <form action="{{ route('builder-brands.store') }}" method="POST" enctype="multipart/form-data">
