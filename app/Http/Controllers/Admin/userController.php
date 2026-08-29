@@ -10,16 +10,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()->paginate(10);
-
+        $users = User::latest()->get();
         return view('admin.users.index', compact('users'));
     }
-
     public function create()
     {
         return view('admin.users.create');
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -29,16 +26,12 @@ class UserController extends Controller
             'gender' => 'nullable|string|max:20',
             'birth_date' => 'nullable|date',
             'profile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'status' => 'required|boolean',
             'password' => 'required|string|min:8|confirmed',
         ]);
-
         $profile = null;
-
         if ($request->hasFile('profile')) {
             $profile = $request->file('profile')->store('users', 'public');
         }
-
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -49,10 +42,7 @@ class UserController extends Controller
             'status' => 1,
             'password' => bcrypt($request->password),
         ]);
-
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'User created successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
     public function show(User $user)
@@ -89,17 +79,11 @@ class UserController extends Controller
                 ->store('users', 'public');
         }       
         $user->update($data);
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'User updated successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
-
     public function destroy(User $user)
     {
-        $user->delete();
-
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'User deleted successfully.');
+        $user->update(['status' => 0,]);
+        return redirect()->route('admin.users.index')->with('success', 'User deactivated successfully.');
     }
 }
