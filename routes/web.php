@@ -27,4 +27,4 @@ Route::middleware('auth')->group(function () {
     Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions']) ->name('roles.permissions.update');
 });
     Route::resource('builder-brands', BuilderBrandController::class);
-});
+
