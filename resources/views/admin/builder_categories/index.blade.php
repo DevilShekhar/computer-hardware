@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Builder Category Listing</h4>
+                        <h4>PC Builder Category Listing</h4>
                         <div class="card-header-action">
                             <a href="{{ route('builder-categories.create') }}" class="btn btn-primary">
                                 <i class="fas fa-plus"></i> Add Category

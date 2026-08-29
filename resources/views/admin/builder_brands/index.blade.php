@@ -8,7 +8,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Builder Brand Listing</h4>
+                        <h4>PC Builder Brand Listing</h4>
                         <div class="card-header-action">
                             <a href="{{ route('builder-brands.create') }}" class="btn btn-primary">
                                 <i class="fas fa-plus"></i> Add Brand

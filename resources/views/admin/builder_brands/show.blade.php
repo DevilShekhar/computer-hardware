@@ -8,10 +8,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Builder Brand Details</h4>
+                        <h4>PC Builder Brand Details</h4>
                         <div class="card-header-action">
                             <a href="{{ route('builder-brands.edit', $builderBrand->id) }}" class="btn btn-primary">
-                                <i class="fas fa-edit"></i> Edit Brand
+                                <i class="fas fa-edit"></i> Edit PC Builder Brand
                             </a>
                         </div>
                     </div>

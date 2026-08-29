@@ -4,12 +4,12 @@
 
 <section class="section">
     <div class="section-header">
-        <h1>Edit Builder Brand</h1>
+        <h1>Edit PC Builder Brand</h1>
         <div class="section-header-breadcrumb">
             <div class="breadcrumb-item">
                 <a href="{{ route('builder-brands.index') }}">PC Builder</a>
             </div>
-            <div class="breadcrumb-item active">Edit Builder Brand</div>
+            <div class="breadcrumb-item active">Edit PC Builder Brand</div>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Edit Builder Brand</h4>
+                        <h4>Edit PC Builder Brand</h4>
                     </div>
 
                     <form action="{{ route('builder-brands.update', $builderBrand->id) }}" method="POST" enctype="multipart/form-data">

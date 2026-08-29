@@ -62,7 +62,7 @@ class BuilderCategoryController extends Controller
             'created_by' => Auth::id(),
             'updated_by' => Auth::id(),
         ]);
-        return redirect()->route('builder-categories.index')->with('success', 'Builder category created successfully.');
+        return redirect()->route('builder-categories.index')->with('success', 'PC Builder category created successfully.');
     }
 
     public function show(BuilderCategory $builderCategory)
@@ -121,12 +121,12 @@ class BuilderCategoryController extends Controller
             'status' => $request->status,
             'updated_by' => Auth::id(),
         ]);
-        return redirect()->route('builder-categories.index')->with('success', 'Builder category updated successfully.');
+        return redirect()->route('builder-categories.index')->with('success', 'PC Builder category updated successfully.');
     }
 
     public function destroy(BuilderCategory $builderCategory)
     {
         $builderCategory->update(['status' => 0,'updated_by' => Auth::id(),]);
-        return redirect()->route('builder-categories.index')->with('success', 'Builder category deactivated successfully.');
+        return redirect()->route('builder-categories.index')->with('success', 'PC Builder category deactivated successfully.');
     }
 }
