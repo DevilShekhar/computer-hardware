@@ -226,6 +226,16 @@
                     </li>
                 </ul>
             </li>
+            <li class="dropdown {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+              <a href="#" class="menu-toggle nav-link has-dropdown">i data-feather="shield"></i><span>Roles</span></a>
+              <ul class="dropdown-menu">
+                <li class="{{ request()->routeIs('admin.roles.index') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('roles.index') }}"> Role Listing</a>
+                </li>
+                <li class="{{ request()->routeIs('admin.roles.create') ? 'active' : '' }}">
+                  <a class="nav-link" href="{{ route('roles.create') }}"> Add Role</a>/li>
+              </ul>
+            </li>
             <li class="dropdown">
               <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Email</span></a>
               <ul class="dropdown-menu">
