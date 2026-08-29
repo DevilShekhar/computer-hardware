@@ -3,9 +3,13 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BuilderBrandController;
+use App\Http\Controllers\Admin\BuilderCategoryController;
+
 use App\Http\Controllers\BuilderBrandController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,6 +22,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/users', UserController::class)->names('admin.users');
     Route::resource('builder-brands', BuilderBrandController::class);
+    Route::resource('builder-categories', BuilderCategoryController::class);
+});
 });
 
 Route::middleware('auth')->group(function () {
@@ -26,4 +32,3 @@ Route::middleware('auth')->group(function () {
     Route::get('roles/{role}/permissions', [RoleController::class, 'managePermissions'])->name('roles.permissions');
     Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
 });
-

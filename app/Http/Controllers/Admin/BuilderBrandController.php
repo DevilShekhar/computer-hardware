@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 use App\Models\BuilderBrand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +27,7 @@ class BuilderBrandController extends Controller
         $request->validate([
             'name' => 'required|string|max:255|unique:builder_brands,name',
             'brand_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'meta_title' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string',
             'meta_keyword' => 'nullable|string',
             'meta_description' => 'nullable|string',
         ], [
@@ -69,7 +71,7 @@ class BuilderBrandController extends Controller
             'name' => 'required|string|max:255|unique:builder_brands,name,' . $builderBrand->id,
             'status' => 'required|boolean',
             'brand_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'meta_title' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string',
             'meta_keyword' => 'nullable|string',
             'meta_description' => 'nullable|string',
         ], [
