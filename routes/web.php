@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BuilderBrandController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,4 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('roles/{role}/permissions-data', [RoleController::class, 'getPermissionsData'])->name('roles.permissions.data');
     Route::get('roles/{role}/permissions', [RoleController::class, 'managePermissions'])->name('roles.permissions');
     Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions']) ->name('roles.permissions.update');
+});
+    Route::resource('builder-brands', BuilderBrandController::class);
 });
