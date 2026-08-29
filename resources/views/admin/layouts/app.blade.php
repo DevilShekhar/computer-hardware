@@ -227,7 +227,7 @@
                 </ul>
             </li>
             <li class="dropdown {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-              <a href="#" class="menu-toggle nav-link has-dropdown">i data-feather="shield"></i><span>Roles</span></a>
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="shield"></i><span>Roles</span></a>
               <ul class="dropdown-menu">
                 <li class="{{ request()->routeIs('admin.roles.index') ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('roles.index') }}"> Role Listing</a>
