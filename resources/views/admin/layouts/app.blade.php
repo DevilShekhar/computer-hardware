@@ -190,33 +190,41 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="dropdown {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+            <li class="dropdown {{ request()->routeIs('builder-brands.*', 'builder-categories.*') ? 'active' : '' }}">
                 <a href="#" class="menu-toggle nav-link has-dropdown">
-                    <i data-feather="users"></i>
-                    <span>Users</span>
+                    <i data-feather="cpu"></i>
+                    <span>PC Builder</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('admin.users.index') }}">
-                            User Listing
+                    <li class="{{ request()->routeIs('builder-brands.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('builder-brands.index') }}">
+                            Brand
                         </a>
                     </li>
-                    <li class="{{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('admin.users.create') }}">
-                            Add User
+                    <li class="{{ request()->routeIs('builder-categories.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('builder-categories.index') }}">
+                            Category
                         </a>
                     </li>
                 </ul>
             </li>
-
             <li class="dropdown">
-              <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="command"></i><span>Apps</span></a>
-              <ul class="dropdown-menu">
-                <li><a class="nav-link" href="chat.html">Chat</a></li>
-                <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
-                <li><a class="nav-link" href="blog.html">Blog</a></li>
-                <li><a class="nav-link" href="calendar.html">Calendar</a></li>
-              </ul>
+                <a href="#" class="menu-toggle nav-link has-dropdown">
+                    <i data-feather="cpu"></i>
+                    <span>PC Builder</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="nav-link" href="{{ route('builder-brands.index') }}">
+                            Brand
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{ route('builder-categories.index') }}">
+                            Category
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li class="dropdown">
               <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>Email</span></a>

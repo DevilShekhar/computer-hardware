@@ -5,29 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BuilderBrand extends Model
+class BuilderCategory extends Model
 {
     use HasFactory;
 
-    protected $table = 'builder_brands';
+    protected $table = 'builder_categories';
 
     protected $fillable = [
+        'brand_id',
         'name',
         'slug',
-        'brand_image',
-        'status',
+        'cat_image',
+        'meta_title',
+        'meta_keywords',
+        'meta_description',
         'created_by',
         'updated_by',
-        'meta_title',
-        'meta_keyword',
-        'meta_description',
+        'status',
     ];
 
     protected $casts = [
         'status' => 'boolean',
     ];
-    public function categories()
+
+    public function brand()
     {
-        return $this->hasMany(BuilderCategory::class, 'brand_id');
+        return $this->belongsTo(BuilderBrand::class, 'brand_id');
     }
 }

@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\BuilderBrandController;
-
+use App\Http\Controllers\Admin\BuilderBrandController;
+use App\Http\Controllers\Admin\BuilderCategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,4 +17,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/users', UserController::class)->names('admin.users');
     Route::resource('builder-brands', BuilderBrandController::class);
+    Route::resource('builder-categories', BuilderCategoryController::class);
 });
