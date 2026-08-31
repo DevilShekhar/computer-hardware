@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BuilderBrandController;
 use App\Http\Controllers\Admin\BuilderCategoryController;
+use App\Http\Controllers\Admin\BuilderSubCategoryController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +33,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/users', UserController::class)->names('admin.users');
     Route::resource('builder-brands', BuilderBrandController::class);
     Route::resource('builder-categories', BuilderCategoryController::class);
+    Route::resource('builder-sub-categories',BuilderSubCategoryController::class);
+    Route::get('builder-sub-categories/categories-by-brand/{brand}', [BuilderSubCategoryController::class, 'getByBrand'])->name('builder-sub-categories.categories-by-brand');
 });
