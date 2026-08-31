@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\ProductBrand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with(['createdBy', 'updatedBy'])
+        $categories = Category::with(['productBrand', 'createdBy', 'updatedBy'])
             ->latest()
             ->get();
 
@@ -22,18 +23,25 @@ class CategoryController extends Controller
 
     public function create()
     {
-        return view('admin.categories.create');
+        $productBrands = ProductBrand::where('status', 1)
+            ->latest()
+            ->get();
+
+        return view('admin.categories.create', compact('productBrands'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'product_brand_id' => 'required|exists:product_brands,id',
             'name' => 'required|string|max:255',
             'cat_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'meta_title' => 'nullable|string',
             'meta_keywords' => 'nullable|string',
             'meta_description' => 'nullable|string',
         ], [
+            'product_brand_id.required' => 'Product brand is required.',
+            'product_brand_id.exists' => 'Selected product brand does not exist.',
             'name.required' => 'Category name is required.',
             'cat_image.image' => 'The category image must be an image.',
             'cat_image.mimes' => 'Category image must be JPG, JPEG, PNG or WEBP.',
@@ -49,13 +57,16 @@ class CategoryController extends Controller
 
         $slug = Str::slug($request->name);
 
-        $existingSlug = Category::where('slug', $slug)->exists();
+        $existingSlug = Category::where('product_brand_id', $request->product_brand_id)
+            ->where('slug', $slug)
+            ->exists();
 
         if ($existingSlug) {
             $slug .= '-' . time();
         }
 
         Category::create([
+            'product_brand_id' => $request->product_brand_id,
             'name' => $request->name,
             'slug' => $slug,
             'cat_image' => $categoryImage,
@@ -74,19 +85,25 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $category->load(['createdBy', 'updatedBy']);
+        $category->load(['productBrand', 'createdBy', 'updatedBy']);
 
         return view('admin.categories.show', compact('category'));
     }
 
     public function edit(Category $category)
     {
-        return view('admin.categories.edit', compact('category'));
+        $productBrands = ProductBrand::where('status', 1)
+            ->orWhere('id', $category->product_brand_id)
+            ->latest()
+            ->get();
+
+        return view('admin.categories.edit', compact('category', 'productBrands'));
     }
 
     public function update(Request $request, Category $category)
     {
         $request->validate([
+            'product_brand_id' => 'required|exists:product_brands,id',
             'name' => 'required|string|max:255',
             'status' => 'required|boolean',
             'cat_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -94,6 +111,8 @@ class CategoryController extends Controller
             'meta_keywords' => 'nullable|string',
             'meta_description' => 'nullable|string',
         ], [
+            'product_brand_id.required' => 'Product brand is required.',
+            'product_brand_id.exists' => 'Selected product brand does not exist.',
             'name.required' => 'Category name is required.',
             'status.required' => 'Status is required.',
             'cat_image.image' => 'The category image must be an image.',
@@ -114,7 +133,8 @@ class CategoryController extends Controller
 
         $slug = Str::slug($request->name);
 
-        $existingSlug = Category::where('slug', $slug)
+        $existingSlug = Category::where('product_brand_id', $request->product_brand_id)
+            ->where('slug', $slug)
             ->where('id', '!=', $category->id)
             ->exists();
 
@@ -123,6 +143,7 @@ class CategoryController extends Controller
         }
 
         $category->update([
+            'product_brand_id' => $request->product_brand_id,
             'name' => $request->name,
             'slug' => $slug,
             'cat_image' => $categoryImage,

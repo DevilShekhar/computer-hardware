@@ -6,10 +6,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Category Listing</h4>
+                        <h4>Product Brand Listing</h4>
                         <div class="card-header-action">
-                            <a href="{{ route('categories.create') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Add Category
+                            <a href="{{ route('product-brands.create') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Product Brand
                             </a>
                         </div>
                     </div>
@@ -19,9 +19,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
-                                        <th>Category Image</th>
-                                        <th>Product Brand</th>
-                                        <th>Category Name</th>
+                                        <th>Brand Image</th>
+                                        <th>Brand Name</th>
                                         <th>Slug</th>
                                         <th>Status</th>
                                         <th>Created By</th>
@@ -30,13 +29,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse($categories as $category)
+                                    @forelse($productBrands as $productBrand)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">
+                                            {{ $loop->iteration }}
+                                        </td>
                                         <td>
-                                            @if($category->cat_image)
-                                            <img src="{{ asset('storage/' . $category->cat_image) }}"
-                                                alt="{{ $category->name }}"
+                                            @if($productBrand->product_brand_image)
+                                            <img src="{{ asset('storage/' . $productBrand->product_brand_image) }}"
+                                                alt="{{ $productBrand->name }}"
                                                 width="45"
                                                 height="45"
                                                 class="rounded"
@@ -51,14 +52,13 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <strong>{{ $category->productBrand->name ?? '-' }}</strong>
+                                            <strong>{{ $productBrand->name }}</strong>
                                         </td>
                                         <td>
-                                            <strong>{{ $category->name }}</strong>
+                                            {{ $productBrand->slug }}
                                         </td>
-                                        <td>{{ $category->slug }}</td>
                                         <td>
-                                            @if($category->status)
+                                            @if($productBrand->status)
                                             <div class="badge badge-success badge-shadow">
                                                 Active
                                             </div>
@@ -68,26 +68,28 @@
                                             </div>
                                             @endif
                                         </td>
-                                        <td>{{ $category->createdBy->name ?? '-' }}</td>
                                         <td>
-                                            {{ $category->created_at ? $category->created_at->format('d-m-Y') : '-' }}
+                                            {{ $productBrand->createdBy->name ?? '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $productBrand->created_at ? $productBrand->created_at->format('d-m-Y') : '-' }}
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <a href="{{ route('categories.show', $category->id) }}"
+                                                <a href="{{ route('product-brands.show', $productBrand->id) }}"
                                                     class="btn btn-info btn-sm mr-1"
                                                     title="View">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('categories.edit', $category->id) }}"
+                                                <a href="{{ route('product-brands.edit', $productBrand->id) }}"
                                                     class="btn btn-primary btn-sm mr-1"
                                                     title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                @if($category->status)
-                                                <form action="{{ route('categories.destroy', $category->id) }}"
+                                                @if($productBrand->status)
+                                                <form action="{{ route('product-brands.destroy', $productBrand->id) }}"
                                                     method="POST"
-                                                    class="delete-category-form">
+                                                    class="delete-product-brand-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
@@ -97,7 +99,7 @@
                                                     </button>
                                                 </form>
                                                 @else
-                                                <a href="{{ route('categories.edit', $category->id) }}"
+                                                <a href="{{ route('product-brands.edit', $productBrand->id) }}"
                                                     class="btn btn-success btn-sm"
                                                     title="Activate">
                                                     <i class="fas fa-check"></i>
@@ -108,8 +110,8 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">
-                                            No categories found.
+                                        <td colspan="8" class="text-center">
+                                            No product brands found.
                                         </td>
                                     </tr>
                                     @endforelse
@@ -139,19 +141,16 @@
             columnDefs: [
                 {
                     orderable: false,
-                    targets: [0, 1, 8]
+                    targets: [0, 1, 7]
                 }
             ]
         });
-
-        $('.delete-category-form').on('submit', function(e) {
+        $('.delete-product-brand-form').on('submit', function(e) {
             e.preventDefault();
-
             let form = this;
-
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'This category will be deactivated.',
+                text: 'This product brand will be deactivated.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#fc544b',
