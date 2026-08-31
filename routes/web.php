@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BuilderBrandController;
 use App\Http\Controllers\Admin\BuilderCategoryController;
+use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,12 @@ Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/my-change-password', [ProfileController::class, 'changePassword'])->name('password.index');
+    Route::post('/my-change-password/verify', [ProfileController::class, 'verifyOldPassword'])->name('password.verify');
+    Route::get('/my-change-password/new', [ProfileController::class, 'newPassword'])->name('password.new');
+    Route::post('/my-change-password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::resource('roles', RoleController::class);
     Route::get('roles/{role}/permissions-data', [RoleController::class, 'getPermissionsData'])->name('roles.permissions.data');
     Route::get('roles/{role}/permissions', [RoleController::class, 'managePermissions'])->name('roles.permissions');
