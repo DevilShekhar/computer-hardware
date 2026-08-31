@@ -4,19 +4,20 @@
 
 <!-- index.html  21 Nov 2019 03:44:50 GMT -->
 <head>
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Otika - Admin Dashboard Template</title>
-  <!-- General CSS Files -->
-  <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
-  <!-- Template CSS -->
-  <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
-  <!-- Custom style CSS -->
-  <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/bundles/datatables/datatables.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-  <link rel='shortcut icon' type='image/x-icon' href="{{ asset('assets/img/favicon.ico') }}" />
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>Otika - Admin Dashboard Template</title>
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/bundles/summernote/summernote-bs4.css') }}">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    <!-- Custom style CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/bundles/datatables/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
+    <link rel='shortcut icon' type='image/x-icon' href="{{ asset('assets/img/favicon.ico') }}" />
 </head>
 
 <body>
@@ -546,6 +547,7 @@
     </div>
   </div>
   <script src="{{ asset('assets/js/app.min.js') }}"></script>
+  <script src="{{ asset('assets/bundles/summernote/summernote-bs4.js') }}"></script>
   <script src="{{ asset('assets/bundles/datatables/datatables.min.js') }}"></script>
   <script src="{{ asset('assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
   <script src="{{ asset('assets/bundles/jquery-ui/jquery-ui.min.js') }}"></script>
