@@ -18,6 +18,22 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-md-6">
+                                    <label>Product Brand <span class="text-danger">*</span></label>
+                                    <select name="product_brand_id"
+                                        class="form-control @error('product_brand_id') is-invalid @enderror">
+                                        <option value="">Select Product Brand</option>
+                                        @foreach($productBrands as $productBrand)
+                                        <option value="{{ $productBrand->id }}"
+                                            {{ old('product_brand_id') == $productBrand->id ? 'selected' : '' }}>
+                                            {{ $productBrand->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('product_brand_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-6">
                                     <label>Category Name <span class="text-danger">*</span></label>
                                     <input type="text"
                                         name="name"

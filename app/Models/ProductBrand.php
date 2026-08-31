@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class ProductBrand extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
+    protected $table = 'product_brands';
 
     protected $fillable = [
-        'product_brand_id',
         'name',
         'slug',
-        'cat_image',
+        'product_brand_image',
         'meta_title',
         'meta_keywords',
         'meta_description',
@@ -28,9 +27,9 @@ class Category extends Model
         'status' => 'boolean',
     ];
 
-    public function productBrand()
+    public function categories()
     {
-        return $this->belongsTo(ProductBrand::class, 'product_brand_id');
+        return $this->hasMany(Category::class, 'product_brand_id');
     }
 
     public function createdBy()

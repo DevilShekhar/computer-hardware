@@ -240,19 +240,29 @@
                       <li class="{{ request()->routeIs('builder-sub-categories.*') ? 'active' : '' }}"> <a class="nav-link" href="{{ route('builder-sub-categories.index') }}"> Sub Category </a> </li>
                   </ul>
               </li>
-              <li class="dropdown {{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                    <a href="#" class="menu-toggle nav-link has-dropdown">
-                        <i data-feather="layers"></i>
-                        <span>Product Management</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('categories.index') }}">
-                                Category
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+              <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*') ? 'active' : '' }}">
+                <a href="#" class="menu-toggle nav-link has-dropdown">
+                    <i data-feather="layers"></i>
+                    <span>Product Management</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ request()->routeIs('product-brands.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('product-brands.index') }}">
+                            Brand
+                        </a>
+                    </li>
+                    <li class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('categories.index') }}">
+                            Category
+                        </a>
+                    </li>
+                    <li class="{{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('sub-categories.index') }}">
+                            Sub Category
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
               <li class="dropdown {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                   <a href="#" class="menu-toggle nav-link has-dropdown">
