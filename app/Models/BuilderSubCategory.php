@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BuilderCategory extends Model
+class BuilderSubCategory extends Model
 {
     use HasFactory;
 
-    protected $table = 'builder_categories';
+    protected $table = 'builder_sub_categories';
 
     protected $fillable = [
         'brand_id',
+        'category_id',
         'name',
         'slug',
-        'cat_image',
+        'sub_cat_image',
         'meta_title',
         'meta_keywords',
         'meta_description',
@@ -32,8 +33,18 @@ class BuilderCategory extends Model
     {
         return $this->belongsTo(BuilderBrand::class, 'brand_id');
     }
-    public function subCategories()
+
+    public function category()
     {
-        return $this->hasMany(BuilderSubCategory::class, 'category_id');
+        return $this->belongsTo(BuilderCategory::class, 'category_id');
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }
