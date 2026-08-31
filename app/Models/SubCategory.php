@@ -12,6 +12,7 @@ class SubCategory extends Model
     protected $table = 'sub_categories';
 
     protected $fillable = [
+        'product_brand_id',
         'category_id',
         'name',
         'slug',
@@ -27,6 +28,11 @@ class SubCategory extends Model
     protected $casts = [
         'status' => 'boolean',
     ];
+
+    public function productBrand()
+    {
+        return $this->belongsTo(ProductBrand::class, 'product_brand_id');
+    }
 
     public function category()
     {

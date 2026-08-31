@@ -40,5 +40,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('builder-sub-categories/categories-by-brand/{brand}', [BuilderSubCategoryController::class, 'getByBrand'])->name('builder-sub-categories.categories-by-brand');
     Route::resource('product-brands', ProductBrandController::class);
     Route::resource('categories', CategoryController::class);
+    Route::get('sub-categories/categories-by-brand/{brand}', [SubCategoryController::class, 'getCategoriesByBrand'])->name('sub-categories.categories-by-brand');
     Route::resource('sub-categories', SubCategoryController::class);
 });
