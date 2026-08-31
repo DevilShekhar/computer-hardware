@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class SubCategory extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
+    protected $table = 'sub_categories';
 
     protected $fillable = [
+        'category_id',
         'name',
         'slug',
-        'cat_image',
+        'sub_cat_image',
         'meta_title',
         'meta_keywords',
         'meta_description',
@@ -27,6 +28,11 @@ class Category extends Model
         'status' => 'boolean',
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -35,9 +41,5 @@ class Category extends Model
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
-    }
-    public function subCategories()
-    {
-        return $this->hasMany(SubCategory::class, 'category_id');
     }
 }
