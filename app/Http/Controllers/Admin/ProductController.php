@@ -353,30 +353,15 @@ class ProductController extends Controller
         if ($request->stock_action === 'add') {
 
             $newStock = $previousStock + $request->quantity;
-
-            // inventories table enum is in/out
             $inventoryType = 'in';
-
-            // inventory_histories table enum is add/remove/adjustment
             $historyType = 'add';
 
         } else {
 
             $newStock = $request->quantity;
-
-            // inventory table does not support adjustment,
-            // so use out for stock adjustment record
             $inventoryType = 'out';
-
-            // history table supports adjustment
             $historyType = 'adjustment';
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Store in inventories table
-        |--------------------------------------------------------------------------
-        */
         Inventory::create([
             'product_id' => $product->id,
             'type' => $inventoryType,
@@ -386,12 +371,6 @@ class ProductController extends Controller
             'reason' => $request->reason,
             'created_by' => Auth::id(),
         ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Store in inventory_histories table
-        |--------------------------------------------------------------------------
-        */
         InventoryHistory::create([
             'product_id' => $product->id,
             'previous_quantity' => $previousStock,
@@ -403,12 +382,6 @@ class ProductController extends Controller
             'note' => $request->reason,
             'created_by' => Auth::id(),
         ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update Product Stock
-        |--------------------------------------------------------------------------
-        */
         $product->update([
             'stock_quantity' => $newStock,
             'updated_by' => Auth::id(),
