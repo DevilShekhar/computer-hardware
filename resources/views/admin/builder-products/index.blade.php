@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
+
 @section('content')
+
 <section class="section">
     <div class="section-body">
         <div class="row">
@@ -22,6 +24,7 @@
                                         <th>Product Image</th>
                                         <th>Product Name</th>
                                         <th>SKU</th>
+                                        <th>Builder Type</th>
                                         <th>Builder Brand</th>
                                         <th>Builder Category</th>
                                         <th>Builder Sub Category</th>
@@ -75,6 +78,17 @@
                                                 {{ $builderProduct->product->sku ?? '-' }}
                                             @else
                                                 -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($builderProduct->builderType)
+                                                <strong>
+                                                    {{ $builderProduct->builderType->name }}
+                                                </strong>
+                                            @else
+                                                <span class="text-danger">
+                                                    -
+                                                </span>
                                             @endif
                                         </td>
                                         <td>
@@ -136,34 +150,47 @@
                                                 </div>
                                             @endif
                                         </td>
-                                        <td>{{ $builderProduct->created_at ? $builderProduct->created_at->format('d-m-Y'): '-' }}</td>
+                                        <td>
+                                            {{ $builderProduct->created_at ? $builderProduct->created_at->format('d-m-Y') : '-' }}
+                                        </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <a href="{{ route('builder-products.show', $builderProduct->id) }}" class="btn btn-info btn-sm mr-1" title="View">
+                                                <a href="{{ route('builder-products.show', $builderProduct->id) }}"
+                                                    class="btn btn-info btn-sm mr-1" title="View">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('builder-products.edit', $builderProduct->id) }}" class="btn btn-primary btn-sm mr-1" title="Edit">
+                                                <a href="{{ route('builder-products.edit', $builderProduct->id) }}"
+                                                    class="btn btn-primary btn-sm mr-1" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 @if($builderProduct->status)
-                                                    <form action="{{ route('builder-products.destroy', $builderProduct->id) }}"  method="POST" class="delete-builder-product-form">
+                                                    <form action="{{ route('builder-products.destroy', $builderProduct->id) }}"
+                                                        method="POST"
+                                                        class="delete-builder-product-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Deactivate">
+                                                        <button type="submit"
+                                                            class="btn btn-danger btn-sm"
+                                                            title="Deactivate">
                                                             <i class="fas fa-ban"></i>
                                                         </button>
                                                     </form>
                                                 @else
-                                                    <form action="{{ route('builder-products.update', $builderProduct->id) }}" method="POST" class="activate-builder-product-form">
+                                                    <form action="{{ route('builder-products.update', $builderProduct->id) }}"
+                                                        method="POST"
+                                                        class="activate-builder-product-form">
                                                         @csrf
                                                         @method('PUT')
-                                                        <input type="hidden"  name="product_id" value="{{ $builderProduct->product_id }}">
-                                                        <input type="hidden" name="builder_brand_id"  value="{{ $builderProduct->builder_brand_id }}">
+                                                        <input type="hidden" name="builder_type_id" value="{{ $builderProduct->builder_type_id }}">
+                                                        <input type="hidden" name="product_id" value="{{ $builderProduct->product_id }}">
+                                                        <input type="hidden" name="builder_brand_id" value="{{ $builderProduct->builder_brand_id }}">
                                                         <input type="hidden" name="builder_category_id" value="{{ $builderProduct->builder_category_id }}">
                                                         <input type="hidden" name="builder_sub_category_id" value="{{ $builderProduct->builder_sub_category_id }}">
                                                         <input type="hidden" name="sort_order" value="{{ $builderProduct->sort_order }}">
                                                         <input type="hidden" name="status" value="1">
-                                                        <button type="submit" class="btn btn-success btn-sm" title="Activate">
+                                                        <button type="submit"
+                                                            class="btn btn-success btn-sm"
+                                                            title="Activate">
                                                             <i class="fas fa-check"></i>
                                                         </button>
                                                     </form>
@@ -173,7 +200,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="11" class="text-center">
+                                        <td colspan="12" class="text-center">
                                             No PC builder products found.
                                         </td>
                                     </tr>
@@ -187,8 +214,11 @@
         </div>
     </div>
 </section>
+
 @endsection
+
 @push('scripts')
+
 <script>
     $(document).ready(function() {
         $('#table-1').DataTable({
@@ -201,16 +231,16 @@
                 [10, 25, 50, 100, -1],
                 [10, 25, 50, 100, 'All']
             ],
-            columnDefs: [
-                {
-                    orderable: false,
-                    targets: [0, 1, 10]
-                }
-            ]
+            columnDefs: [{
+                orderable: false,
+                targets: [0, 1, 11]
+            }]
         });
+
         $('.delete-builder-product-form').on('submit', function(e) {
             e.preventDefault();
             let form = this;
+
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'This builder product will be deactivated.',
@@ -226,9 +256,11 @@
                 }
             });
         });
+
         $('.activate-builder-product-form').on('submit', function(e) {
             e.preventDefault();
             let form = this;
+
             Swal.fire({
                 title: 'Activate Product?',
                 text: 'This builder product will be activated.',
@@ -246,7 +278,9 @@
         });
     });
 </script>
+
 @if(session('success'))
+
 <script>
     Swal.fire({
         title: 'Success!',
@@ -256,5 +290,6 @@
         confirmButtonText: 'OK'
     });
 </script>
+
 @endif
 @endpush

@@ -3,31 +3,28 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
 use App\Models\BuilderBrand;
 use App\Models\BuilderCategory;
 use App\Models\BuilderProduct;
 use App\Models\BuilderSubCategory;
+use App\Models\BuilderType;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class BuilderProductController extends Controller
 {
-    /**
-     * Display builder products.
-     */
     public function index(Request $request)
     {
         $query = BuilderProduct::with([
             'product',
+            'builderType',
             'builderBrand',
             'builderCategory',
             'builderSubCategory',
         ]);
 
-        // Search
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -37,12 +34,8 @@ class BuilderProductController extends Controller
             });
         }
 
-        // Status filter
         if ($request->filled('status')) {
-            $query->where(
-                'status',
-                $request->status
-            );
+            $query->where('status', $request->status);
         }
 
         $builderProducts = $query
@@ -51,34 +44,28 @@ class BuilderProductController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        return view('admin.builder-products.index',compact('builderProducts'));
+        return view('admin.builder-products.index', compact('builderProducts'));
     }
 
-    /**
-     * Show create form.
-     */
     public function create()
     {
         $products = Product::where('status', true)
             ->orderBy('name')
             ->get();
 
-        $builderBrands = BuilderBrand::where('status', true)
+        $builderTypes = BuilderType::where('status', true)
             ->orderBy('name')
             ->get();
 
-        $builderCategories = BuilderCategory::where('status', true)
-            ->orderBy('name')
-            ->get();
-
-        $builderSubCategories = BuilderSubCategory::where('status', true)
-            ->orderBy('name')
-            ->get();
+        $builderBrands = collect();
+        $builderCategories = collect();
+        $builderSubCategories = collect();
 
         return view(
             'admin.builder-products.create',
             compact(
                 'products',
+                'builderTypes',
                 'builderBrands',
                 'builderCategories',
                 'builderSubCategories'
@@ -86,9 +73,6 @@ class BuilderProductController extends Controller
         );
     }
 
-    /**
-     * Store builder product.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -96,83 +80,113 @@ class BuilderProductController extends Controller
                 'required',
                 'exists:products,id',
             ],
-
+            'builder_type_id' => [
+                'required',
+                'exists:builder_types,id',
+            ],
             'builder_brand_id' => [
                 'required',
                 'exists:builder_brands,id',
             ],
-
             'builder_category_id' => [
                 'required',
                 'exists:builder_categories,id',
             ],
-
             'builder_sub_category_id' => [
                 'required',
                 'exists:builder_sub_categories,id',
             ],
-
             'sort_order' => [
                 'nullable',
                 'integer',
                 'min:0',
             ],
-
-            'status' => [
-                'nullable',
-                'boolean',
-            ],
+        ], [
+            'product_id.required' => 'Product is required.',
+            'builder_type_id.required' => 'Builder type is required.',
+            'builder_type_id.exists' => 'Selected builder type does not exist.',
+            'builder_brand_id.required' => 'Builder brand is required.',
+            'builder_brand_id.exists' => 'Selected builder brand does not exist.',
+            'builder_category_id.required' => 'Builder category is required.',
+            'builder_category_id.exists' => 'Selected builder category does not exist.',
+            'builder_sub_category_id.required' => 'Builder sub category is required.',
+            'builder_sub_category_id.exists' => 'Selected builder sub category does not exist.',
         ]);
 
-        // Check duplicate
-        $exists = BuilderProduct::where(
-            'product_id',
-            $validated['product_id']
-        )
-            ->where(
-                'builder_sub_category_id',
-                $validated['builder_sub_category_id']
-            )
+        $brandExists = BuilderBrand::where('id', $validated['builder_brand_id'])
+            ->where('builder_type_id', $validated['builder_type_id'])
+            ->exists();
+
+        if (!$brandExists) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'builder_brand_id' => 'Selected brand does not belong to the selected builder type.',
+                ]);
+        }
+
+        $categoryExists = BuilderCategory::where('id', $validated['builder_category_id'])
+            ->where('builder_type_id', $validated['builder_type_id'])
+            ->where('brand_id', $validated['builder_brand_id'])
+            ->exists();
+
+        if (!$categoryExists) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'builder_category_id' => 'Selected category does not belong to the selected builder type and brand.',
+                ]);
+        }
+
+        $subCategoryExists = BuilderSubCategory::where('id', $validated['builder_sub_category_id'])
+            ->where('builder_type_id', $validated['builder_type_id'])
+            ->where('brand_id', $validated['builder_brand_id'])
+            ->where('category_id', $validated['builder_category_id'])
+            ->exists();
+
+        if (!$subCategoryExists) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'builder_sub_category_id' => 'Selected sub category does not belong to the selected builder type, brand and category.',
+                ]);
+        }
+
+        $exists = BuilderProduct::where('builder_type_id', $validated['builder_type_id'])
+            ->where('product_id', $validated['product_id'])
+            ->where('builder_sub_category_id', $validated['builder_sub_category_id'])
             ->exists();
 
         if ($exists) {
             return back()
                 ->withInput()
-                ->with('error', 'This product is already added to this builder sub category.');
+                ->withErrors([
+                    'product_id' => 'This product is already added to this builder type and sub category.',
+                ]);
         }
 
-        $validated['sort_order'] =
-            $validated['sort_order'] ?? 0;
-
-        $validated['status'] =
-            $request->boolean('status');
-
-        $validated['created_by'] =
-            Auth::id();
-
-        $validated['updated_by'] =
-            Auth::id();
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['status'] = 1;
+        $validated['created_by'] = Auth::id();
+        $validated['updated_by'] = Auth::id();
 
         BuilderProduct::create($validated);
 
         return redirect()
             ->route('builder-products.index')
-            ->with(
-                'success',
-                'Builder product added successfully.'
-            );
+            ->with('success', 'Builder product added successfully.');
     }
 
-    /**
-     * Show builder product.
-     */
     public function show(BuilderProduct $builderProduct)
     {
         $builderProduct->load([
             'product',
+            'builderType',
             'builderBrand',
             'builderCategory',
             'builderSubCategory',
+            'createdBy',
+            'updatedBy',
         ]);
 
         return view(
@@ -181,24 +195,42 @@ class BuilderProductController extends Controller
         );
     }
 
-    /**
-     * Show edit form.
-     */
     public function edit(BuilderProduct $builderProduct)
     {
         $products = Product::where('status', true)
+            ->orWhere('id', $builderProduct->product_id)
             ->orderBy('name')
             ->get();
 
-        $builderBrands = BuilderBrand::where('status', true)
+        $builderTypes = BuilderType::where('status', true)
+            ->orWhere('id', $builderProduct->builder_type_id)
             ->orderBy('name')
             ->get();
 
-        $builderCategories = BuilderCategory::where('status', true)
+        $builderBrands = BuilderBrand::where('builder_type_id', $builderProduct->builder_type_id)
+            ->where(function ($query) use ($builderProduct) {
+                $query->where('status', true)
+                    ->orWhere('id', $builderProduct->builder_brand_id);
+            })
             ->orderBy('name')
             ->get();
 
-        $builderSubCategories = BuilderSubCategory::where('status', true)
+        $builderCategories = BuilderCategory::where('builder_type_id', $builderProduct->builder_type_id)
+            ->where('brand_id', $builderProduct->builder_brand_id)
+            ->where(function ($query) use ($builderProduct) {
+                $query->where('status', true)
+                    ->orWhere('id', $builderProduct->builder_category_id);
+            })
+            ->orderBy('name')
+            ->get();
+
+        $builderSubCategories = BuilderSubCategory::where('builder_type_id', $builderProduct->builder_type_id)
+            ->where('brand_id', $builderProduct->builder_brand_id)
+            ->where('category_id', $builderProduct->builder_category_id)
+            ->where(function ($query) use ($builderProduct) {
+                $query->where('status', true)
+                    ->orWhere('id', $builderProduct->builder_sub_category_id);
+            })
             ->orderBy('name')
             ->get();
 
@@ -207,6 +239,7 @@ class BuilderProductController extends Controller
             compact(
                 'builderProduct',
                 'products',
+                'builderTypes',
                 'builderBrands',
                 'builderCategories',
                 'builderSubCategories'
@@ -214,90 +247,115 @@ class BuilderProductController extends Controller
         );
     }
 
-    /**
-     * Update builder product.
-     */
-    public function update(Request $request, BuilderProduct $builderProduct) {
+    public function update(Request $request, BuilderProduct $builderProduct)
+    {
         $validated = $request->validate([
             'product_id' => [
                 'required',
                 'exists:products,id',
             ],
-
+            'builder_type_id' => [
+                'required',
+                'exists:builder_types,id',
+            ],
             'builder_brand_id' => [
                 'required',
                 'exists:builder_brands,id',
             ],
-
             'builder_category_id' => [
                 'required',
                 'exists:builder_categories,id',
             ],
-
             'builder_sub_category_id' => [
                 'required',
                 'exists:builder_sub_categories,id',
             ],
-
             'sort_order' => [
                 'nullable',
                 'integer',
                 'min:0',
             ],
-
             'status' => [
-                'nullable',
+                'required',
                 'boolean',
             ],
+        ], [
+            'product_id.required' => 'Product is required.',
+            'builder_type_id.required' => 'Builder type is required.',
+            'builder_type_id.exists' => 'Selected builder type does not exist.',
+            'builder_brand_id.required' => 'Builder brand is required.',
+            'builder_brand_id.exists' => 'Selected builder brand does not exist.',
+            'builder_category_id.required' => 'Builder category is required.',
+            'builder_category_id.exists' => 'Selected builder category does not exist.',
+            'builder_sub_category_id.required' => 'Builder sub category is required.',
+            'builder_sub_category_id.exists' => 'Selected builder sub category does not exist.',
+            'status.required' => 'Status is required.',
         ]);
 
-        // Check duplicate excluding current record
-        $exists = BuilderProduct::where(
-            'product_id',
-            $validated['product_id']
-        )
-            ->where(
-                'builder_sub_category_id',
-                $validated['builder_sub_category_id']
-            )
-            ->where(
-                'id',
-                '!=',
-                $builderProduct->id
-            )
+        $brandExists = BuilderBrand::where('id', $validated['builder_brand_id'])
+            ->where('builder_type_id', $validated['builder_type_id'])
+            ->exists();
+
+        if (!$brandExists) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'builder_brand_id' => 'Selected brand does not belong to the selected builder type.',
+                ]);
+        }
+
+        $categoryExists = BuilderCategory::where('id', $validated['builder_category_id'])
+            ->where('builder_type_id', $validated['builder_type_id'])
+            ->where('brand_id', $validated['builder_brand_id'])
+            ->exists();
+
+        if (!$categoryExists) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'builder_category_id' => 'Selected category does not belong to the selected builder type and brand.',
+                ]);
+        }
+
+        $subCategoryExists = BuilderSubCategory::where('id', $validated['builder_sub_category_id'])
+            ->where('builder_type_id', $validated['builder_type_id'])
+            ->where('brand_id', $validated['builder_brand_id'])
+            ->where('category_id', $validated['builder_category_id'])
+            ->exists();
+
+        if (!$subCategoryExists) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'builder_sub_category_id' => 'Selected sub category does not belong to the selected builder type, brand and category.',
+                ]);
+        }
+
+        $exists = BuilderProduct::where('builder_type_id', $validated['builder_type_id'])
+            ->where('product_id', $validated['product_id'])
+            ->where('builder_sub_category_id', $validated['builder_sub_category_id'])
+            ->where('id', '!=', $builderProduct->id)
             ->exists();
 
         if ($exists) {
             return back()
                 ->withInput()
-                ->with(
-                    'error',
-                    'This product is already added to this builder sub category.'
-                );
+                ->withErrors([
+                    'product_id' => 'This product is already added to this builder type and sub category.',
+                ]);
         }
 
-        $validated['sort_order'] =
-            $validated['sort_order'] ?? 0;
-
-        $validated['status'] =
-            $request->boolean('status');
-
-        $validated['updated_by'] =
-            Auth::id();
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['status'] = $request->boolean('status');
+        $validated['updated_by'] = Auth::id();
 
         $builderProduct->update($validated);
 
         return redirect()
             ->route('builder-products.index')
-            ->with(
-                'success',
-                'Builder product updated successfully.'
-            );
+            ->with('success', 'Builder product updated successfully.');
     }
 
-    /**
-     * Delete builder product.
-     */
     public function destroy(BuilderProduct $builderProduct)
     {
         $builderProduct->update([
@@ -307,11 +365,19 @@ class BuilderProductController extends Controller
 
         return redirect()
             ->route('builder-products.index')
-            ->with(
-                'success',
-                'Builder product deactivated successfully.'
-            );
+            ->with('success', 'Builder product deactivated successfully.');
     }
+
+    public function getBrands($type)
+    {
+        $brands = BuilderBrand::where('builder_type_id', $type)
+            ->where('status', true)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return response()->json($brands);
+    }
+
     public function getCategories($brand)
     {
         $categories = BuilderCategory::where('brand_id', $brand)

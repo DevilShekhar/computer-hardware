@@ -13,6 +13,7 @@ class BuilderProduct extends Model
 
     protected $fillable = [
         'product_id',
+        'builder_type_id',
         'builder_brand_id',
         'builder_category_id',
         'builder_sub_category_id',
@@ -27,75 +28,35 @@ class BuilderProduct extends Model
         'sort_order' => 'integer',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Main Product
-    |--------------------------------------------------------------------------
-    */
-
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Builder Brand
-    |--------------------------------------------------------------------------
-    */
+    public function builderType()
+    {
+        return $this->belongsTo(BuilderType::class, 'builder_type_id');
+    }
 
     public function builderBrand()
     {
-        return $this->belongsTo(
-            BuilderBrand::class,
-            'builder_brand_id'
-        );
+        return $this->belongsTo(BuilderBrand::class, 'builder_brand_id');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Builder Category
-    |--------------------------------------------------------------------------
-    */
 
     public function builderCategory()
     {
-        return $this->belongsTo(
-            BuilderCategory::class,
-            'builder_category_id'
-        );
+        return $this->belongsTo(BuilderCategory::class, 'builder_category_id');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Builder Sub Category
-    |--------------------------------------------------------------------------
-    */
 
     public function builderSubCategory()
     {
-        return $this->belongsTo(
-            BuilderSubCategory::class,
-            'builder_sub_category_id'
-        );
+        return $this->belongsTo(BuilderSubCategory::class, 'builder_sub_category_id');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Created By
-    |--------------------------------------------------------------------------
-    */
 
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Updated By
-    |--------------------------------------------------------------------------
-    */
 
     public function updatedBy()
     {
