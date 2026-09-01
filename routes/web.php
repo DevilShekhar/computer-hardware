@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\BuilderTypeController;
 use App\Http\Controllers\Admin\BuilderProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/users', UserController::class)->names('admin.users');
+    Route::resource('builder-types', BuilderTypeController::class);
     Route::resource('builder-brands', BuilderBrandController::class);
     Route::resource('builder-categories', BuilderCategoryController::class);
     Route::resource('builder-sub-categories',BuilderSubCategoryController::class);
