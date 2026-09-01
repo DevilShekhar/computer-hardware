@@ -124,6 +124,12 @@
                                                     {{ $user->birth_date ? $user->birth_date->format('d-m-Y') : '-' }}
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <th>Role</th>
+                                                <td>
+                                                    {{ $user->role ? $user->role->name : '-' }}
+                                                </td>
+                                            </tr>
 
                                             <tr>
                                                 <th>Status</th>

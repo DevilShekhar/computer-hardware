@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BuilderBrandController;
 use App\Http\Controllers\Admin\BuilderCategoryController;
 use App\Http\Controllers\Admin\BuilderSubCategoryController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -48,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::get('products/categories-by-brand/{brand}', [ProductController::class, 'getCategoriesByBrand'])->name('products.categories-by-brand');
     Route::get('products/sub-categories-by-category/{category}', [ProductController::class, 'getSubCategoriesByCategory'])->name('products.sub-categories-by-category');
+    Route::resource('coupons', CouponController::class)->names('coupons');
     Route::get('/builder-products/categories/{brand}', [BuilderProductController::class, 'getCategories'])->name('builder-products.categories');
     Route::get('/builder-products/sub-categories/{category}', [BuilderProductController::class, 'getSubCategories'])->name('builder-products.sub-categories');
     Route::resource('builder-products',BuilderProductController::class);

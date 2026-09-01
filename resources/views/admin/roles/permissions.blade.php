@@ -138,9 +138,6 @@
     </div>
 </section>
 @endsection
-
-@section('scripts')
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -271,6 +268,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
-
-@endsection
 
