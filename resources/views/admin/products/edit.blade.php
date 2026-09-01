@@ -136,22 +136,23 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-12">
-                                    <label>Add Product Images </label>
-                                    <input type="file"  name="images[]" id="productImages" multiple  class="form-control @error('images') is-invalid @enderror @error('images.*') is-invalid @enderror" accept=".jpg,.jpeg,.png,.webp">
+                                    <label>Add Product Images</label>
+                                    <input type="file"
+                                        name="images[]"
+                                        id="productImages"
+                                        multiple
+                                        class="form-control @error('images') is-invalid @enderror @error('images.*') is-invalid @enderror"
+                                        accept=".jpg,.jpeg,.png,.webp">
                                     @error('images')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     @error('images.*')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     <small class="form-text text-muted">
-                                        You can select multiple images. Maximum 2MB per image.
+                                        You can upload a maximum of <strong>4 images</strong> in total (existing + new). Maximum 2MB per image.
                                     </small>
-                                    <div  id="imagePreview" class="row mt-3"></div>
+                                    <div id="imagePreview" class="row mt-3"></div>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label>Current Product Images</label>
@@ -246,7 +247,7 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
-                                </div> 
+                                </div>
                                 <div class="form-group col-md-4">
                                     <label>Status<span class="text-danger">*</span></label>
                                     <select  name="status" class="form-control @error('status') is-invalid @enderror">
@@ -495,46 +496,47 @@ $(document).ready(function () {
         );
     }
     let selectedFiles = [];
-    $('#productImages').on('change', function (e) {
-        selectedFiles =
-            Array.from(e.target.files);
+    const MAX_IMAGES = 4;
+    $('#productImages').on('change', function(e) {
+        let newFiles = Array.from(e.target.files);
+        let combined = selectedFiles.concat(newFiles);
+        if (combined.length > MAX_IMAGES) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Limit Exceeded',
+                text: `You can upload a maximum of ${MAX_IMAGES} images only.`,
+                confirmButtonColor: '#6777ef'
+            });
+            combined = combined.slice(0, MAX_IMAGES);
+        }
+
+        selectedFiles = combined;
+        let dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        $('#productImages')[0].files = dataTransfer.files;
+
         showImagePreview();
     });
     function showImagePreview() {
         $('#imagePreview').html('');
-        selectedFiles.forEach(function (file, index) {
-            let reader =
-                new FileReader();
-            reader.onload = function (e) {
+        selectedFiles.forEach(function(file, index) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
                 $('#imagePreview').append(`
-                    <div
-                        class="col-md-3 mb-3 image-preview-item"
-                        data-index="${index}"
-                    >
+                    <div class="col-md-3 mb-3 image-preview-item" data-index="${index}">
                         <div class="card">
                             <div class="card-body p-2 text-center">
-                                <img
-                                    src="${e.target.result}"
+                                <img src="${e.target.result}"
                                     class="img-fluid rounded"
-                                    style="
-                                        height:150px;
-                                        width:100%;
-                                        object-fit:cover;
-                                    "
-                                >
+                                    style="height:150px;width:100%;object-fit:cover;">
                                 <div class="mt-2">
-                                    <small
-                                        class="d-block text-muted text-truncate"
-                                    >
+                                    <small class="d-block text-muted text-truncate">
                                         ${file.name}
                                     </small>
-                                    <button
-                                        type="button"
-                                        class="btn btn-danger btn-sm mt-2 remove-image"
-                                        data-index="${index}"
-                                    >
-                                        <i class="fas fa-trash"></i>
-                                        Remove
+                                    <button type="button"
+                                            class="btn btn-danger btn-sm mt-2 remove-image"
+                                            data-index="${index}">
+                                        <i class="fas fa-trash"></i> Remove
                                     </button>
                                 </div>
                             </div>
@@ -545,26 +547,14 @@ $(document).ready(function () {
             reader.readAsDataURL(file);
         });
     }
-    $(document).on(
-        'click',
-        '.remove-image',
-        function () {
-            let index =
-                parseInt($(this).data('index'));
-            selectedFiles.splice(
-                index,
-                1
-            );
-            let dataTransfer =
-                new DataTransfer();
-            selectedFiles.forEach(function (file) {
-                dataTransfer.items.add(file);
-            });
-            $('#productImages')[0].files =
-                dataTransfer.files;
-            showImagePreview();
-        }
-    );
+    $(document).on('click', '.remove-image', function() {
+        let index = $(this).data('index');
+        selectedFiles.splice(index, 1);
+        let dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        $('#productImages')[0].files = dataTransfer.files;
+        showImagePreview();
+    });
     $(document).on(
         'click',
         '.delete-image-btn',
