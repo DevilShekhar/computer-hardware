@@ -53,4 +53,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/builder-products/categories/{brand}', [BuilderProductController::class, 'getCategories'])->name('builder-products.categories');
     Route::get('/builder-products/sub-categories/{category}', [BuilderProductController::class, 'getSubCategories'])->name('builder-products.sub-categories');
     Route::resource('builder-products',BuilderProductController::class);
+    Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])
+    ->name('products.add-stock');
+    Route::get(
+        '/products/{product}/stock-history',
+        [ProductController::class, 'inventoryHistory']
+    )->name('products.stock-history');
 });

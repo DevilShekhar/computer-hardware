@@ -131,7 +131,7 @@
                                 <h5>Description</h5>
                                 <div class="card">
                                     <div class="card-body">
-                                        {{ $product->description ?? '-' }}
+                                        {!! $product->description ?? '-' !!}
                                     </div>
                                 </div>
                             </div>

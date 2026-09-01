@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Inventory;
+use App\Models\InventoryHistory;
 use App\Models\Product;
 use App\Models\ProductBrand;
-use App\Models\Category;
-use App\Models\SubCategory;
 use App\Models\ProductImage;
 use App\Models\ProductSpecification;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -24,7 +26,7 @@ class ProductController extends Controller
             'subCategory',
             'images',
             'createdBy',
-            'updatedBy'
+            'updatedBy',
         ])->latest()->get();
 
         return view('admin.products.index', compact('products'));
@@ -79,11 +81,11 @@ class ProductController extends Controller
             ->where('product_brand_id', $request->product_brand_id)
             ->exists();
 
-        if (!$categoryExists) {
+        if (! $categoryExists) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'category_id' => 'Selected category does not belong to the selected product brand.'
+                    'category_id' => 'Selected category does not belong to the selected product brand.',
                 ]);
         }
 
@@ -92,18 +94,18 @@ class ProductController extends Controller
             ->where('product_brand_id', $request->product_brand_id)
             ->exists();
 
-        if (!$subCategoryExists) {
+        if (! $subCategoryExists) {
             return back()
                 ->withInput()
                 ->withErrors([
-                    'sub_category_id' => 'Selected sub category does not belong to the selected category and product brand.'
+                    'sub_category_id' => 'Selected sub category does not belong to the selected category and product brand.',
                 ]);
         }
 
         $slug = Str::slug($request->name);
 
         if (Product::where('slug', $slug)->exists()) {
-            $slug .= '-' . time();
+            $slug .= '-'.time();
         }
 
         $product = Product::create([
@@ -145,7 +147,7 @@ class ProductController extends Controller
             foreach ($request->specification_name as $key => $name) {
                 $value = $request->specification_value[$key] ?? null;
 
-                if (!empty($name) && !empty($value)) {
+                if (! empty($name) && ! empty($value)) {
                     ProductSpecification::create([
                         'product_id' => $product->id,
                         'specification_name' => $name,
@@ -169,7 +171,7 @@ class ProductController extends Controller
             'images',
             'specifications',
             'createdBy',
-            'updatedBy'
+            'updatedBy',
         ]);
 
         return view('admin.products.show', compact('product'));
@@ -201,7 +203,7 @@ class ProductController extends Controller
 
         $product->load([
             'images',
-            'specifications'
+            'specifications',
         ]);
 
         return view('admin.products.edit', compact(
@@ -219,7 +221,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'required|exists:sub_categories,id',
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|max:255|unique:products,sku,' . $product->id,
+            'sku' => 'required|string|max:255|unique:products,sku,'.$product->id,
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
             'short_description' => 'nullable|string',
@@ -240,19 +242,18 @@ class ProductController extends Controller
             'meta_description' => 'nullable|string',
         ]);
         $categoryExists = Category::where('id', $request->category_id)->where('product_brand_id', $request->product_brand_id)->exists();
-        if (!$categoryExists) {
-            return back()->withInput()->withErrors(['category_id' =>'Selected category does not belong to the selected product brand.']);
+        if (! $categoryExists) {
+            return back()->withInput()->withErrors(['category_id' => 'Selected category does not belong to the selected product brand.']);
         }
         $subCategoryExists = SubCategory::where('id', $request->sub_category_id)->where('category_id', $request->category_id)->where('product_brand_id', $request->product_brand_id)->exists();
-        if (!$subCategoryExists) {
+        if (! $subCategoryExists) {
             return back()->withInput()->withErrors([
-                    'sub_category_id' => 'Selected sub category does not belong to the selected category and product brand.'
-                ]);
+                'sub_category_id' => 'Selected sub category does not belong to the selected category and product brand.',
+            ]);
         }
         $slug = Str::slug($request->name);
-        if (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists())
-        {
-           $slug .= '-' . time();
+        if (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
+            $slug .= '-'.time();
         }
         $product->update([
             'product_brand_id' => $request->product_brand_id,
@@ -277,7 +278,7 @@ class ProductController extends Controller
         ]);
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imagePath = $image->store('products','public');
+                $imagePath = $image->store('products', 'public');
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image' => $imagePath,
@@ -290,20 +291,22 @@ class ProductController extends Controller
         $specificationValues = $request->input('specification_value', []);
         foreach ($specificationNames as $key => $name) {
             $value = $specificationValues[$key] ?? null;
-            if (!empty(trim($name ?? '')) && !empty(trim($value ?? '')))
-            {
+            if (! empty(trim($name ?? '')) && ! empty(trim($value ?? ''))) {
                 ProductSpecification::create([
                     'product_id' => $product->id,
-                    'specification_name' =>trim($name),
-                    'specification_value' =>trim($value),
+                    'specification_name' => trim($name),
+                    'specification_value' => trim($value),
                 ]);
             }
         }
-        return redirect()->route('products.index')->with('success','Product updated successfully.');
+
+        return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
+
     public function destroy(Product $product)
     {
-        $product->update(['status' => 0,'updated_by' => Auth::id(),]);
+        $product->update(['status' => 0, 'updated_by' => Auth::id()]);
+
         return redirect()->route('products.index')->with('success', 'Product deactivated successfully.');
     }
 
@@ -313,6 +316,7 @@ class ProductController extends Controller
             Storage::disk('public')->delete($image->image);
         }
         $image->delete();
+
         return back()->with('success', 'Product image deleted successfully.');
     }
 
@@ -322,6 +326,7 @@ class ProductController extends Controller
             ->where('status', 1)
             ->latest()
             ->get(['id', 'name']);
+
         return response()->json($categories);
     }
 
@@ -331,6 +336,113 @@ class ProductController extends Controller
             ->where('status', 1)
             ->latest()
             ->get(['id', 'name']);
+
         return response()->json($subCategories);
+    }
+
+    public function addStock(Request $request, Product $product)
+    {
+        $request->validate([
+            'stock_action' => 'required|in:add,update',
+            'quantity' => 'required|integer|min:1',
+            'reason' => 'nullable|string|max:255',
+        ]);
+
+        $previousStock = $product->stock_quantity;
+
+        if ($request->stock_action === 'add') {
+
+            $newStock = $previousStock + $request->quantity;
+
+            // inventories table enum is in/out
+            $inventoryType = 'in';
+
+            // inventory_histories table enum is add/remove/adjustment
+            $historyType = 'add';
+
+        } else {
+
+            $newStock = $request->quantity;
+
+            // inventory table does not support adjustment,
+            // so use out for stock adjustment record
+            $inventoryType = 'out';
+
+            // history table supports adjustment
+            $historyType = 'adjustment';
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store in inventories table
+        |--------------------------------------------------------------------------
+        */
+        Inventory::create([
+            'product_id' => $product->id,
+            'type' => $inventoryType,
+            'quantity' => $request->quantity,
+            'previous_stock' => $previousStock,
+            'new_stock' => $newStock,
+            'reason' => $request->reason,
+            'created_by' => Auth::id(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Store in inventory_histories table
+        |--------------------------------------------------------------------------
+        */
+        InventoryHistory::create([
+            'product_id' => $product->id,
+            'previous_quantity' => $previousStock,
+            'quantity_added' => $request->stock_action === 'add'
+                ? $request->quantity
+                : 0,
+            'new_quantity' => $newStock,
+            'type' => $historyType,
+            'note' => $request->reason,
+            'created_by' => Auth::id(),
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Update Product Stock
+        |--------------------------------------------------------------------------
+        */
+        $product->update([
+            'stock_quantity' => $newStock,
+            'updated_by' => Auth::id(),
+        ]);
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product stock updated successfully.');
+    }
+
+    public function inventoryHistory(Product $product)
+    {
+        $histories = InventoryHistory::with('createdBy')
+            ->where('product_id', $product->id)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'product' => $product->name,
+            'sku' => $product->sku,
+            'current_stock' => $product->stock_quantity,
+            'history' => $histories->map(function ($item) {
+                return [
+                    'created_at' => $item->created_at
+                        ? $item->created_at->format('d-m-Y h:i A')
+                        : '-',
+                    'type' => $item->type,
+                    'quantity' => $item->quantity_added,
+                    'previous_stock' => $item->previous_quantity,
+                    'new_stock' => $item->new_quantity,
+                    'reason' => $item->note ?? '-',
+                    'created_by' => $item->createdBy->name ?? 'System',
+                ];
+            })->values(),
+        ]);
     }
 }
