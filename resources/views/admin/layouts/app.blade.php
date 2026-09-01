@@ -229,7 +229,6 @@
                                 </li>
                             </ul>
                         </li>
-
                         <li class="dropdown {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="shield"></i>
@@ -251,24 +250,36 @@
 
                         <li
                             class="dropdown {{ request()->routeIs('builder-brands.*', 'builder-categories.*') ? 'active' : '' }}">
+                        <li class="dropdown {{ request()->routeIs('builder-brands.*', 'builder-categories.*', 'builder-sub-categories.*', 'builder-products.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="cpu"></i>
                                 <span>PC Builder</span>
                             </a>
+
                             <ul class="dropdown-menu">
                                 <li class="{{ request()->routeIs('builder-brands.*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('builder-brands.index') }}">
                                         Brand
                                     </a>
                                 </li>
+
                                 <li class="{{ request()->routeIs('builder-categories.*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('builder-categories.index') }}">
                                         Category
                                     </a>
                                 </li>
-                                <li class="{{ request()->routeIs('builder-sub-categories.*') ? 'active' : '' }}"> <a
-                                        class="nav-link" href="{{ route('builder-sub-categories.index') }}"> Sub
-                                        Category </a> </li>
+
+                                <li class="{{ request()->routeIs('builder-sub-categories.*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('builder-sub-categories.index') }}">
+                                        Sub Category
+                                    </a>
+                                </li>
+
+                                <li class="{{ request()->routeIs('builder-products.*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('builder-products.index') }}">
+                                        Product
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li

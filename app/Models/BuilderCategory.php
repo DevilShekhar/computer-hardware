@@ -36,4 +36,11 @@ class BuilderCategory extends Model
     {
         return $this->hasMany(BuilderSubCategory::class, 'category_id');
     }
+    public function builderProducts()
+    {
+        return $this->hasMany(
+            BuilderProduct::class,
+            'builder_category_id'
+        );
+    }
 }
