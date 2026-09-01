@@ -50,8 +50,12 @@ class BuilderType extends Model
     {
         return $this->hasMany(BuilderCategory::class,'builder_type_id');
     }
+    public function builderProducts()
+    {
+        return $this->hasMany(BuilderProduct::class, 'builder_type_id');
     public function builderSubCategories()
     {
         return $this->hasMany(BuilderSubCategory::class, 'builder_type_id');
+
     }
 }
