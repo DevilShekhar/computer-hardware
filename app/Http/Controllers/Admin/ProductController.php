@@ -250,7 +250,7 @@ class ProductController extends Controller
                 ]);
         }
         $slug = Str::slug($request->name);
-        if (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) 
+        if (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists())
         {
            $slug .= '-' . time();
         }

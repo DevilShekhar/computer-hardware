@@ -8,6 +8,7 @@ class Coupon extends Model
 {
     protected $fillable = [
         'code',
+        'product_id',
         'discount_type',
         'discount_value',
         'minimum_order_value',
@@ -26,4 +27,9 @@ class Coupon extends Model
         'end_date' => 'date',
         'status' => 'boolean',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

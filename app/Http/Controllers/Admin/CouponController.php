@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CouponController extends Controller
@@ -14,7 +15,6 @@ class CouponController extends Controller
     public function index()
     {
         $coupons = Coupon::latest()->get();
-
         return view('admin.coupons.index', compact('coupons'));
     }
 
@@ -23,7 +23,11 @@ class CouponController extends Controller
      */
     public function create()
     {
-        return view('admin.coupons.create');
+        $products = Product::where('status', 1)
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.coupons.create', compact('products'));
     }
 
     /**
@@ -33,6 +37,7 @@ class CouponController extends Controller
     {
         $request->validate([
             'code' => 'required|string|max:50|unique:coupons,code',
+            'product_id' => 'nullable|exists:products,id',
             'discount_type' => 'required|in:percentage,flat',
             'discount_value' => 'required|numeric|min:0',
             'minimum_order_value' => 'nullable|numeric|min:0',
@@ -45,6 +50,7 @@ class CouponController extends Controller
 
         Coupon::create([
             'code' => strtoupper($request->code),
+            'product_id' => $request->product_id,
             'discount_type' => $request->discount_type,
             'discount_value' => $request->discount_value,
             'minimum_order_value' => $request->minimum_order_value,
@@ -62,19 +68,15 @@ class CouponController extends Controller
     }
 
     /**
-     * Display coupon details.
-     */
-    public function show(Coupon $coupon)
-    {
-        return view('admin.coupons.show', compact('coupon'));
-    }
-
-    /**
      * Show edit coupon form.
      */
     public function edit(Coupon $coupon)
     {
-        return view('admin.coupons.edit', compact('coupon'));
+        $products = Product::where('status', 1)
+            ->orWhere('id', $coupon->product_id)
+            ->orderBy('name')
+            ->get();
+        return view('admin.coupons.edit', compact('coupon', 'products'));
     }
 
     /**
@@ -84,6 +86,7 @@ class CouponController extends Controller
     {
         $request->validate([
             'code' => 'required|string|max:50|unique:coupons,code,'.$coupon->id,
+            'product_id' => 'nullable|exists:products,id',
             'discount_type' => 'required|in:percentage,flat',
             'discount_value' => 'required|numeric|min:0',
             'minimum_order_value' => 'nullable|numeric|min:0',
@@ -96,6 +99,7 @@ class CouponController extends Controller
 
         $coupon->update([
             'code' => strtoupper($request->code),
+            'product_id' => $request->product_id,
             'discount_type' => $request->discount_type,
             'discount_value' => $request->discount_value,
             'minimum_order_value' => $request->minimum_order_value,
