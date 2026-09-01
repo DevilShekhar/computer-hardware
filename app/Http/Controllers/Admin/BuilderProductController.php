@@ -101,10 +101,6 @@ class BuilderProductController extends Controller
                 'integer',
                 'min:0',
             ],
-            'status' => [
-                'nullable',
-                'boolean',
-            ],
         ], [
             'product_id.required' => 'Product is required.',
             'builder_type_id.required' => 'Builder type is required.',
@@ -170,7 +166,7 @@ class BuilderProductController extends Controller
         }
 
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
-        $validated['status'] = $request->boolean('status');
+        $validated['status'] = 1;
         $validated['created_by'] = Auth::id();
         $validated['updated_by'] = Auth::id();
 
