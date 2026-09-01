@@ -46,4 +46,8 @@ class BuilderType extends Model
     {
         return $this->hasMany(BuilderBrand::class, 'builder_type_id');
     }
+    public function builderCategories()
+    {
+        return $this->hasMany(BuilderCategory::class,'builder_type_id');
+    }
 }
