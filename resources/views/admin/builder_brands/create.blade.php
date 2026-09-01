@@ -12,7 +12,6 @@
             <div class="breadcrumb-item active">Create PC Builder Brand</div>
         </div>
     </div>
-
     <div class="section-body">
         <div class="row">
             <div class="col-12">
@@ -26,41 +25,61 @@
 
                         <div class="card-body">
                             @if($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                             @endif
 
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label for="name">Brand Name <span class="text-danger">*</span></label>
-                                    <input type="text"
-                                        id="name"
-                                        name="name"
+                                    <label for="builder_type_id">
+                                        Builder Type <span class="text-danger">*</span>
+                                    </label>
+
+                                    <select id="builder_type_id" name="builder_type_id"
+                                        class="form-control @error('builder_type_id') is-invalid @enderror" required>
+                                        <option value="">Select Builder Type</option>
+
+                                        @foreach($builderTypes as $builderType)
+                                        <option value="{{ $builderType->id }}"
+                                            {{ old('builder_type_id') == $builderType->id ? 'selected' : '' }}>
+                                            {{ $builderType->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+
+                                    @error('builder_type_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="name">
+                                        Brand Name <span class="text-danger">*</span>
+                                    </label>
+
+                                    <input type="text" id="name" name="name"
                                         class="form-control @error('name') is-invalid @enderror"
-                                        value="{{ old('name') }}"
-                                        placeholder="Enter brand name"
-                                        required>
+                                        value="{{ old('name') }}" placeholder="Enter brand name" required>
 
                                     @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="form-group col-md-6">
                                     <label for="brand_image">Brand Image</label>
-                                    <input type="file"
-                                        id="brand_image"
-                                        name="brand_image"
+
+                                    <input type="file" id="brand_image" name="brand_image"
                                         class="form-control @error('brand_image') is-invalid @enderror"
                                         accept=".jpg,.jpeg,.png,.webp">
 
                                     @error('brand_image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
 
                                     <small class="form-text text-muted">
@@ -70,41 +89,37 @@
 
                                 <div class="form-group col-md-6">
                                     <label for="meta_title">Meta Title</label>
-                                    <input type="text"
-                                        id="meta_title"
-                                        name="meta_title"
+
+                                    <input type="text" id="meta_title" name="meta_title"
                                         class="form-control @error('meta_title') is-invalid @enderror"
-                                        value="{{ old('meta_title') }}"
-                                        placeholder="Enter meta title">
+                                        value="{{ old('meta_title') }}" placeholder="Enter meta title">
 
                                     @error('meta_title')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="form-group col-md-6">
                                     <label for="meta_keyword">Meta Keyword</label>
-                                    <textarea id="meta_keyword"
-                                        name="meta_keyword"
-                                        class="form-control @error('meta_keyword') is-invalid @enderror"
-                                        rows="4"
+
+                                    <textarea id="meta_keyword" name="meta_keyword"
+                                        class="form-control @error('meta_keyword') is-invalid @enderror" rows="4"
                                         placeholder="Enter meta keywords">{{ old('meta_keyword') }}</textarea>
 
                                     @error('meta_keyword')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="form-group col-md-12">
                                     <label for="meta_description">Meta Description</label>
-                                    <textarea id="meta_description"
-                                        name="meta_description"
-                                        class="form-control @error('meta_description') is-invalid @enderror"
-                                        rows="5"
+
+                                    <textarea id="meta_description" name="meta_description"
+                                        class="form-control @error('meta_description') is-invalid @enderror" rows="5"
                                         placeholder="Enter meta description">{{ old('meta_description') }}</textarea>
 
                                     @error('meta_description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -114,6 +129,7 @@
                             <a href="{{ route('builder-brands.index') }}" class="btn btn-secondary">
                                 Cancel
                             </a>
+
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Save Brand
                             </button>
@@ -123,6 +139,7 @@
             </div>
         </div>
     </div>
+
 </section>
 
 @endsection

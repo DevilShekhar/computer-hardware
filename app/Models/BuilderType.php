@@ -42,4 +42,8 @@ class BuilderType extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+    public function builderBrands()
+    {
+        return $this->hasMany(BuilderBrand::class, 'builder_type_id');
+    }
 }
