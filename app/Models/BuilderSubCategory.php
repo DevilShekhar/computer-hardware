@@ -12,6 +12,7 @@ class BuilderSubCategory extends Model
     protected $table = 'builder_sub_categories';
 
     protected $fillable = [
+        'builder_type_id',
         'brand_id',
         'category_id',
         'name',
@@ -29,6 +30,11 @@ class BuilderSubCategory extends Model
         'status' => 'boolean',
     ];
 
+    public function builderType()
+    {
+        return $this->belongsTo(BuilderType::class, 'builder_type_id');
+    }
+
     public function brand()
     {
         return $this->belongsTo(BuilderBrand::class, 'brand_id');
@@ -38,13 +44,12 @@ class BuilderSubCategory extends Model
     {
         return $this->belongsTo(BuilderCategory::class, 'category_id');
     }
+
     public function builderProducts()
     {
-        return $this->hasMany(
-            BuilderProduct::class,
-            'builder_sub_category_id'
-        );
+        return $this->hasMany(BuilderProduct::class, 'builder_sub_category_id');
     }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
