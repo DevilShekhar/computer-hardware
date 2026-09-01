@@ -73,4 +73,8 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+    public function builderProducts()
+    {
+        return $this->hasMany(BuilderProduct::class,'product_id');
+    }
 }

@@ -38,6 +38,13 @@ class BuilderSubCategory extends Model
     {
         return $this->belongsTo(BuilderCategory::class, 'category_id');
     }
+    public function builderProducts()
+    {
+        return $this->hasMany(
+            BuilderProduct::class,
+            'builder_sub_category_id'
+        );
+    }
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
