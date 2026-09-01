@@ -314,13 +314,11 @@
 
                         <li class="dropdown">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="mail"></i>
-                                <span>Email</span>
+                               <i data-feather="tag"></i>
+                                <span>Coupons</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="email-inbox.html">Inbox</a></li>
-                                <li><a class="nav-link" href="email-compose.html">Compose</a></li>
-                                <li><a class="nav-link" href="email-read.html">Read</a></li>
+                                <li><a class="nav-link" href="{{ route('coupons.index') }}">Coupon List</a></li>
                             </ul>
                         </li>
 

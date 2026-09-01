@@ -77,4 +77,12 @@ class Product extends Model
     {
         return $this->hasMany(BuilderProduct::class,'product_id');
     }
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class);
+    }
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class);
+    }
 }

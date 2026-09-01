@@ -36,6 +36,7 @@
                                         <tr>
                                             <th class="text-center">#</th>
                                             <th>Coupon Code</th>
+                                            <th>Applicable Product</th>
                                             <th>Discount</th>
                                             <th>Minimum Order</th>
                                             <th>Usage</th>
@@ -52,6 +53,9 @@
                                                 </td>
                                                 <td>
                                                     <strong>{{ $coupon->code }}</strong>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ $coupon->product->name ?? 'All Products' }}</strong>
                                                 </td>
                                                 <td>
                                                     @if($coupon->discount_type == 'percentage')
