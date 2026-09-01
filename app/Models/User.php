@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable,HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
@@ -20,6 +20,7 @@ class User extends Authenticatable
         'profile',
         'status',
         'password',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -35,5 +36,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'status' => 'boolean',
         ];
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 }
