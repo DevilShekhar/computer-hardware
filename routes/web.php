@@ -41,7 +41,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('builder-types', BuilderTypeController::class);
     Route::resource('builder-brands', BuilderBrandController::class);
     Route::resource('builder-categories', BuilderCategoryController::class);
-    Route::resource('builder-sub-categories',BuilderSubCategoryController::class);
+    Route::get('builder-sub-categories/brands-by-type/{builderType}', [BuilderSubCategoryController::class, 'getBrandsByType'])->name('builder-sub-categories.brands-by-type');
+    Route::get('builder-sub-categories/categories-by-brand/{brand}', [BuilderSubCategoryController::class, 'getByBrand'])->name('builder-sub-categories.categories-by-brand');
+    Route::resource('builder-sub-categories', BuilderSubCategoryController::class);
     Route::get('builder-sub-categories/categories-by-brand/{brand}', [BuilderSubCategoryController::class, 'getByBrand'])->name('builder-sub-categories.categories-by-brand');
     Route::resource('product-brands', ProductBrandController::class);
     Route::resource('categories', CategoryController::class);
