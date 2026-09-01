@@ -37,9 +37,6 @@ class BuilderBrand extends Model
     }
     public function builderProducts()
     {
-        return $this->hasMany(
-            BuilderProduct::class,
-            'builder_brand_id'
-        );
+        return $this->hasMany(BuilderProduct::class,'builder_brand_id');
     }
 }
