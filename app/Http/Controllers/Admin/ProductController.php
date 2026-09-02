@@ -392,7 +392,18 @@ class ProductController extends Controller
             ->with('success', 'Product stock updated successfully.');
     }
 
-    public function inventoryHistory(Product $product)
+    public function inventoryHistory(Request $request)
+    {
+        $products = Product::orderBy('name')->get();
+
+        $selectedProduct = $request->get('product');
+
+        return view('admin.products.inventory-history', compact(
+            'products',
+            'selectedProduct'
+        ));
+    }
+    public function inventoryHistoryData(Product $product)
     {
         $histories = InventoryHistory::with('createdBy')
             ->where('product_id', $product->id)
@@ -403,6 +414,7 @@ class ProductController extends Controller
             'product' => $product->name,
             'sku' => $product->sku,
             'current_stock' => $product->stock_quantity,
+
             'history' => $histories->map(function ($item) {
                 return [
                     'created_at' => $item->created_at
