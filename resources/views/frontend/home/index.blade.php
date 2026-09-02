@@ -4,70 +4,53 @@
 
 @section('content')
 <!-- Start Hero Area -->
+<!-- Start Hero Area -->
 <div class="slider-with-banner">
     <div class="container">
         <div class="row">
             <!-- Begin Slider Area -->
-            <div class="col-lg-8 col-md-8">
+            <div class="col-lg-12 col-md-12">
                 <div class="slider-area pt-sm-30 pt-xs-30">
                     <div class="slider-active owl-carousel">
+                        @forelse($promotionalBanners as $banner)
                         <!-- Begin Single Slide Area -->
+                        <div class="single-slide align-center-left animation-style-01 bg-1" style="background-image: url('{{ asset('storage/' . $banner->image) }}');">
+                            <div class="slider-progress"></div>
+                            <div class="slider-content">
+                                @if($banner->short_description)
+                                    <h5> {{ $banner->short_description }} </h5>
+                                @endif
+                                @if($banner->title)
+                                    <h2>{{ $banner->title }}</h2>
+                                @endif
+                                @if($banner->button_text)
+                                <div class="default-btn slide-btn">
+                                    <a class="links" href="{{ $banner->button_url ?: '#' }}">
+                                        {{ $banner->button_text }}
+                                    </a>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @empty
+                        <!-- Default Slide -->
                         <div class="single-slide align-center-left animation-style-01 bg-1">
                             <div class="slider-progress"></div>
                             <div class="slider-content">
-                                <h5>Sale Offer <span>-20% Off</span> This Week</h5>
-                                <h2>Chamcham Galaxy S9 | S9+</h2>
-                                <h3>Starting at <span>$1209.00</span></h3>
+                                <h5> Welcome to Our Store</h5>
+                                <h2>Discover Our Latest Products</h2>
                                 <div class="default-btn slide-btn">
-                                    <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
+                                    <a class="links" href="{{ url('/shop') }}">
+                                        Shopping Now
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                        <!-- Single Slide Area End Here -->
-                        <!-- Begin Single Slide Area -->
-                        <div class="single-slide align-center-left animation-style-02 bg-2">
-                            <div class="slider-progress"></div>
-                            <div class="slider-content">
-                                <h5>Sale Offer <span>Black Friday</span> This Week</h5>
-                                <h2>Work Desk Surface Studio 2018</h2>
-                                <h3>Starting at <span>$824.00</span></h3>
-                                <div class="default-btn slide-btn">
-                                    <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Single Slide Area End Here -->
-                        <!-- Begin Single Slide Area -->
-                        <div class="single-slide align-center-left animation-style-01 bg-3">
-                            <div class="slider-progress"></div>
-                            <div class="slider-content">
-                                <h5>Sale Offer <span>-10% Off</span> This Week</h5>
-                                <h2>Phantom 4 Pro+ Obsidian</h2>
-                                <h3>Starting at <span>$1849.00</span></h3>
-                                <div class="default-btn slide-btn">
-                                    <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Single Slide Area End Here -->
+                        @endforelse
                     </div>
                 </div>
             </div>
             <!-- Slider Area End Here -->
-            <!-- Begin Li Banner Area -->
-            <div class="col-lg-4 col-md-4 text-center pt-sm-30 pt-xs-30">
-                <div class="li-banner">
-                    <a href="#">
-                        <img src="{{ asset('assets/frontend/assets/images/banner/1_1.jpg') }}" alt="">
-                    </a>
-                </div>
-                <div class="li-banner mt-15 mt-md-30 mt-xs-25 mb-xs-5">
-                    <a href="#">
-                        <img src="{{ asset('assets/frontend/assets/images/banner/1_2.jpg') }}" alt="">
-                    </a>
-                </div>
-            </div>
-            <!-- Li Banner Area End Here -->
         </div>
     </div>
 </div>
@@ -110,7 +93,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -155,7 +139,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/2.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/2.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -202,7 +187,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/3.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/3.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -247,7 +233,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/4.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/4.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -294,7 +281,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/5.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/5.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -339,7 +327,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/6.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/6.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -392,7 +381,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/12.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/12.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -437,7 +427,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -484,7 +475,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/10.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/10.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -529,7 +521,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/9.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/9.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -576,7 +569,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/8.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/8.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -621,7 +615,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/7.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/7.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -674,7 +669,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/3.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/3.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -719,7 +715,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/5.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/5.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -766,7 +763,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/7.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/7.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -811,7 +809,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/9.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/9.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -858,7 +857,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -903,7 +903,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/12.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/12.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -979,6 +980,7 @@
 </div>
 <!-- Li's Static Banner Area End Here -->
 <!-- Begin Li's Laptop Product Area -->
+<!-- Begin Product Area -->
 <section class="product-area li-laptop-product pt-60 pb-45 pt-sm-50 pt-xs-60">
     <div class="container">
         <div class="row">
@@ -986,292 +988,136 @@
             <div class="col-lg-12">
                 <div class="li-section-title">
                     <h2>
-                        <span>Laptop</span>
+                        <span>Our Products</span>
                     </h2>
-                    <ul class="li-sub-category-list">
-                        <li class="active"><a href="shop-left-sidebar.html">Prime Video</a></li>
-                        <li><a href="shop-left-sidebar.html">Computers</a></li>
-                        <li><a href="shop-left-sidebar.html">Electronics</a></li>
-                    </ul>
                 </div>
                 <div class="row">
                     <div class="product-active owl-carousel">
-                        <div class="col-lg-12">
-                            <!-- single-product-wrap start -->
-                            <div class="single-product-wrap">
-                                <div class="product-image">
-                                    <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="Li's Product Image">
-                                    </a>
-                                    <span class="sticker">New</span>
-                                </div>
-                                <div class="product_desc">
-                                    <div class="product_desc_info">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Graphic Corner</a>
-                                            </h5>
-                                            <div class="rating-box">
-                                                <ul class="rating">
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                </ul>
+                        @forelse($products as $product)
+                            <div class="col-lg-12">
+                                <!-- single-product-wrap start -->
+                                <div class="single-product-wrap">
+                                    <div class="product-image">
+                                        <a href="{{ url('/product/' . $product->slug) }}">
+                                            @php
+                                                $primaryImage = $product->images
+                                                    ->where('is_primary', true)
+                                                    ->first();
+                                                if (!$primaryImage) {
+                                                    $primaryImage = $product->images->first();
+                                                }
+                                            @endphp
+                                            @if($primaryImage && $primaryImage->image)
+                                                <img src="{{ asset('storage/' . $primaryImage->image) }}" alt="{{ $product->name }}">
+                                            @else
+                                                <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="{{ $product->name }}">
+                                            @endif
+                                        </a>
+                                        @if($product->is_discounted)
+                                            <span class="sticker">Sale</span>
+                                        @else
+                                            <span class="sticker">New</span>
+                                        @endif
+                                    </div>
+                                    <div class="product_desc">
+                                        <div class="product_desc_info">
+                                            <!-- Brand -->
+                                            <div class="product-review">
+                                                <h5 class="manufacturer">
+                                                    @if($product->productBrand)
+                                                        <a href="#">
+                                                            {{ $product->productBrand->name }}
+                                                        </a>
+                                                    @else
+                                                        <a href="#">
+                                                            Product
+                                                        </a>
+                                                    @endif
+                                                </h5>
+                                                <!-- Rating -->
+                                                <div class="rating-box">
+                                                    <ul class="rating">
+                                                        <li>
+                                                            <i class="fa fa-star-o"></i>
+                                                        </li>
+                                                        <li>
+                                                            <i class="fa fa-star-o"></i>
+                                                        </li>
+                                                        <li>
+                                                            <i class="fa fa-star-o"></i>
+                                                        </li>
+                                                        <li>
+                                                            <i class="fa fa-star-o"></i>
+                                                        </li>
+                                                        <li>
+                                                            <i class="fa fa-star-o"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <!-- Product Name -->
+                                            <h4>
+                                                <a class="product_name"
+                                                   href="{{ url('/product/' . $product->slug) }}">
+                                                    {{ $product->name }}
+                                                </a>
+                                            </h4>
+                                            <!-- Price -->
+                                            <div class="price-box">
+                                                @if($product->sale_price)
+                                                    <span class="new-price new-price-2">
+                                                        ₹{{ number_format($product->sale_price, 2) }}
+                                                    </span>
+                                                    <span class="old-price">
+                                                        ₹{{ number_format($product->price, 2) }}
+                                                    </span>
+                                                    @if($product->price > 0)
+                                                        @php
+                                                            $discountPercentage = (($product->price - $product->sale_price) / $product->price) * 100;
+                                                        @endphp
+                                                        <span class="discount-percentage">
+                                                            -{{ round($discountPercentage) }}%
+                                                        </span>
+                                                    @endif
+                                                @else
+                                                    <span class="new-price">
+                                                        ₹{{ number_format($product->price, 2) }}
+                                                    </span>
+                                                @endif
                                             </div>
                                         </div>
-                                        <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a>
-                                        </h4>
-                                        <div class="price-box">
-                                            <span class="new-price">$46.80</span>
+                                        <!-- Product Actions -->
+                                        <div class="add-actions">
+                                            <ul class="add-actions-link">
+                                                <li class="add-cart active">
+                                                    <a href="{{ url('/cart/add/' . $product->id) }}">
+                                                        Add to cart
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="links-details"
+                                                       href="#">
+                                                        <i class="fa fa-heart-o"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="quick-view"  data-toggle="modal" data-target="#exampleModalCenter"  href="#">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
-                                    <div class="add-actions">
-                                        <ul class="add-actions-link">
-                                            <li class="add-cart active"><a href="#">Add to cart</a></li>
-                                            <li><a class="links-details" href="single-product.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a class="quick-view" data-toggle="modal"
-                                                    data-target="#exampleModalCenter" href="#"><i
-                                                        class="fa fa-eye"></i></a></li>
-                                        </ul>
-                                    </div>
+                                </div>
+                                <!-- single-product-wrap end -->
+                            </div>
+                        @empty
+                            <div class="col-lg-12">
+                                <div class="text-center">
+                                    <p>No products available.</p>
                                 </div>
                             </div>
-                            <!-- single-product-wrap end -->
-                        </div>
-                        <div class="col-lg-12">
-                            <!-- single-product-wrap start -->
-                            <div class="single-product-wrap">
-                                <div class="product-image">
-                                    <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/2.jpg') }}" alt="Li's Product Image">
-                                    </a>
-                                    <span class="sticker">New</span>
-                                </div>
-                                <div class="product_desc">
-                                    <div class="product_desc_info">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                            <div class="rating-box">
-                                                <ul class="rating">
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <h4><a class="product_name" href="single-product.html">Mug Today is a good
-                                                day</a></h4>
-                                        <div class="price-box">
-                                            <span class="new-price new-price-2">$71.80</span>
-                                            <span class="old-price">$77.22</span>
-                                            <span class="discount-percentage">-7%</span>
-                                        </div>
-                                    </div>
-                                    <div class="add-actions">
-                                        <ul class="add-actions-link">
-                                            <li class="add-cart active"><a href="#">Add to cart</a></li>
-                                            <li><a class="links-details" href="single-product.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a class="quick-view" data-toggle="modal"
-                                                    data-target="#exampleModalCenter" href="#"><i
-                                                        class="fa fa-eye"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single-product-wrap end -->
-                        </div>
-                        <div class="col-lg-12">
-                            <!-- single-product-wrap start -->
-                            <div class="single-product-wrap">
-                                <div class="product-image">
-                                    <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/3.jpg') }}" alt="Li's Product Image">
-                                    </a>
-                                    <span class="sticker">New</span>
-                                </div>
-                                <div class="product_desc">
-                                    <div class="product_desc_info">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Graphic Corner</a>
-                                            </h5>
-                                            <div class="rating-box">
-                                                <ul class="rating">
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a>
-                                        </h4>
-                                        <div class="price-box">
-                                            <span class="new-price">$46.80</span>
-                                        </div>
-                                    </div>
-                                    <div class="add-actions">
-                                        <ul class="add-actions-link">
-                                            <li class="add-cart active"><a href="#">Add to cart</a></li>
-                                            <li><a class="links-details" href="single-product.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a class="quick-view" data-toggle="modal"
-                                                    data-target="#exampleModalCenter" href="#"><i
-                                                        class="fa fa-eye"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single-product-wrap end -->
-                        </div>
-                        <div class="col-lg-12">
-                            <!-- single-product-wrap start -->
-                            <div class="single-product-wrap">
-                                <div class="product-image">
-                                    <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/4.jpg') }}" alt="Li's Product Image">
-                                    </a>
-                                    <span class="sticker">New</span>
-                                </div>
-                                <div class="product_desc">
-                                    <div class="product_desc_info">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                            <div class="rating-box">
-                                                <ul class="rating">
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <h4><a class="product_name" href="single-product.html">Mug Today is a good
-                                                day</a></h4>
-                                        <div class="price-box">
-                                            <span class="new-price new-price-2">$71.80</span>
-                                            <span class="old-price">$77.22</span>
-                                            <span class="discount-percentage">-7%</span>
-                                        </div>
-                                    </div>
-                                    <div class="add-actions">
-                                        <ul class="add-actions-link">
-                                            <li class="add-cart active"><a href="#">Add to cart</a></li>
-                                            <li><a class="links-details" href="single-product.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a class="quick-view" data-toggle="modal"
-                                                    data-target="#exampleModalCenter" href="#"><i
-                                                        class="fa fa-eye"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single-product-wrap end -->
-                        </div>
-                        <div class="col-lg-12">
-                            <!-- single-product-wrap start -->
-                            <div class="single-product-wrap">
-                                <div class="product-image">
-                                    <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/5.jpg') }}" alt="Li's Product Image">
-                                    </a>
-                                    <span class="sticker">New</span>
-                                </div>
-                                <div class="product_desc">
-                                    <div class="product_desc_info">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Graphic Corner</a>
-                                            </h5>
-                                            <div class="rating-box">
-                                                <ul class="rating">
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <h4><a class="product_name" href="single-product.html">Accusantium dolorem1</a>
-                                        </h4>
-                                        <div class="price-box">
-                                            <span class="new-price">$46.80</span>
-                                        </div>
-                                    </div>
-                                    <div class="add-actions">
-                                        <ul class="add-actions-link">
-                                            <li class="add-cart active"><a href="#">Add to cart</a></li>
-                                            <li><a class="links-details" href="single-product.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a class="quick-view" data-toggle="modal"
-                                                    data-target="#exampleModalCenter" href="#"><i
-                                                        class="fa fa-eye"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single-product-wrap end -->
-                        </div>
-                        <div class="col-lg-12">
-                            <!-- single-product-wrap start -->
-                            <div class="single-product-wrap">
-                                <div class="product-image">
-                                    <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/6.jpg') }}" alt="Li's Product Image">
-                                    </a>
-                                    <span class="sticker">New</span>
-                                </div>
-                                <div class="product_desc">
-                                    <div class="product_desc_info">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                            <div class="rating-box">
-                                                <ul class="rating">
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                    <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <h4><a class="product_name" href="single-product.html">Mug Today is a good
-                                                day</a></h4>
-                                        <div class="price-box">
-                                            <span class="new-price new-price-2">$71.80</span>
-                                            <span class="old-price">$77.22</span>
-                                            <span class="discount-percentage">-7%</span>
-                                        </div>
-                                    </div>
-                                    <div class="add-actions">
-                                        <ul class="add-actions-link">
-                                            <li class="add-cart active"><a href="#">Add to cart</a></li>
-                                            <li><a class="links-details" href="single-product.html"><i
-                                                        class="fa fa-heart-o"></i></a></li>
-                                            <li><a class="quick-view" data-toggle="modal"
-                                                    data-target="#exampleModalCenter" href="#"><i
-                                                        class="fa fa-eye"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- single-product-wrap end -->
-                        </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -1279,6 +1125,7 @@
         </div>
     </div>
 </section>
+<!-- Product Area End Here -->
 <!-- Li's Laptop Product Area End Here -->
 <!-- Begin Li's TV & Audio Product Area -->
 <section class="product-area li-laptop-product li-tv-audio-product pb-45">
@@ -1303,7 +1150,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/3.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/3.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -1348,7 +1196,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/5.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/5.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -1395,7 +1244,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/7.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/7.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -1440,7 +1290,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/9.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/9.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -1487,7 +1338,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -1532,7 +1384,8 @@
                             <div class="single-product-wrap">
                                 <div class="product-image">
                                     <a href="single-product.html">
-                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}" alt="Li's Product Image">
+                                        <img src="{{ asset('assets/frontend/assets/images/product/large-size/11.jpg') }}"
+                                            alt="Li's Product Image">
                                     </a>
                                     <span class="sticker">New</span>
                                 </div>
@@ -1627,7 +1480,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/1.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/1.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1657,7 +1511,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/2.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/2.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1687,7 +1542,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/3.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/3.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1732,7 +1588,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/4.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/4.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1762,7 +1619,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/5.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/5.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1792,7 +1650,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/6.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/6.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1837,7 +1696,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/6.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/6.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1867,7 +1727,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/4.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/4.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
@@ -1897,7 +1758,8 @@
                                 <div class="group-featured-pro-wrapper">
                                     <div class="product-img">
                                         <a href="product-details.html">
-                                            <img src="{{ asset('assets/frontend/assets/images/featured-product/2.jpg') }}">
+                                            <img
+                                                src="{{ asset('assets/frontend/assets/images/featured-product/2.jpg') }}">
                                         </a>
                                     </div>
                                     <div class="featured-pro-content">
