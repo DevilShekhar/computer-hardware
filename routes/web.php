@@ -14,13 +14,11 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\BuilderTypeController;
 use App\Http\Controllers\Admin\BuilderProductController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
 
@@ -66,3 +64,5 @@ Route::middleware(['auth'])->group(function () {
     )->name('products.stock-history');
 
 });
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
