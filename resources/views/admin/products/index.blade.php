@@ -59,6 +59,11 @@
                                                         ₹{{ number_format($product->price, 2) }}
                                                     </del>
                                                 </small>
+                                                @if($product->is_discounted)
+                                                    <p class="text-success mb-0">
+                                                        <small>On Discount</small>
+                                                    </p>
+                                                @endif
                                             @else
                                                 <strong>
                                                     ₹{{ number_format($product->price, 2) }}

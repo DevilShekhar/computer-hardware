@@ -108,6 +108,17 @@
                                         </div>
                                     @enderror
                                 </div>
+                                <div class="form-group col-md-3">
+                                    <label for="is_discounted">Discounted?</label>
+                                    <select name="is_discounted" id="is_discounted" class="form-control">
+                                        <option value="0" {{ old('is_discounted', $product->is_discounted) == 0 ? 'selected' : '' }}>
+                                            No
+                                        </option>
+                                        <option value="1" {{ old('is_discounted', $product->is_discounted) == 1 ? 'selected' : '' }}>
+                                            Yes
+                                        </option>
+                                    </select>
+                                </div>
                                 <div class="form-group col-md-4">
                                     <label> Stock Quantity <span class="text-danger">*</span> </label>
                                     <input  type="number"  name="stock_quantity"  value="{{ old('stock_quantity', $product->stock_quantity) }}" class="form-control @error('stock_quantity') is-invalid @enderror"  placeholder="Enter stock quantity">

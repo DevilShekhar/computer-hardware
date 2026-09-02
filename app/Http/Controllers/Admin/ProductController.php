@@ -62,6 +62,7 @@ class ProductController extends Controller
             'meta_title' => 'nullable|string',
             'meta_keywords' => 'nullable|string',
             'meta_description' => 'nullable|string',
+            'is_discounted' => 'required|boolean',
         ], [
             'product_brand_id.required' => 'Product brand is required.',
             'product_brand_id.exists' => 'Selected product brand does not exist.',
@@ -129,6 +130,7 @@ class ProductController extends Controller
             'status' => 1,
             'created_by' => Auth::id(),
             'updated_by' => Auth::id(),
+            'is_discounted' => $request->is_discounted,
         ]);
 
         if ($request->hasFile('images')) {
@@ -233,6 +235,7 @@ class ProductController extends Controller
             'gst_rate' => 'nullable|numeric|min:0|max:100',
             'warranty_information' => 'nullable|string|max:255',
             'status' => 'required|boolean',
+            'is_discounted' => 'required|boolean',
             'specification_name' => 'nullable|array',
             'specification_name.*' => 'nullable|string|max:255',
             'specification_value' => 'nullable|array',
@@ -275,6 +278,7 @@ class ProductController extends Controller
             'meta_description' => $request->meta_description,
             'status' => $request->status,
             'updated_by' => Auth::id(),
+            'is_discounted' => $request->is_discounted,
         ]);
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
