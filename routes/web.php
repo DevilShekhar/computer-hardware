@@ -11,18 +11,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SubCategoryController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
-
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -61,3 +54,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('builder-products', BuilderProductController::class);
     Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])->name('products.add-stock');
 });
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
