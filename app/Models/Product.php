@@ -30,6 +30,7 @@ class Product extends Model
         'status',
         'created_by',
         'updated_by',
+        'is_discounted'
     ];
 
     protected $casts = [
@@ -37,6 +38,7 @@ class Product extends Model
         'sale_price' => 'decimal:2',
         'gst_rate' => 'decimal:2',
         'status' => 'boolean',
+        'is_discounted' => 'boolean',
     ];
 
     public function productBrand()
