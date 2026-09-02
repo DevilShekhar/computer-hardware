@@ -20,16 +20,6 @@
 </head>
 
 <body>
-
-    <div class="preloader">
-        <div class="preloader-inner">
-            <div class="preloader-icon">
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </div>
-
     <header class="header navbar-area">
         <!-- Start Topbar -->
         <div class="topbar">
@@ -101,8 +91,8 @@
                 <div class="row align-items-center">
                     <div class="col-lg-3 col-md-3 col-7">
                         <!-- Start Header Logo -->
-                        <a class="navbar-brand" href="index-2.html">
-                            <img src="assets/images/logo/logo.svg" alt="Logo">
+                        <a class="navbar-brand" href="{{ route('home') }}">
+                            <img src="{{ asset('assets/frontend/assets/images/logo/logo.svg') }}" alt="Logo">
                         </a>
                         <!-- End Header Logo -->
                     </div>
@@ -341,8 +331,8 @@
                     <div class="row">
                         <div class="col-lg-3 col-md-4 col-12">
                             <div class="footer-logo">
-                                <a href="index-2.html">
-                                    <img src="assets/images/logo/white-logo.svg" alt="#">
+                                <a href="{{ route('home') }}">
+                                    <img src="{{ asset('assets/frontend/assets/images/logo/logo.svg') }}" alt="Logo">
                                 </a>
                             </div>
                         </div>
