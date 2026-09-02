@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PromotionalBannerController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\OurProductController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -62,4 +63,6 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('promotional-banners/{promotionalBanner}/activate',[PromotionalBannerController::class, 'activate'])->name('promotional-banners.activate');
 });
 
-Route::get('/', [HomeController::class, 'index'])->name('home');  
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/our-products', [OurProductController::class, 'index'])->name('our-products');
+Route::get('/our-product/{slug}', [OurProductController::class, 'show'])->name('product.details');
