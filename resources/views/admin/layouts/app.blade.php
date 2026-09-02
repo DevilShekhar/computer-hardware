@@ -19,7 +19,58 @@
     <link rel="stylesheet" href="{{ asset('assets/bundles/datatables/datatables.min.css') }}">
     <link rel="stylesheet"
         href="{{ asset('assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/select-2.css') }}">
+
     <link rel='shortcut icon' type='image/x-icon' href="{{ asset('assets/img/favicon.ico') }}" />
+    <style>
+        .select2-container {
+            width: 100% !important
+        }
+
+        .select2-container .select2-selection--single {
+            height: 42px;
+            border: 1px solid #e4e6fc;
+            border-radius: 4px
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 40px;
+            padding-left: 12px;
+            color: #495057;
+            font-size: 14px
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+            right: 8px
+        }
+
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #6777ef;
+            box-shadow: 0 0 0 2px rgba(103, 119, 239, .1)
+        }
+
+        .select2-dropdown {
+            border: 1px solid #e4e6fc;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .08)
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1px solid #e4e6fc;
+            border-radius: 4px;
+            padding: 7px 10px
+        }
+
+        .select2-container--default .select2-results__option {
+            padding: 8px 12px;
+            font-size: 14px
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background: #6777ef
+        }
+    </style>
 </head>
 
 <body>
