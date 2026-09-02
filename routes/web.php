@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PromotionalBannerController;
 use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/builder-products/sub-categories/{category}', [BuilderProductController::class, 'getSubCategories'])->name('builder-products.sub-categories');
     Route::resource('builder-products', BuilderProductController::class);
     Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])->name('products.add-stock');
+    Route::resource('promotional-banners', PromotionalBannerController::class);
+    Route::patch('promotional-banners/{promotionalBanner}/activate',[PromotionalBannerController::class, 'activate'])->name('promotional-banners.activate');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
