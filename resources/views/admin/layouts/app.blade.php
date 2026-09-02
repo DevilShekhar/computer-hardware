@@ -365,6 +365,26 @@
                                         Product Inventory History
                                     </a>
                                 </li>
+                                <li class="{{ request()->routeIs('products.stock') && request()->route('type') === 'available' ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('products.stock', 'available') }}">
+                                        <i class="bi bi-check-circle me-2"></i>
+                                        Available Products
+                                    </a>
+                                </li>
+
+                                <li class="{{ request()->routeIs('products.stock') && request()->route('type') === 'low' ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('products.stock', 'low') }}">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>
+                                        Low Stock Products
+                                    </a>
+                                </li>
+
+                                <li class="{{ request()->routeIs('products.stock') && request()->route('type') === 'out' ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('products.stock', 'out') }}">
+                                        <i class="bi bi-x-circle me-2"></i>
+                                        Out Of Stock Products
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 

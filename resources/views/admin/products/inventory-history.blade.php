@@ -44,7 +44,7 @@
                         <div class="card-header">
                             <h4><i class="fas fa-history mr-2"></i>Stock History</h4>
                         </div>
-                        <div class="card-body p-0">
+                        <div class="card-body">
                             <div id="history-container">
                                 <div class="text-center py-5">
                                     <div class="spinner-border text-primary mb-3" role="status"></div>
