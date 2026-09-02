@@ -1,27 +1,21 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BuilderBrandController;
 use App\Http\Controllers\Admin\BuilderCategoryController;
+use App\Http\Controllers\Admin\BuilderProductController;
 use App\Http\Controllers\Admin\BuilderSubCategoryController;
+use App\Http\Controllers\Admin\BuilderTypeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductBrandController;
-use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\BuilderTypeController;
-use App\Http\Controllers\Admin\BuilderProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Frontend\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
-
 Auth::routes();
-
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
@@ -48,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('sub-categories/categories-by-brand/{brand}', [SubCategoryController::class, 'getCategoriesByBrand'])->name('sub-categories.categories-by-brand');
     Route::resource('sub-categories', SubCategoryController::class);
     Route::delete('products/images/{image}', [ProductController::class, 'deleteImage'])->name('products.images.delete');
+    Route::get('/products/inventory-history',[ProductController::class, 'inventoryHistory'])->name('products.inventory-history');
+    Route::get('/products/{product}/inventory-history-data',[ProductController::class, 'inventoryHistoryData'])->name('products.inventory-history.data');
     Route::resource('products', ProductController::class);
     Route::get('products/categories-by-brand/{brand}', [ProductController::class, 'getCategoriesByBrand'])->name('products.categories-by-brand');
     Route::get('products/sub-categories-by-category/{category}', [ProductController::class, 'getSubCategoriesByCategory'])->name('products.sub-categories-by-category');
@@ -57,7 +53,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/builder-products/sub-categories/{category}', [BuilderProductController::class, 'getSubCategories'])->name('builder-products.sub-categories');
     Route::resource('builder-products', BuilderProductController::class);
     Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])->name('products.add-stock');
-    Route::get('/products/{product}/stock-history',[ProductController::class, 'inventoryHistory'])->name('products.stock-history');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');

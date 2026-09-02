@@ -83,39 +83,36 @@
                                         </td>
                                         <td>{{ $product->created_at ? $product->created_at->format('d-m-Y') : '-' }}</td>
                                         <td>
-    <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-success btn-sm mr-1 add-stock-btn" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-sku="{{ $product->sku }}" data-stock="{{ $product->stock_quantity }}" data-url="{{ route('products.add-stock', $product->id) }}" title="Add Stock">
-            <i class="fas fa-boxes"></i>
-        </button>
-        <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm mr-1" title="View">
-            <i class="fas fa-eye"></i>
-        </a>
-        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm mr-1" title="Edit">
-            <i class="fas fa-edit"></i>
-        </a>
-        <a href="javascript:void(0);"
-   class="btn btn-warning btn-sm mr-1 inventory-history-btn"
-   data-product-id="{{ $product->id }}"
-   data-product-name="{{ $product->name }}"
-   data-url="{{ route('products.stock-history', $product->id) }}"
-   title="Stock History">
-    <i class="fas fa-history"></i>
-</a>
-        @if($product->status)
-        <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="delete-product-form">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger btn-sm" title="Deactivate">
-                <i class="fas fa-ban"></i>
-            </button>
-        </form>
-        @else
-        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-success btn-sm" title="Activate">
-            <i class="fas fa-check"></i>
-        </a>
-        @endif
-    </div>
-</td>
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" class="btn btn-success btn-sm mr-1 add-stock-btn" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-sku="{{ $product->sku }}" data-stock="{{ $product->stock_quantity }}" data-url="{{ route('products.add-stock', $product->id) }}" title="Add Stock">
+                                                    <i class="fas fa-boxes"></i>
+                                                </button>
+                                                <a href="{{ route('products.inventory-history', ['product' => $product->id]) }}"
+                                                    class="btn btn-warning btn-sm mr-1"
+                                                    title="Inventory History">
+                                                        <i class="fas fa-history"></i>
+                                                </a>
+                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm mr-1" title="View">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm mr-1" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                @if($product->status)
+                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="delete-product-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" title="Deactivate">
+                                                        <i class="fas fa-ban"></i>
+                                                    </button>
+                                                </form>
+                                                @else
+                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-success btn-sm" title="Activate">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </td>
                                     </tr>
                                     @empty
                                     <tr>
@@ -183,53 +180,6 @@
                     </button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="stockHistoryModal" tabindex="-1" role="dialog" aria-labelledby="stockHistoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="stockHistoryModalLabel">
-                    <i class="fas fa-history"></i> Stock History
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-light">
-                    <strong>Product:</strong> <span id="historyProductName"></span>
-                    <br>
-                    <strong>SKU:</strong> <span id="historyProductSku"></span>
-                    <br>
-                    <strong>Current Stock:</strong> <span id="historyCurrentStock" class="badge badge-info"></span>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Date & Time</th>
-                                <th>Quantity</th>
-                                <th>Previous Stock</th>
-                                <th>New Stock</th>
-                                <th>Reason</th>
-                                <th>Added By</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stockHistoryBody">
-                            <tr>
-                                <td colspan="7" class="text-center">Loading...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
         </div>
     </div>
 </div>
