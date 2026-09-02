@@ -403,20 +403,27 @@ class ProductController extends Controller
             'selectedProduct'
         ));
     }
-    public function inventoryHistoryData(Product $product)
+
+    public function inventoryHistoryData(?Product $product = null)
     {
-        $histories = InventoryHistory::with('createdBy')
-            ->where('product_id', $product->id)
-            ->latest()
-            ->get();
+        $query = InventoryHistory::with(['product', 'createdBy'])
+            ->latest();
+
+        if ($product) {
+            $query->where('product_id', $product->id);
+        }
+
+        $histories = $query->get();
 
         return response()->json([
-            'product' => $product->name,
-            'sku' => $product->sku,
-            'current_stock' => $product->stock_quantity,
+            'product' => $product?->name,
+            'sku' => $product?->sku,
+            'current_stock' => $product?->stock_quantity,
 
             'history' => $histories->map(function ($item) {
                 return [
+                    'product' => $item->product->name ?? '-',
+                    'sku' => $item->product->sku ?? '-',
                     'created_at' => $item->created_at
                         ? $item->created_at->format('d-m-Y h:i A')
                         : '-',
