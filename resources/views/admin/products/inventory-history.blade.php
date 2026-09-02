@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
+
 @section('title', 'Inventory History')
+
 @section('content')
     <section class="section">
         <div class="section-header">
@@ -9,9 +11,11 @@
                 <div class="breadcrumb-item active">History</div>
             </div>
         </div>
+
         <div class="section-body">
             <div class="row">
-                {{-- Product Dropdown --}}
+
+                {{-- Product Select Card --}}
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
@@ -19,13 +23,13 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group mb-0">
-                                <label for="productSelect">Product <span class="text-danger">*</span></label>
+                                <label for="productSelect">Product</label>
                                 <select id="productSelect" class="form-control">
-                                    <option value="">Select Product</option>
+                                    <option value="">All Products</option>
                                     @foreach($products as $product)
-                                        <option value="{{ $product->id }}" {{ ($selectedProduct ?? '') == $product->id ? 'selected' : '' }}>
-                                            {{ $product->name }} - SKU: {{ $product->sku ?? '-' }} - Stock:
-                                            {{ $product->stock_quantity }}
+                                        <option value="{{ $product->id }}"
+                                            {{ ($selectedProduct ?? '') == $product->id ? 'selected' : '' }}>
+                                            {{ $product->name }} - SKU: {{ $product->sku ?? '-' }} - Stock: {{ $product->stock_quantity }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -34,7 +38,7 @@
                     </div>
                 </div>
 
-                {{-- Stock History --}}
+                {{-- History Card --}}
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-header">
@@ -42,134 +46,180 @@
                         </div>
                         <div class="card-body p-0">
                             <div id="history-container">
-                                <div class="text-center text-muted py-5">
-                                    <i class="fas fa-history fa-3x mb-3"></i>
-                                    <h6>Select a Product</h6>
-                                    <p class="mb-0">Select a product above to view its inventory history.</p>
+                                <div class="text-center py-5">
+                                    <div class="spinner-border text-primary mb-3" role="status"></div>
+                                    <p class="text-muted mb-0">Loading inventory history...</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
+@endsection
+
+@push('scripts')
+    {{-- Select2 JS --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const productSelect = document.getElementById('productSelect');
-            const historyContainer = document.getElementById('history-container');
-            const selectedProduct = @json($selectedProduct ?? null);
+        $(document).ready(function () {
 
-            function loadHistory(productId) {
-                if (!productId) {
-                    historyContainer.innerHTML = `
-                    <div class="text-center text-muted py-5">
-                        <i class="fas fa-history fa-3x mb-3"></i>
-                        <h6>Select a Product</h6>
-                        <p class="mb-0">Select a product above to view its inventory history.</p>
-                    </div>`;
-                    return;
-                }
+            // Initialize Select2
+            $('#productSelect').select2({
+                placeholder: 'Search and select product',
+                allowClear: true,
+                width: '100%'
+            });
 
+            const productSelect     = document.getElementById('productSelect');
+            const historyContainer  = document.getElementById('history-container');
+            const selectedProduct   = @json($selectedProduct ?? null);
+
+            /**
+             * Load inventory history
+             */
+            function loadHistory(productId = '') {
+                // Show loading spinner
                 historyContainer.innerHTML = `
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary mb-3" role="status"></div>
-                    <p class="text-muted mb-0">Loading inventory history...</p>
-                </div>`;
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary mb-3" role="status"></div>
+                        <p class="text-muted mb-0">Loading inventory history...</p>
+                    </div>`;
 
-                fetch(`/products/${productId}/inventory-history-data`)
+                const url = productId
+                    ? `/products/inventory-history-data/${productId}`
+                    : `/products/inventory-history-data`;
+
+                fetch(url)
                     .then(response => {
-                        if (!response.ok) throw new Error('Failed to load inventory history.');
+                        if (!response.ok) {
+                            throw new Error('Failed to load inventory history.');
+                        }
                         return response.json();
                     })
                     .then(data => {
-                        let html = `
-                        <div class="p-4 border-bottom">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <h5 class="mb-1">${escapeHtml(data.product)}</h5>
-                                    <p class="text-muted mb-0">SKU: ${escapeHtml(data.sku ?? '-')}</p>
-                                </div>
-                                <div class="col-md-4 text-md-right mt-3 mt-md-0">
-                                    <small class="text-muted d-block">Current Stock</small>
-                                    <h4 class="text-primary mb-0">${data.current_stock}</h4>
-                                </div>
-                            </div>
-                        </div>`;
+                        let html = '';
 
-                        if (!data.history || data.history.length === 0) {
+                        // Header section
+                        if (productId) {
                             html += `
-                            <div class="text-center text-muted py-5">
-                                <i class="fas fa-history fa-3x mb-3"></i>
-                                <h6>No Inventory History</h6>
-                                <p class="mb-0">No stock movements have been recorded for this product yet.</p>
-                            </div>`;
+                                <div class="p-4 border-bottom">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <h5 class="mb-1">${escapeHtml(data.product ?? '-')}</h5>
+                                            <p class="text-muted mb-0">SKU: ${escapeHtml(data.sku ?? '-')}</p>
+                                        </div>
+                                        <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                                            <small class="text-muted d-block">Current Stock</small>
+                                            <h4 class="text-primary mb-0">${data.current_stock ?? 0}</h4>
+                                        </div>
+                                    </div>
+                                </div>`;
                         } else {
                             html += `
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover mb-0" id="table-1">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Date & Time</th>
-                                            <th>Type</th>
-                                            <th>Quantity</th>
-                                            <th>Previous Stock</th>
-                                            <th>New Stock</th>
-                                            <th>Reason</th>
-                                            <th>Created By</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>`;
+                                <div class="p-4 border-bottom">
+                                    <h5 class="mb-1">
+                                        <i class="fas fa-boxes mr-2"></i>All Products
+                                    </h5>
+                                    <p class="text-muted mb-0">
+                                        Showing inventory history for all products.
+                                    </p>
+                                </div>`;
+                        }
+
+                        // Empty state
+                        if (!data.history || data.history.length === 0) {
+                            html += `
+                                <div class="text-center text-muted py-5">
+                                    <i class="fas fa-history fa-3x mb-3"></i>
+                                    <h6>No Inventory History</h6>
+                                    <p class="mb-0">No stock movements have been recorded yet.</p>
+                                </div>`;
+                        } else {
+                            // Table
+                            html += `
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover mb-0" id="table-1">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                ${!productId ? '<th>Product</th>' : ''}
+                                                <th>Date & Time</th>
+                                                <th>Type</th>
+                                                <th>Quantity</th>
+                                                <th>Previous Stock</th>
+                                                <th>New Stock</th>
+                                                <th>Reason</th>
+                                                <th>Created By</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
 
                             data.history.forEach((item, index) => {
                                 const type = (item.type ?? '').toLowerCase();
-                                let typeBadge = 'badge-secondary';
+
+                                let typeBadge     = 'badge-secondary';
                                 let quantityClass = 'font-weight-bold';
-                                let quantity = item.quantity;
+                                let quantity      = item.quantity ?? 0;
 
                                 if (['add', 'added', 'stock_in', 'in'].includes(type)) {
-                                    typeBadge = 'badge-success';
+                                    typeBadge     = 'badge-success';
                                     quantityClass = 'text-success font-weight-bold';
-                                    quantity = '+' + item.quantity;
+                                    quantity      = '+' + quantity;
                                 } else if (['remove', 'removed', 'stock_out', 'out'].includes(type)) {
-                                    typeBadge = 'badge-danger';
+                                    typeBadge     = 'badge-danger';
                                     quantityClass = 'text-danger font-weight-bold';
-                                    quantity = '-' + item.quantity;
+                                    quantity      = '-' + quantity;
                                 } else if (['update', 'updated'].includes(type)) {
                                     typeBadge = 'badge-primary';
                                 }
 
                                 html += `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${escapeHtml(item.created_at ?? '-')}</td>
-                                    <td>
-                                        <span class="badge ${typeBadge}">
-                                            ${escapeHtml(item.type ?? '-')}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="${quantityClass}">
-                                            ${quantity}
-                                        </span>
-                                    </td>
-                                    <td>${item.previous_stock ?? '-'}</td>
-                                    <td><strong>${item.new_stock ?? '-'}</strong></td>
-                                    <td>${escapeHtml(item.reason ?? '-')}</td>
-                                    <td>${escapeHtml(item.created_by ?? 'System')}</td>
-                                </tr>`;
+                                    <tr>
+                                        <td>${index + 1}</td>`;
+
+                                if (!productId) {
+                                    html += `
+                                        <td>
+                                            <strong>${escapeHtml(item.product ?? '-')}</strong><br>
+                                            <small class="text-muted">
+                                                SKU: ${escapeHtml(item.sku ?? '-')}
+                                            </small>
+                                        </td>`;
+                                }
+
+                                html += `
+                                        <td>${escapeHtml(item.created_at ?? '-')}</td>
+                                        <td>
+                                            <span class="badge ${typeBadge}">
+                                                ${escapeHtml(item.type ?? '-')}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="${quantityClass}">
+                                                ${quantity}
+                                            </span>
+                                        </td>
+                                        <td>${item.previous_stock ?? '-'}</td>
+                                        <td><strong>${item.new_stock ?? '-'}</strong></td>
+                                        <td>${escapeHtml(item.reason ?? '-')}</td>
+                                        <td>${escapeHtml(item.created_by ?? 'System')}</td>
+                                    </tr>`;
                             });
 
                             html += `
-                                    </tbody>
-                                </table>
-                            </div>`;
+                                        </tbody>
+                                    </table>
+                                </div>`;
                         }
 
+                        // Render HTML
                         historyContainer.innerHTML = html;
 
+                        // Initialize DataTable if data exists
                         if (data.history && data.history.length > 0) {
                             $('#table-1').DataTable({
                                 ordering: true,
@@ -194,28 +244,31 @@
                         console.error(error);
 
                         historyContainer.innerHTML = `
-                        <div class="text-center text-danger py-5">
-                            <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                            <h6>Unable to Load History</h6>
-                            <p class="text-muted mb-0">Something went wrong while loading inventory history.</p>
-                        </div>`;
+                            <div class="text-center text-danger py-5">
+                                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                                <h6>Unable to Load History</h6>
+                                <p class="text-muted mb-0">
+                                    Something went wrong while loading inventory history.
+                                </p>
+                            </div>`;
                     });
             }
 
-            productSelect.addEventListener('change', function () {
+            // Change event
+            $('#productSelect').on('change', function () {
                 loadHistory(this.value);
             });
-
             function escapeHtml(value) {
                 const div = document.createElement('div');
                 div.textContent = value;
                 return div.innerHTML;
             }
-
             if (selectedProduct) {
                 productSelect.value = selectedProduct;
-                loadHistory(selectedProduct);
+                $('#productSelect').trigger('change');
+            } else {
+                loadHistory('');
             }
         });
     </script>
-@endsection
+@endpush
