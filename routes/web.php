@@ -47,7 +47,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('products/images/{image}', [ProductController::class, 'deleteImage'])->name('products.images.delete');
     Route::get('/products/inventory-history', [ProductController::class, 'inventoryHistory'])->name('products.inventory-history');
     Route::get('/products/inventory-history-data/{product?}', [ProductController::class, 'inventoryHistoryData'])->name('products.inventory-history.data');
-    Route::resource('products', ProductController::class);  
+    Route::get('/products/stock/{type?}', [ProductController::class, 'stockProducts'])->name('products.stock');
+    Route::resource('products', ProductController::class);
     Route::get('products/categories-by-brand/{brand}', [ProductController::class, 'getCategoriesByBrand'])->name('products.categories-by-brand');
     Route::get('products/sub-categories-by-category/{category}', [ProductController::class, 'getSubCategoriesByCategory'])->name('products.sub-categories-by-category');
     Route::resource('coupons', CouponController::class)->names('coupons');
@@ -58,4 +59,4 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])->name('products.add-stock');
 });
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');  

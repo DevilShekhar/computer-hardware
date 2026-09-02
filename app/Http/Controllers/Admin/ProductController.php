@@ -437,4 +437,48 @@ class ProductController extends Controller
             })->values(),
         ]);
     }
+
+    public function stockProducts($type = 'available')
+    {
+        $query = Product::with([
+            'productBrand',
+            'category',
+            'subCategory',
+            'images',
+            'createdBy',
+            'updatedBy',
+        ]);
+
+        switch ($type) {
+
+            case 'available':
+                // Stock greater than 10
+                $query->where('stock_quantity', '>', 10);
+                $title = 'Available Products';
+                break;
+
+            case 'low':
+                // Stock between 1 and 10
+                $query->whereBetween('stock_quantity', [1, 10]);
+                $title = 'Low Stock Products';
+                break;
+
+            case 'out':
+                // Stock is 0
+                $query->where('stock_quantity', 0);
+                $title = 'Out Of Stock Products';
+                break;
+
+            default:
+                abort(404);
+        }
+
+        $products = $query->latest()->get();
+
+        return view('admin.products.index', compact(
+            'products',
+            'type',
+            'title'
+        ));
+    }
 }
