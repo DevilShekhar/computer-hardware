@@ -46,10 +46,13 @@
                                             <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="{{ $product->name }}">
                                         @endif
                                     </a>
-                                    @if($product->is_discounted)
-                                        <span class="sticker">Sale</span>
-                                    @else
-                                        <span class="sticker">New</span>
+                                    @if($product->sale_price && $product->price > 0 && $product->sale_price < $product->price)
+                                        @php
+                                            $discountPercentage = (($product->price - $product->sale_price) / $product->price) * 100;
+                                        @endphp
+                                        <span class="sticker">
+                                            -{{ round($discountPercentage) }}%
+                                        </span>
                                     @endif
                                 </div>
                                 <div class="product_desc">
@@ -92,19 +95,10 @@
                                                 <span class="new-price new-price-2">
                                                     ₹{{ number_format($product->sale_price, 2) }}
                                                 </span>
+
                                                 <span class="old-price">
                                                     ₹{{ number_format($product->price, 2) }}
                                                 </span>
-                                                @if($product->price > 0)
-                                                    @php
-                                                        $discountPercentage =
-                                                            (($product->price - $product->sale_price)
-                                                            / $product->price) * 100;
-                                                    @endphp
-                                                    <span class="discount-percentage">
-                                                        -{{ round($discountPercentage) }}%
-                                                    </span>
-                                                @endif
                                             @else
                                                 <span class="new-price">
                                                     ₹{{ number_format($product->price, 2) }}
