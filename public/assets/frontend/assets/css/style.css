@@ -5813,3 +5813,33 @@ span.required {
     color: #dc3545 !important;
     text-decoration: line-through;
 }
+.product-details-images .lg-image {
+    position: relative;
+    overflow: visible;
+}
+
+.product-discount-badge {
+   
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 117px;
+    height: 134px;
+    background-image: url("../images/sale-badge.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.product-discount-badge .discount-percentage {
+    display: block;
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1;
+    color: #000;
+}
