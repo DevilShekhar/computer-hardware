@@ -66,3 +66,4 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/our-products', [OurProductController::class, 'index'])->name('our-products');
 Route::get('/our-product/{slug}', [OurProductController::class, 'show'])->name('product.details');
+Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')->name('reviews.store');

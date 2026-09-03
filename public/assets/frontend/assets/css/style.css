@@ -5813,13 +5813,7 @@ span.required {
     color: #dc3545 !important;
     text-decoration: line-through;
 }
-.product-details-images .lg-image {
-    position: relative;
-    overflow: visible;
-}
-
 .product-discount-badge {
-   
     position: absolute;
     top: 0px;
     right: 0px;
@@ -5842,4 +5836,468 @@ span.required {
     font-weight: 900;
     line-height: 1;
     color: #000;
+}
+/* =========================================
+   PRODUCT DETAILS
+========================================= */
+
+ 
+
+/* Heading */
+
+.product-details-heading {
+    margin-bottom: 30px;
+}
+
+.product-details-heading h2 {
+    display: inline-block;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 4px solid #ed1c24;
+    color: #142944;
+    font-size: 34px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Layout */
+
+.product-details-layout {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+}
+/* LEFT */
+/* Price Card */
+
+.product-price-card {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 15px;
+    background: #142944;
+    padding:20px;
+}
+
+.product-price-item,
+.product-sale-price-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 25px 30px;
+}
+
+.product-price-item {
+    color: #fff;
+}
+
+.product-sale-price-item {
+    background: #ed1c24;
+    color: #fff;
+}
+
+/* Price Icon */
+
+.price-icon {
+    width: 55px;
+    height: 55px;
+    min-width: 55px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+    color: #fff;
+}
+
+.product-price-item .price-icon {
+    background: #fff;
+    color: #142944;
+}
+
+.product-sale-price-item .price-icon {
+    background: #fff;
+    color: #ed1c24;
+}
+
+/* Price Text */
+
+.price-label {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.product-price-item strong,
+.product-sale-price-item strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* RIGHT */
+
+.product-details-right {
+    width: 62%;
+}
+
+/* Detail Row */
+
+.product-detail-row {
+    display: flex;
+    align-items: center;
+    min-height: 50px;
+    margin-bottom: 15px;
+
+    border: 1px solid #e1e5ea;
+    border-radius: 10px;
+
+    overflow: hidden;
+    background: #fff;
+}
+
+/* Icon */
+
+.product-detail-icon {
+    width: 50px;
+    min-width: 75px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #142944;
+    color: #fff;
+
+    font-size: 16px;
+}
+
+/* Label */
+
+.product-detail-label {
+    width: 31%;
+    padding-left: 25px;
+
+    color: #142944;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Colon */
+
+.product-detail-colon {
+    width: 30px;
+
+    color: #142944;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Value */
+
+.product-detail-value {
+    flex: 1;
+    padding: 0 20px;
+
+    color: #202020;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Sale Row */
+
+.product-detail-row.sale-row {
+    border-color: #ed1c24;
+}
+
+.product-detail-row.sale-row .product-detail-icon {
+    background: #ed1c24;
+}
+
+.product-detail-row.sale-row .product-detail-label,
+.product-detail-row.sale-row .product-detail-value {
+    color: #ed1c24;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 991px) {
+    .product-details-layout {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .product-details-left,
+    .product-details-right {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575px) {
+    .product-details-card {
+        padding: 20px 15px;
+    }
+
+    .product-details-heading h2 {
+        font-size: 25px;
+    }
+
+    .product-detail-row {
+        min-height: 65px;
+    }
+
+    .product-detail-icon {
+        width: 55px;
+        min-width: 55px;
+        height: 65px;
+        font-size: 18px;
+    }
+
+    .product-detail-label {
+        width: auto;
+        min-width: 105px;
+        padding-left: 12px;
+        font-size: 13px;
+    }
+
+    .product-detail-value {
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .product-detail-colon {
+        width: 15px;
+    }
+
+    .product-details-image {
+        height: 250px;
+    }
+
+    .product-details-image img {
+        max-height: 240px;
+    }
+
+    .product-price-item,
+    .product-sale-price-item {
+        padding: 18px;
+    }
+
+    .product-price-item strong,
+    .product-sale-price-item strong {
+        font-size: 22px;
+    }
+}
+.product-specifications-card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 15px;
+    padding: 35px;
+    margin-top: 20px;
+}
+
+
+/* =========================================
+   HEADING
+========================================= */
+
+.specifications-heading {
+    margin-bottom: 30px;
+}
+
+.specifications-heading h2 {
+    display: inline-block;
+    margin: 0;
+    padding-bottom: 12px;
+
+    border-bottom: 4px solid #ed1c24;
+
+    color: #142944;
+    font-size: 34px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   SPECIFICATION ROW
+========================================= */
+
+.specification-row {
+    display: flex;
+    align-items: center;
+
+    min-height: 75px;
+    margin-bottom: 10px;
+
+    border: 1px solid #e1e5ea;
+    border-radius: 10px;
+
+    overflow: hidden;
+    background: #fff;
+
+    transition: all 0.3s ease;
+}
+
+.specification-row:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.specification-icon {
+    width: 75px;
+    min-width: 75px;
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #142944;
+    color: #fff;
+
+    font-size: 24px;
+}
+
+
+/* =========================================
+   NAME
+========================================= */
+
+.specification-name {
+    width: 32%;
+    padding: 0 25px;
+
+    color: #142944;
+    font-size: 18px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================
+   COLON
+========================================= */
+
+.specification-colon {
+    width: 35px;
+
+    color: #142944;
+    font-size: 20px;
+    font-weight: 700;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   VALUE
+========================================= */
+
+.specification-value {
+    flex: 1;
+    padding: 0 25px;
+
+    color: #333;
+    font-size: 18px;
+    font-weight: 400;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.no-specifications {
+    min-height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+
+    color: #777;
+    font-size: 16px;
+}
+
+.no-specifications i {
+    color: #ed1c24;
+    font-size: 20px;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767px) {
+
+    .product-specifications-card {
+        padding: 20px 15px;
+    }
+
+    .specifications-heading h2 {
+        font-size: 25px;
+    }
+
+    .specification-row {
+        min-height: 65px;
+    }
+
+    .specification-icon {
+        width: 55px;
+        min-width: 55px;
+        height: 65px;
+
+        font-size: 18px;
+    }
+
+    .specification-name {
+        width: 30%;
+        padding: 0 12px;
+
+        font-size: 13px;
+    }
+
+    .specification-colon {
+        width: 15px;
+    }
+
+    .specification-value {
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .specification-name {
+        font-size: 12px;
+    }
+
+    .specification-value {
+        font-size: 13px;
+    }
+
 }
