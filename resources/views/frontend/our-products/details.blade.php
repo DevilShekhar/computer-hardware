@@ -23,22 +23,39 @@
         <div class="row single-product-area">
             <div class="col-lg-5 col-md-6">
                 <div class="product-details-left">
-                    <div class="product-details-images slider-navigation-1">
+                  <div class="product-details-images slider-navigation-1">
                         @forelse($product->images as $image)
-                        <div class="lg-image">
-                            <a class="popup-img venobox vbox-item" href="{{ asset('storage/' . $image->image) }}"
-                                data-gall="myGallery">
-                                <img src="{{ asset('storage/' . $image->image) }}" alt="{{ $product->name }}">
-                            </a>
-                        </div>
+                            <div class="lg-image" style="position: relative;">
+                                <a class="popup-img venobox vbox-item"  href="{{ asset('storage/' . $image->image) }}" data-gall="myGallery">
+                                    <img src="{{ asset('storage/' . $image->image) }}" alt="{{ $product->name }}">
+                                </a>
+                                @if($product->is_discounted && $product->price > 0 && $product->sale_price && $product->sale_price < $product->price)
+                                    @php
+                                        $discountPercentage = (($product->price - $product->sale_price) / $product->price) * 100;
+                                    @endphp
+                                    <span class="product-discount-badge">
+                                        <span class="discount-percentage">
+                                            {{ round($discountPercentage) }}%
+                                        </span>
+                                    </span>
+                                @endif
+                            </div>
                         @empty
-                        <div class="lg-image">
-                            <a class="popup-img venobox vbox-item"
-                                href="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
-                                data-gall="myGallery">
-                                <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="{{ $product->name }}">
-                            </a>
-                        </div>
+                            <div class="lg-image" style="position: relative;">
+                                <a class="popup-img venobox vbox-item" href="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" data-gall="myGallery">
+                                    <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"  alt="{{ $product->name }}">
+                                </a>
+                                @if($product->is_discounted && $product->price > 0 && $product->sale_price && $product->sale_price < $product->price)
+                                    @php
+                                        $discountPercentage = (($product->price - $product->sale_price) / $product->price) * 100;
+                                    @endphp
+                                    <span class="product-discount-badge">
+                                        <span class="discount-percentage">
+                                            {{ round($discountPercentage) }}%
+                                        </span>
+                                    </span>
+                                @endif
+                            </div>
                         @endforelse
                     </div>
                     <div class="product-details-thumbs slider-thumbs-1">
