@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\PromotionalBannerController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OurProductController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\ProductReviewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])->name('products.add-stock');
     Route::resource('promotional-banners', PromotionalBannerController::class);
     Route::patch('promotional-banners/{promotionalBanner}/activate',[PromotionalBannerController::class, 'activate'])->name('promotional-banners.activate');
+    Route::get('/product-review', [ProductReviewController::class, 'index'])->name('product-review.index');
+    Route::post('/product-review/{review}/approve', [ProductReviewController::class, 'approve'])->name('product-review.approve');
+    Route::post('/product-review/{review}/reject', [ProductReviewController::class, 'reject'])->name('product-review.reject');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
