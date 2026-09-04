@@ -76,3 +76,8 @@ Route::get('/login-for-review/{slug}', function ($slug) {
     session(['url.intended' => route('product.details', ['slug' => $slug]) . '?review=1']);
     return redirect()->route('login');
 })->name('login.for.review');
+Route::get('/compare', [OurProductController::class, 'compare'])
+    ->name('compare');
+
+Route::get('/compare/products', [OurProductController::class, 'compareProducts'])
+    ->name('compare.products');
