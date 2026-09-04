@@ -468,156 +468,151 @@
                 </div>
             </div>
             <div id="reviews" class="tab-pane" role="tabpanel">
-                <div class="product-reviews">
-                    <div class="product-details-comment-block">
-                        @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                        @endif
-                        @if(session('error'))
-                        <div class="alert alert-danger">
-                            {{ session('error') }}
-                        </div>
-                        @endif
-                        @php
-                            $reviewCount = $product->reviews->count();
-                            $averageRating = $reviewCount > 0 ? round($product->reviews->avg('rating'), 1) : 0;
-                        @endphp
-                        <div class="comment-review">
-                            <span>Grade</span>
-                            <ul class="rating">
-                                @for($i = 1; $i <= 5; $i++)
-                                <li>
-                                    <i class="fa {{ $i <= round($averageRating) ? 'fa-star' : 'fa-star-o' }}"></i>
-                                </li>
-                                @endfor
-                            </ul>
-                            @if($reviewCount > 0)
-                            <span>{{ $averageRating }}/5 ({{ $reviewCount }} {{ $reviewCount == 1 ? 'Review' : 'Reviews' }})</span>
-                            @else
-                            <span>No reviews yet</span>
-                            @endif
-                        </div>
-                        <div class="comment-author-infos pt-25">
-                            <span>
-                                {{ $product->name }}
-                            </span>
-                        </div>
-                        <div class="comment-details">
-                            <h4 class="title-block">
-                                Customer Reviews
-                            </h4>
-                            @forelse($product->reviews->sortByDesc('created_at') as $review)
-                            <div class="customer-review-item">
-                                <div class="customer-review-header">
-                                    <strong>{{ $review->user->name }}</strong>
-                                    <span>
-                                        @for($i = 1; $i <= 5; $i++)
-                                        <i class="fa {{ $i <= $review->rating ? 'fa-star' : 'fa-star-o' }}"></i>
-                                        @endfor
-                                    </span>
-                                </div>
-                                <p>
-                                    {{ $review->comment }}
-                                </p>
-                                <small>
-                                    {{ $review->created_at->format('d M Y') }}
-                                </small>
-                            </div>
-                            @empty
-                            <p>
-                                No reviews available.
-                            </p>
-                            @endforelse
-                        </div>
-                        <div class="review-btn">
-                            @auth
-                                @php
-                                    $userReview = $product->reviews->where('user_id', auth()->id())->first();
-                                @endphp
-                                @if($userReview)
-                                <p>You have already reviewed this product.</p>
-                                @else
-                                <a class="review-links" href="#" data-toggle="modal" data-target="#mymodal">
-                                    Write Your Review!
-                                </a>
-                                @endif
-                            @else
-                                <a class="review-links" href="{{ route('login.for.review', ['slug' => $product->slug]) }}">
-                                    Login to Write a Review
-                                </a>
-                            @endauth
-                        </div>
-                        @auth
-                        @php
-                            $userReview = $product->reviews->where('user_id', auth()->id())->first();
-                        @endphp
+    <div class="product-reviews">
+        <div class="product-details-comment-block">
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
+            @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+            @endif
+            @php
+                $userReview = auth()->check() ? $product->reviews->where('user_id', auth()->id())->first() : null;
+                $approvedReviews = $product->reviews->where('status', 1);
+                $visibleReviews = $product->reviews->filter(function ($review) use ($userReview) {
+                    return $review->status == 1 || ($userReview && $review->id == $userReview->id);
+                })->sortByDesc('created_at');
+                $reviewCount = $approvedReviews->count();
+                $averageRating = $reviewCount > 0 ? round($approvedReviews->avg('rating'), 1) : 0;
+            @endphp
 
-                        @if(!$userReview)
-                        <div class="modal fade modal-wrapper" id="mymodal">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        <h3 class="review-page-title">
-                                            Write Your Review
-                                        </h3>
-                                        <div class="modal-inner-area row">
-                                            <div class="col-lg-12">
-                                                <div class="li-review-content">
-                                                    <div class="feedback-area">
-                                                        <div class="feedback">
-                                                            <h3 class="feedback-title">
-                                                                Our Feedback
-                                                            </h3>
-                                                            <form action="{{ route('reviews.store') }}" method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                                <p class="your-opinion">
-                                                                    <label>
-                                                                        Your Rating
-                                                                    </label>
-                                                                    <span>
-                                                                        <select class="star-rating" name="rating" required>
-                                                                            <option value="5">5</option>
-                                                                            <option value="4">4</option>
-                                                                            <option value="3">3</option>
-                                                                            <option value="2">2</option>
-                                                                            <option value="1">1</option>
-                                                                        </select>
-                                                                    </span>
-                                                                </p>
-                                                                <p class="feedback-form">
-                                                                    <label for="feedback">
-                                                                        Your Review
-                                                                    </label>
-                                                                    <textarea id="feedback" name="comment" cols="45" rows="8" aria-required="true" required></textarea>
-                                                                </p>
-                                                                <div class="feedback-input">
-                                                                    <p class="feedback-form-author">
-                                                                        <label>
-                                                                            Name
-                                                                        </label>
-                                                                        <input value="{{ auth()->user()->name }}" size="30" type="text" readonly>
-                                                                    </p>
-                                                                    <p class="feedback-form-author feedback-form-email">
-                                                                        <label>
-                                                                            Email
-                                                                        </label>
-                                                                        <input value="{{ auth()->user()->email }}" size="30" type="email" readonly>
-                                                                    </p>
-                                                                    <div class="feedback-btn pb-15">
-                                                                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            Close
-                                                                        </a>
-                                                                        <button type="submit" class="li-btn-3 review-links">
-                                                                            Submit
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
+            <div class="comment-review">
+                <span>Grade</span>
+                <ul class="rating">
+                    @for($i = 1; $i <= 5; $i++)
+                    <li>
+                        <i class="fa {{ $i <= round($averageRating) ? 'fa-star' : 'fa-star-o' }}"></i>
+                    </li>
+                    @endfor
+                </ul>
+                @if($reviewCount > 0)
+                <span>{{ $averageRating }}/5 ({{ $reviewCount }} {{ $reviewCount == 1 ? 'Review' : 'Reviews' }})</span>
+                @else
+                <span>No reviews yet</span>
+                @endif
+            </div>
+            <div class="comment-author-infos pt-25">
+                <span>{{ $product->name }}</span>
+            </div>
+            <div class="comment-details">
+                <h4 class="title-block">
+                    Customer Reviews
+                </h4>
+                @forelse($visibleReviews as $review)
+                <div class="customer-review-item">
+                    <div class="customer-review-header">
+                        <strong>{{ $review->user->name }}</strong>
+                        <span>
+                            @for($i = 1; $i <= 5; $i++)
+                            <i class="fa {{ $i <= $review->rating ? 'fa-star' : 'fa-star-o' }}"></i>
+                            @endfor
+                        </span>
+                    </div>
+                    <p>
+                        {{ $review->comment }}
+                    </p>
+                    <small>
+                        {{ $review->created_at->format('d M Y h:i A') }}
+                    </small>
+                </div>
+                @empty
+                <p>
+                    No reviews available.
+                </p>
+                @endforelse
+            </div>
+            <div class="review-btn">
+                @auth
+                    @if($userReview)
+                    <p>You have already reviewed this product.</p>
+                    @else
+                    <a class="review-links" href="#" data-toggle="modal" data-target="#mymodal">
+                        Write Your Review!
+                    </a>
+                    @endif
+                @else
+                    <a class="review-links" href="{{ route('login.for.review', ['slug' => $product->slug]) }}">
+                        Login to Write a Review
+                    </a>
+                @endauth
+            </div>
+            @auth
+                @if(!$userReview)
+                <div class="modal fade modal-wrapper" id="mymodal">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h3 class="review-page-title">
+                                    Write Your Review
+                                </h3>
+                                <div class="modal-inner-area row">
+                                    <div class="col-lg-12">
+                                        <div class="li-review-content">
+                                            <div class="feedback-area">
+                                                <div class="feedback">
+                                                    <h3 class="feedback-title">
+                                                        Our Feedback
+                                                    </h3>
+                                                    <form action="{{ route('reviews.store') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                        <p class="your-opinion">
+                                                            <label>
+                                                                Your Rating
+                                                            </label>
+                                                            <span>
+                                                                <select class="star-rating" name="rating" required>
+                                                                    <option value="5">5</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="1">1</option>
+                                                                </select>
+                                                            </span>
+                                                        </p>
+                                                        <p class="feedback-form">
+                                                            <label for="feedback">
+                                                                Your Review
+                                                            </label>
+                                                            <textarea id="feedback" name="comment" cols="45" rows="8" aria-required="true" required></textarea>
+                                                        </p>
+                                                        <div class="feedback-input">
+                                                            <p class="feedback-form-author">
+                                                                <label>
+                                                                    Name
+                                                                </label>
+                                                                <input value="{{ auth()->user()->name }}" size="30" type="text" readonly>
+                                                            </p>
+                                                            <p class="feedback-form-author feedback-form-email">
+                                                                <label>
+                                                                    Email
+                                                                </label>
+                                                                <input value="{{ auth()->user()->email }}" size="30" type="email" readonly>
+                                                            </p>
+                                                            <div class="feedback-btn pb-15">
+                                                                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    Close
+                                                                </a>
+                                                                <button type="submit" class="li-btn-3 review-links">
+                                                                    Submit
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -625,11 +620,13 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
-                        @endauth
                     </div>
                 </div>
-            </div>
+                @endif
+            @endauth
+        </div>
+    </div>
+</div>
         </div>
     </div>
 </div>
