@@ -107,7 +107,7 @@
                                                             <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="{{ $product->name }}">
                                                         @endif
                                                     </a>
-                                                    @if($discountPercentage)
+                                                    @if($hasDiscount)
                                                         <span class="sticker">-{{ $discountPercentage }}%</span>
                                                     @endif
                                                 </div>

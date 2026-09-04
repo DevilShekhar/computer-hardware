@@ -45,17 +45,12 @@
                         </div>
                         @empty
                         <div class="lg-image" style="position: relative;">
-                            <a class="popup-img venobox vbox-item"
-                                href="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
-                                data-gall="myGallery">
-                                <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
-                                    alt="{{ $product->name }}">
+                            <a class="popup-img venobox vbox-item"  href="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"  data-gall="myGallery">
+                                <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="{{ $product->name }}">
                             </a>
-                            @if($product->is_discounted && $product->price > 0 && $product->sale_price &&
-                            $product->sale_price < $product->price)
+                            @if($product->is_discounted && $product->price > 0 && $product->sale_price &&  $product->sale_price < $product->price)
                                 @php
-                                $discountPercentage = (($product->price - $product->sale_price) / $product->price) *
-                                100;
+                                $discountPercentage = (($product->price - $product->sale_price) / $product->price) * 100;
                                 @endphp
                                 <span class="product-discount-badge">
                                     <span class="discount-percentage">
@@ -73,8 +68,7 @@
                         </div>
                         @empty
                         <div class="sm-image">
-                            <img src="{{ asset('assets/frontend/assets/images/product/small-size/1.jpg') }}"
-                                alt="{{ $product->name }}">
+                            <img src="{{ asset('assets/frontend/assets/images/product/small-size/1.jpg') }}" alt="{{ $product->name }}">
                         </div>
                         @endforelse
                     </div>
@@ -169,8 +163,7 @@
                                 @endif
                                 <div class="product-meta-item">
                                     <span class="meta-label">Availability</span>
-                                    <span
-                                        class="meta-value availability-value {{ $product->stock_quantity > 0 ? 'in-stock' : 'out-stock' }}">
+                                    <span class="meta-value availability-value {{ $product->stock_quantity > 0 ? 'in-stock' : 'out-stock' }}">
                                         <i
                                             class="fa {{ $product->stock_quantity > 0 ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
                                         {{ $product->stock_quantity > 0 ? 'In Stock' : 'Out of Stock' }}
@@ -262,7 +255,7 @@
                             </a>
                         </li>
                         <li>
-                            <a data-toggle="tab" href="#reviews">
+                            <a data-toggle="tab" href="#reviews" id="reviews-tab">
                                 <span>Reviews</span>
                             </a>
                         </li>
@@ -296,8 +289,7 @@
                                 @if($primaryImage && $primaryImage->image)
                                 <img src="{{ asset('storage/' . $primaryImage->image) }}" alt="{{ $product->name }}">
                                 @else
-                                <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
-                                    alt="{{ $product->name }}">
+                                <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}" alt="{{ $product->name }}">
                                 @endif
                             </div>
                             @if($product->price !== null)
@@ -478,25 +470,34 @@
             <div id="reviews" class="tab-pane" role="tabpanel">
                 <div class="product-reviews">
                     <div class="product-details-comment-block">
+                        @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                        @endif
+                        @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                        @endif
+                        @php
+                            $reviewCount = $product->reviews->count();
+                            $averageRating = $reviewCount > 0 ? round($product->reviews->avg('rating'), 1) : 0;
+                        @endphp
                         <div class="comment-review">
                             <span>Grade</span>
                             <ul class="rating">
+                                @for($i = 1; $i <= 5; $i++)
                                 <li>
-                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa {{ $i <= round($averageRating) ? 'fa-star' : 'fa-star-o' }}"></i>
                                 </li>
-                                <li>
-                                    <i class="fa fa-star-o"></i>
-                                </li>
-                                <li>
-                                    <i class="fa fa-star-o"></i>
-                                </li>
-                                <li class="no-star">
-                                    <i class="fa fa-star-o"></i>
-                                </li>
-                                <li class="no-star">
-                                    <i class="fa fa-star-o"></i>
-                                </li>
+                                @endfor
                             </ul>
+                            @if($reviewCount > 0)
+                            <span>{{ $averageRating }}/5 ({{ $reviewCount }} {{ $reviewCount == 1 ? 'Review' : 'Reviews' }})</span>
+                            @else
+                            <span>No reviews yet</span>
+                            @endif
                         </div>
                         <div class="comment-author-infos pt-25">
                             <span>
@@ -507,21 +508,53 @@
                             <h4 class="title-block">
                                 Customer Reviews
                             </h4>
+                            @forelse($product->reviews->sortByDesc('created_at') as $review)
+                            <div class="customer-review-item">
+                                <div class="customer-review-header">
+                                    <strong>{{ $review->user->name }}</strong>
+                                    <span>
+                                        @for($i = 1; $i <= 5; $i++)
+                                        <i class="fa {{ $i <= $review->rating ? 'fa-star' : 'fa-star-o' }}"></i>
+                                        @endfor
+                                    </span>
+                                </div>
+                                <p>
+                                    {{ $review->comment }}
+                                </p>
+                                <small>
+                                    {{ $review->created_at->format('d M Y') }}
+                                </small>
+                            </div>
+                            @empty
                             <p>
                                 No reviews available.
                             </p>
+                            @endforelse
                         </div>
                         <div class="review-btn">
                             @auth
-                            <a class="review-links" href="#" data-toggle="modal" data-target="#mymodal">
-                                Write Your Review!
-                            </a>
+                                @php
+                                    $userReview = $product->reviews->where('user_id', auth()->id())->first();
+                                @endphp
+                                @if($userReview)
+                                <p>You have already reviewed this product.</p>
+                                @else
+                                <a class="review-links" href="#" data-toggle="modal" data-target="#mymodal">
+                                    Write Your Review!
+                                </a>
+                                @endif
                             @else
-                            <a class="review-links" href="{{ route('login') }}">
-                                Login to Write a Review
-                            </a>
+                                <a class="review-links" href="{{ route('login.for.review', ['slug' => $product->slug]) }}">
+                                    Login to Write a Review
+                                </a>
                             @endauth
                         </div>
+                        @auth
+                        @php
+                            $userReview = $product->reviews->where('user_id', auth()->id())->first();
+                        @endphp
+
+                        @if(!$userReview)
                         <div class="modal fade modal-wrapper" id="mymodal">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
@@ -530,62 +563,59 @@
                                             Write Your Review
                                         </h3>
                                         <div class="modal-inner-area row">
-                                            <div class="col-lg-6">
-                                                <div class="li-review-product">
-                                                    @php
-                                                    $reviewImage = $product->images->first();
-                                                    @endphp
-                                                    @if($reviewImage)
-                                                    <img src="{{ asset('storage/' . $reviewImage->image) }}"
-                                                        alt="{{ $product->name }}">
-                                                    @endif
-                                                    <div class="li-review-product-desc">
-                                                        <p class="li-product-name">
-                                                            {{ $product->name }}
-                                                        </p>
-                                                        @if($product->short_description)
-                                                        <p>
-                                                            <span>
-                                                                {{ $product->short_description }}
-                                                            </span>
-                                                        </p>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <div class="li-review-content">
                                                     <div class="feedback-area">
                                                         <div class="feedback">
                                                             <h3 class="feedback-title">
                                                                 Our Feedback
                                                             </h3>
-                                                           @auth
-<form action="{{ route('reviews.store') }}" method="POST">
-    @csrf
-    <input type="hidden" name="product_id" value="{{ $product->id }}">
-    <p class="your-opinion">
-        <label>Your Rating</label>
-        <span>
-            <select class="star-rating" name="rating">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-        </span>
-    </p>
-    <p class="feedback-form">
-        <label for="feedback">Your Review</label>
-        <textarea id="feedback" name="comment" cols="45" rows="8" required></textarea>
-    </p>
-    <div class="feedback-btn pb-15">
-        <a href="#" class="close" data-dismiss="modal" aria-label="Close">Close</a>
-        <button type="submit">Submit</button>
-    </div>
-</form>
-@endauth
+                                                            <form action="{{ route('reviews.store') }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                                <p class="your-opinion">
+                                                                    <label>
+                                                                        Your Rating
+                                                                    </label>
+                                                                    <span>
+                                                                        <select class="star-rating" name="rating" required>
+                                                                            <option value="5">5</option>
+                                                                            <option value="4">4</option>
+                                                                            <option value="3">3</option>
+                                                                            <option value="2">2</option>
+                                                                            <option value="1">1</option>
+                                                                        </select>
+                                                                    </span>
+                                                                </p>
+                                                                <p class="feedback-form">
+                                                                    <label for="feedback">
+                                                                        Your Review
+                                                                    </label>
+                                                                    <textarea id="feedback" name="comment" cols="45" rows="8" aria-required="true" required></textarea>
+                                                                </p>
+                                                                <div class="feedback-input">
+                                                                    <p class="feedback-form-author">
+                                                                        <label>
+                                                                            Name
+                                                                        </label>
+                                                                        <input value="{{ auth()->user()->name }}" size="30" type="text" readonly>
+                                                                    </p>
+                                                                    <p class="feedback-form-author feedback-form-email">
+                                                                        <label>
+                                                                            Email
+                                                                        </label>
+                                                                        <input value="{{ auth()->user()->email }}" size="30" type="email" readonly>
+                                                                    </p>
+                                                                    <div class="feedback-btn pb-15">
+                                                                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            Close
+                                                                        </a>
+                                                                        <button type="submit" class="li-btn-3 review-links">
+                                                                            Submit
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -595,6 +625,8 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
+                        @endauth
                     </div>
                 </div>
             </div>
@@ -720,6 +752,19 @@
         </div>
     </div>
 </section>
+@if(request()->get('review') == 1)
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+    $('#reviews-tab').tab('show');
+    setTimeout(function(){
+        document.getElementById('reviews').scrollIntoView({
+            behavior:'smooth',
+            block:'start'
+        });
+    },300);
+});
+</script>
+@endif
 @else
 @endif
 @endsection
