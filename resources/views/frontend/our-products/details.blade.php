@@ -277,7 +277,7 @@
             </div>
             <div id="product-details" class="tab-pane" role="tabpanel">
                 <div class="product-details-card">
-                    <div class="product-details-layout">
+                    <div class="product-details-layout mt-4">
                         <div class="product-details-left">
                             <div class="product-details-image">
                                 @php

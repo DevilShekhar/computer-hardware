@@ -2,66 +2,57 @@
 @section('title', 'Home')
 @section('content')
 <!-- Start Hero Area -->
-<div class="slider-with-banner">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="slider-area pt-sm-30 pt-xs-30">
-                    <div class="slider-active owl-carousel">
-                        @forelse($promotionalBanners as $banner)
-                        <!-- Begin Single Slide Area -->
-                        <div class="single-slide align-center-left animation-style-01 bg-1"
-                            style="background-image: url('{{ asset('storage/' . $banner->image) }}');">
-                            <div class="slider-progress"></div>
-                            <div class="slider-content">
-                                @if($banner->short_description)
-                                <h5> {{ $banner->short_description }} </h5>
-                                @endif
-                                @if($banner->title)
-                                <h2>{{ $banner->title }}</h2>
-                                @endif
-                                @if($banner->button_text)
-                                <div class="default-btn slide-btn">
-                                    <a class="links" href="{{ $banner->button_url ?: '#' }}">
-                                        {{ $banner->button_text }}
-                                    </a>
-                                </div>
-                                @endif
+<div class="slider-with-banner full-screen-slider">
+    <div class="slider-area">
+        <div class="slider-active owl-carousel">
+            @forelse($promotionalBanners as $banner)
+
+                <div class="single-slide align-center-left animation-style-01"
+                    style="background-image: url('{{ asset('storage/' . $banner->image) }}');">
+
+                    <div class="slider-progress"></div>
+
+                    <div class="slider-content">
+                        @if($banner->short_description)
+                            <h5>{{ $banner->short_description }}</h5>
+                        @endif
+
+                        @if($banner->title)
+                            <h2>{{ $banner->title }}</h2>
+                        @endif
+
+                        @if($banner->button_text)
+                            <div class="default-btn slide-btn">
+                                <a class="links" href="{{ $banner->button_url ?: '#' }}">
+                                    {{ $banner->button_text }}
+                                </a>
                             </div>
+                        @endif
+                    </div>
+
+                </div>
+
+            @empty
+
+                <div class="single-slide align-center-left animation-style-01">
+                    <div class="slider-progress"></div>
+
+                    <div class="slider-content">
+                        <h5>Welcome to Our Store</h5>
+                        <h2>Discover Our Latest Products</h2>
+
+                        <div class="default-btn slide-btn">
+                            <a class="links" href="{{ url('/shop') }}">
+                                Shopping Now
+                            </a>
                         </div>
-                        @empty
-                        <div class="single-slide align-center-left animation-style-01 bg-1">
-                            <div class="slider-progress"></div>
-                            <div class="slider-content">
-                                <h5> Welcome to Our Store</h5>
-                                <h2>Discover Our Latest Products</h2>
-                                <div class="default-btn slide-btn">
-                                    <a class="links" href="{{ url('/shop') }}">
-                                        Shopping Now
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        @endforelse
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="static-top-wrap">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="static-top-content mt-sm-30">
-                    Gift Special: Gift every single day on Weekends - New Coupon code "
-                    <span>LimupaSaleoff</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
+            @endforelse
+        </div>
+    </div>
+</div>
 <div class="li-static-banner li-static-banner-4 text-center pt-20">
     <div class="container">
         <div class="row">
