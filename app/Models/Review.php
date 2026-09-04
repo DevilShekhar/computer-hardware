@@ -14,6 +14,9 @@ class Review extends Model
         'user_id',
         'rating',
         'comment',
+        'status',
+        'approved_by',
+        'approved_at',
     ];
 
     public function product()
@@ -24,5 +27,10 @@ class Review extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

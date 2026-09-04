@@ -333,59 +333,12 @@
                                 </li>
                             </ul>
                         </li>
-                        <li
-                            class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="layers"></i>
-                                <span>Product Management</span>
+                        <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
+                        <li class="{{ request()->routeIs('product-review.*') ? 'active' : '' }}">
+                            <a href="{{ route('product-review.index') }}" class="nav-link">
+                                <i data-feather="star"></i>
+                                <span>Product Reviews</span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li class="{{ request()->routeIs('product-brands.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('product-brands.index') }}">
-                                        Brand
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('categories.index') }}">
-                                        Category
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('sub-categories.index') }}">
-                                        Sub Category
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('products.index') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.index') }}">
-                                        Product
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('products.inventory-history') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.inventory-history') }}">
-                                        Product Inventory History
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('products.stock') && request()->route('type') === 'available' ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.stock', 'available') }}">
-                                        <i class="bi bi-check-circle me-2"></i>
-                                        Available Products
-                                    </a>
-                                </li>
-
-                                <li class="{{ request()->routeIs('products.stock') && request()->route('type') === 'low' ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.stock', 'low') }}">
-                                        <i class="bi bi-exclamation-triangle me-2"></i>
-                                        Low Stock Products
-                                    </a>
-                                </li>
-
-                                <li class="{{ request()->routeIs('products.stock') && request()->route('type') === 'out' ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.stock', 'out') }}">
-                                        <i class="bi bi-x-circle me-2"></i>
-                                        Out Of Stock Products
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
 
                         <li class="dropdown">
