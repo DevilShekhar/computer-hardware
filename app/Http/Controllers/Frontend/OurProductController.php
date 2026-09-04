@@ -116,4 +116,105 @@ class OurProductController extends Controller
         ->get();
         return view('frontend.our-products.details',compact('product', 'relatedProducts'));
     }
+    public function compare()
+    {
+        return view('frontend.our-products.compare');
+    }
+
+    public function compareProducts(Request $request)
+    {
+        $ids=$request->input('ids',[]);
+
+        if(!is_array($ids)){
+            $ids=[];
+        }
+
+        $ids=array_map('intval',$ids);
+
+        $ids=array_values(array_unique(array_filter($ids,function($id){
+            return $id>0;
+        })));
+
+        $ids=array_slice($ids,0,2);
+
+        $products=Product::with([
+            'productBrand',
+            'category',
+            'subCategory',
+            'images',
+            'specifications',
+        ])
+            ->where('status',1)
+            ->whereIn('id',$ids)
+            ->get();
+
+        $products=$products
+            ->sortBy(function($product) use($ids){
+                $position=array_search((int)$product->id,$ids);
+                return $position===false?999:$position;
+            })
+            ->values();
+
+        return response()->json([
+            'products'=>$products->map(function($product){
+                $primaryImage=$product->images->where('is_primary',true)->first()??$product->images->first();
+
+                $specifications=$product->specifications->map(function($specification){
+                    $attributes=method_exists($specification,'getAttributes')
+                        ?$specification->getAttributes()
+                        :[];
+
+                    $name=$specification->specification_name
+                        ??$specification->name
+                        ??$specification->specification
+                        ??$specification->attribute
+                        ??$specification->title
+                        ??$specification->key
+                        ??($attributes['specification_name']??null)
+                        ??($attributes['name']??null)
+                        ??($attributes['specification']??null)
+                        ??($attributes['attribute']??null)
+                        ??($attributes['title']??null)
+                        ??($attributes['key']??null);
+
+                    $value=$specification->specification_value
+                        ??$specification->value
+                        ??$specification->attribute_value
+                        ??$specification->description
+                        ??$specification->text
+                        ??($attributes['specification_value']??null)
+                        ??($attributes['value']??null)
+                        ??($attributes['attribute_value']??null)
+                        ??($attributes['description']??null)
+                        ??($attributes['text']??null);
+
+                    return [
+                        'name'=>$name,
+                        'value'=>$value,
+                    ];
+                })
+                ->filter(function($specification){
+                    return filled($specification['name']);
+                })
+                ->values();
+
+                return [
+                    'id'=>$product->id,
+                    'name'=>$product->name,
+                    'slug'=>$product->slug,
+                    'price'=>$product->price!==null?(float)$product->price:0,
+                    'sale_price'=>$product->sale_price!==null?(float)$product->sale_price:null,
+                    'brand'=>$product->productBrand?$product->productBrand->name:'',
+                    'category'=>$product->category?$product->category->name:'',
+                    'sub_category'=>$product->subCategory?$product->subCategory->name:'',
+                    'image'=>$primaryImage&&$primaryImage->image
+                        ?asset('storage/'.$primaryImage->image)
+                        :asset('assets/frontend/assets/images/product/large-size/1.jpg'),
+                    'detail_url'=>route('product.details',['slug'=>$product->slug]),
+                    'specifications'=>$specifications,
+                    'short_description' => $product->short_description ?? '',
+                ];
+            })->values(),
+        ]);
+    }
 }

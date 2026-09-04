@@ -147,6 +147,11 @@
                                                                 <a href="{{ url('/cart/add/'.$product->id) }}">Add to cart</a>
                                                             </li>
                                                             <li>
+                                                                <a href="javascript:void(0)" class="compare-product" data-id="{{ $product->id }}" title="Compare Product">
+                                                                    <i class="fa fa-exchange"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
                                                                 <a class="links-details" href="#">
                                                                     <i class="fa fa-heart-o"></i>
                                                                 </a>
@@ -327,6 +332,7 @@ function gridProduct(product){
                 '<div class="add-actions">'+
                     '<ul class="add-actions-link">'+
                         '<li class="add-cart active"><a href="'+product.cart_url+'">Add to cart</a></li>'+
+                        '<li><a class="compare-product" href="javascript:void(0)" data-id="'+product.id+'"><i class="fa fa-exchange"></i></a></li>'+
                         '<li><a class="links-details" href="#"><i class="fa fa-heart-o"></i></a></li>'+
                         '<li><a class="quick-view" href="'+product.detail_url+'"><i class="fa fa-eye"></i></a></li>'+
                     '</ul>'+
@@ -366,9 +372,30 @@ function listProduct(product){
         '<div class="col-lg-4">'+
             '<div class="shop-add-action mb-xs-30">'+
                 '<ul class="add-actions-link">'+
-                    '<li class="add-cart"><a href="'+product.cart_url+'">Add to cart</a></li>'+
-                    '<li class="wishlist"><a href="#"><i class="fa fa-heart-o"></i>Add to wishlist</a></li>'+
-                    '<li><a class="quick-view" href="'+product.detail_url+'"><i class="fa fa-eye"></i>View product</a></li>'+
+                    '<li class="add-cart">'+
+                        '<a href="'+product.cart_url+'">Add to cart</a>'+
+                    '</li>'+
+
+                    '<li>'+
+                        '<a href="javascript:void(0)" '+
+                        'class="compare-product" '+
+                        'data-id="'+product.id+'" '+
+                        'title="Compare Product">'+
+                            '<i class="fa fa-exchange"></i> Compare'+
+                        '</a>'+
+                    '</li>'+
+
+                    '<li class="wishlist">'+
+                        '<a href="#">'+
+                            '<i class="fa fa-heart-o"></i>Add to wishlist'+
+                        '</a>'+
+                    '</li>'+
+
+                    '<li>'+
+                        '<a class="quick-view" href="'+product.detail_url+'">'+
+                            '<i class="fa fa-eye"></i>View product'+
+                        '</a>'+
+                    '</li>'+
                 '</ul>'+
             '</div>'+
         '</div>'+
@@ -439,40 +466,272 @@ function loadProducts(){
         productGrid.style.opacity='1';
     });
 }
-
 document.addEventListener('click',function(e){
-    const brand=e.target.closest('.filter-brand');
+
+    /* =====================================================
+       COMPARE PRODUCT
+    ===================================================== */
+
+    const compareButton =
+        e.target.closest('.compare-product');
+
+
+    if(compareButton){
+
+        e.preventDefault();
+
+
+        const productId =
+            Number(compareButton.dataset.id);
+
+
+        if(!productId){
+
+            console.error(
+                'Invalid product ID for comparison'
+            );
+
+            return;
+        }
+
+
+        let compareProducts = [];
+
+
+        try{
+
+            compareProducts = JSON.parse(
+                localStorage.getItem('compareProducts') || '[]'
+            );
+
+        }catch(error){
+
+            console.error(
+                'Invalid compareProducts:',
+                error
+            );
+
+            compareProducts = [];
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Convert IDs to numbers
+        |--------------------------------------------------------------------------
+        */
+
+        compareProducts = compareProducts
+            .map(Number)
+            .filter(function(id){
+
+                return id > 0;
+
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Remove duplicate IDs
+        |--------------------------------------------------------------------------
+        */
+
+        compareProducts = [
+            ...new Set(compareProducts)
+        ];
+
+
+        console.log(
+            'Clicked Product:',
+            productId
+        );
+
+        console.log(
+            'Current Compare Products:',
+            compareProducts
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Already selected
+        |--------------------------------------------------------------------------
+        */
+
+        if(
+            compareProducts.includes(productId)
+        ){
+
+            window.location.href =
+                "{{ route('compare') }}";
+
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Maximum 2 products
+        |--------------------------------------------------------------------------
+        */
+
+        if(
+            compareProducts.length >= 2
+        ){
+
+            alert(
+                'You can compare only 2 products at a time.'
+            );
+
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Add product
+        |--------------------------------------------------------------------------
+        */
+
+        compareProducts.push(productId);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Save
+        |--------------------------------------------------------------------------
+        */
+
+        localStorage.setItem(
+            'compareProducts',
+            JSON.stringify(compareProducts)
+        );
+
+
+        console.log(
+            'Updated Compare Products:',
+            compareProducts
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | First product
+        |--------------------------------------------------------------------------
+        */
+
+        if(
+            compareProducts.length === 1
+        ){
+
+            alert(
+                'Product added for comparison. Please select one more product.'
+            );
+
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Second product
+        |--------------------------------------------------------------------------
+        */
+
+        if(
+            compareProducts.length === 2
+        ){
+
+            window.location.href =
+                "{{ route('compare') }}";
+
+            return;
+        }
+
+    }
+
+
+    /* =====================================================
+       BRAND FILTER
+    ===================================================== */
+
+    const brand =
+        e.target.closest('.filter-brand');
+
 
     if(brand){
+
         e.preventDefault();
-        currentFilter.brand=brand.dataset.id;
-        currentFilter.category='';
-        currentFilter.sub_category='';
+
+        currentFilter.brand =
+            brand.dataset.id;
+
+        currentFilter.category =
+            '';
+
+        currentFilter.sub_category =
+            '';
+
         loadProducts();
+
         return;
     }
 
-    const category=e.target.closest('.filter-category');
+
+    /* =====================================================
+       CATEGORY FILTER
+    ===================================================== */
+
+    const category =
+        e.target.closest('.filter-category');
+
 
     if(category){
+
         e.preventDefault();
-        currentFilter.brand='';
-        currentFilter.category=category.dataset.id;
-        currentFilter.sub_category='';
+
+        currentFilter.brand =
+            '';
+
+        currentFilter.category =
+            category.dataset.id;
+
+        currentFilter.sub_category =
+            '';
+
         loadProducts();
+
         return;
     }
 
-    const subCategory=e.target.closest('.filter-sub-category');
+
+    /* =====================================================
+       SUB CATEGORY FILTER
+    ===================================================== */
+
+    const subCategory =
+        e.target.closest('.filter-sub-category');
+
 
     if(subCategory){
+
         e.preventDefault();
-        currentFilter.brand='';
-        currentFilter.category='';
-        currentFilter.sub_category=subCategory.dataset.id;
+
+        currentFilter.brand =
+            '';
+
+        currentFilter.category =
+            '';
+
+        currentFilter.sub_category =
+            subCategory.dataset.id;
+
         loadProducts();
+
         return;
     }
+
 });
 
 if(productSort){
