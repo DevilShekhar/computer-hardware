@@ -73,6 +73,50 @@
         </div>
     </div>
 </div>
+<section class="team-area pt-60 pt-sm-44">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="li-section-title capitalize mb-25">
+                    <h2><span>Our Brands</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="product-active owl-carousel">
+                @forelse($productBrands as $productBrand)
+                    <div class="col-lg-12">
+                        <div class="team-member mb-60 mb-sm-30 mb-xs-30">
+                            <div class="team-thumb">
+                                <a href="{{ route('our-brand.show', ['slug' => $productBrand->slug]) }}">
+                                    @if($productBrand->product_brand_image)
+                                        <img src="{{ asset('storage/' . $productBrand->product_brand_image) }}" alt="{{ $productBrand->name }}" style="width: 100%; height: 220px; object-fit: contain;">
+                                    @else
+                                        <img src="{{ asset('images/no-image.png') }}" alt="{{ $productBrand->name }}" style="width: 100%; height: 220px; object-fit: contain;">
+                                    @endif
+                                </a>
+                            </div>
+                            <div class="team-content text-center">
+                                <h3>
+                                    <a href="{{ route('our-brand.show', ['slug' => $productBrand->slug]) }}">{{ $productBrand->name }}</a>
+                                </h3>
+                                <p>
+                                    <a href="{{ route('our-brand.show', ['slug' => $productBrand->slug]) }}">View Products</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <p>No brands available.</p>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+</section>
 <section class="product-area li-laptop-product pt-60 pb-45 pt-sm-50 pt-xs-60">
     <div class="container">
         <div class="row">

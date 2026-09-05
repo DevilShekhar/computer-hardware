@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OurProductController;
 use App\Http\Controllers\Frontend\PcBuilderController;
+use App\Http\Controllers\Frontend\OurBrandController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -85,3 +86,5 @@ Route::get('/compare/products', [OurProductController::class, 'compareProducts']
 
 Route::get('/pc-builder', [PcBuilderController::class, 'index'])->name('pc-builder.index');
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
+Route::get('/our-brand', [OurBrandController::class, 'index'])->name('our-brand');
+Route::get('/our-brand/{slug}', [OurBrandController::class, 'show'])->name('our-brand.show');
