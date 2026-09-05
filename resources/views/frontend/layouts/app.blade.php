@@ -286,66 +286,137 @@
                                 <nav>
                                     <ul>
                                         <li><a href="index.html">Home</a></li>
-                                        <li class="megamenu-holder"><a href="shop-left-sidebar.html">Shop</a>
-                                            <ul class="megamenu hb-megamenu">
-                                                <li><a href="shop-left-sidebar.html">Shop Page Layout</a>
-                                                    <ul>
-                                                        <li><a href="shop-3-column.html">Shop 3 Column</a></li>
-                                                        <li><a href="shop-4-column.html">Shop 4 Column</a></li>
-                                                        <li><a href="shop-left-sidebar.html">Shop Left Sidebar</a></li>
-                                                        <li><a href="shop-right-sidebar.html">Shop Right Sidebar</a>
+                                     <li class="shop-nav-item">
+                                        <a href="{{ url('/shop') }}" class="shop-nav-link">
+                                            Shop
+                                        </a>
+                                        @if(isset($productBrands) && $productBrands->count())
+                                            <div class="custom-shop-mega-menu">
+                                                <div class="custom-shop-column custom-shop-brands">
+                                                    <div class="custom-shop-column-header">
+                                                        Brands
+                                                    </div>
+                                                    <div class="custom-shop-column-body">
+                                                        @foreach($productBrands as $brand)
+                                                            <div class="custom-shop-item custom-shop-brand-item">
+                                                                <a href="{{ url('/shop/brand/' . $brand->slug) }}" class="custom-shop-item-link">
+                                                                    <div class="custom-shop-item-content">
+                                                                        @if(!empty($brand->product_brand_image))
+                                                                            <img src="{{ asset('storage/' . $brand->product_brand_image) }}" alt="{{ $brand->name }}" class="custom-shop-brand-image">
+                                                                        @else
+                                                                            <div class="custom-shop-brand-placeholder">
+                                                                                {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                                                            </div>
+                                                                        @endif
+                                                                        <span>
+                                                                            {{ $brand->name }}
+                                                                        </span>
+                                                                    </div>
+                                                                    @if($brand->categories && $brand->categories->count())
+                                                                        <span class="custom-shop-arrow">
+                                                                            <i class="fa fa-angle-right"></i>
+                                                                        </span>
+                                                                    @endif
+                                                                </a>
+                                                                @if($brand->categories && $brand->categories->count())
+                                                                    <div class="custom-shop-submenu custom-shop-category-menu">
+                                                                        <div class="custom-shop-column-header">
+                                                                            {{ $brand->name }}
+                                                                        </div>
+                                                                        <div class="custom-shop-column-body">
+                                                                            @foreach($brand->categories as $category)
+                                                                                <div class="custom-shop-item custom-shop-category-item">
+                                                                                    <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug) }}" class="custom-shop-item-link">
+                                                                                        <div class="custom-shop-item-content">
+                                                                                            <span>
+                                                                                                {{ $category->name }}
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        @if($category->subCategories && $category->subCategories->count())
+                                                                                            <span class="custom-shop-arrow">
+                                                                                                <i class="fa fa-angle-right"></i>
+                                                                                            </span>
+                                                                                        @endif
+                                                                                    </a>
+                                                                                    @if($category->subCategories && $category->subCategories->count())
+                                                                                        <div class="custom-shop-submenu custom-shop-subcategory-menu">
+                                                                                            <div class="custom-shop-column-header">
+                                                                                                {{ $category->name }}
+                                                                                            </div>
+                                                                                            <div class="custom-shop-column-body">
+                                                                                                @foreach($category->subCategories as $subCategory)
+                                                                                                    <div class="custom-shop-item custom-shop-subcategory-item">
+                                                                                                        <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug . '/' . $subCategory->slug) }}" class="custom-shop-item-link">
+                                                                                                            <div class="custom-shop-item-content">
+                                                                                                                <span>
+                                                                                                                    {{ $subCategory->name }}
+                                                                                                                </span>
+                                                                                                            </div>
+                                                                                                            @if($subCategory->products && $subCategory->products->count())
+                                                                                                                <span class="custom-shop-arrow">
+                                                                                                                    <i class="fa fa-angle-right"></i>
+                                                                                                                </span>
+                                                                                                            @endif
+                                                                                                        </a>
+                                                                                                        @if($subCategory->products && $subCategory->products->count())
+                                                                                                            <div class="custom-shop-submenu custom-shop-product-menu">
+                                                                                                                <div class="custom-shop-column-header">
+                                                                                                                    {{ $subCategory->name }}
+                                                                                                                </div>
+                                                                                                                <div class="custom-shop-column-body">
+                                                                                                                    @foreach($subCategory->products as $product)
+                                                                                                                        <a href="{{ url('/product/' . $product->slug) }}" class="custom-shop-product-link">
+                                                                                                                            <span>
+                                                                                                                                {{ $product->name }}
+                                                                                                                            </span>
+                                                                                                                            <i class="fa fa-angle-right"></i>
+                                                                                                                        </a>
+                                                                                                                    @endforeach
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        @endif
+                                                                                                    </div>
+                                                                                                @endforeach
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    @endif
+                                                                                </div>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </li>
+                                        <li class="dropdown-holder">
+                                            <a href="{{ url('/pc-builder') }}">
+                                                PC Builder
+                                            </a>
+                                            @if(isset($builderTypes) && $builderTypes->isNotEmpty())
+                                                <ul class="hb-dropdown">
+
+                                                    @foreach($builderTypes as $builderType)
+                                                        <li>
+                                                            <a href="{{ url('/pc-builder/' . $builderType->slug) }}">
+                                                                @if($builderType->image)
+                                                                    <img src="{{ asset('storage/' . $builderType->image) }}" alt="{{ $builderType->name }}" width="40" height="40">
+                                                                @endif
+                                                                <span>
+                                                                    {{ $builderType->name }}
+                                                                </span>
+                                                            </a>
                                                         </li>
-                                                        <li><a href="shop-list.html">Shop List</a></li>
-                                                        <li><a href="shop-list-left-sidebar.html">Shop List Left
-                                                                Sidebar</a></li>
-                                                        <li><a href="shop-list-right-sidebar.html">Shop List Right
-                                                                Sidebar</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a href="single-product-gallery-left.html">Single Product Style</a>
-                                                    <ul>
-                                                        <li><a href="single-product-carousel.html">Single Product
-                                                                Carousel</a></li>
-                                                        <li><a href="single-product-gallery-left.html">Single Product
-                                                                Gallery Left</a></li>
-                                                        <li><a href="single-product-gallery-right.html">Single Product
-                                                                Gallery Right</a></li>
-                                                        <li><a href="single-product-tab-style-top.html">Single Product
-                                                                Tab Style Top</a></li>
-                                                        <li><a href="single-product-tab-style-left.html">Single Product
-                                                                Tab Style Left</a></li>
-                                                        <li><a href="single-product-tab-style-right.html">Single Product
-                                                                Tab Style Right</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a href="single-product.html">Single Products</a>
-                                                    <ul>
-                                                        <li><a href="single-product.html">Single Product</a></li>
-                                                        <li><a href="single-product-sale.html">Single Product Sale</a>
-                                                        </li>
-                                                        <li><a href="single-product-group.html">Single Product Group</a>
-                                                        </li>
-                                                        <li><a href="single-product-normal.html">Single Product
-                                                                Normal</a></li>
-                                                        <li><a href="single-product-affiliate.html">Single Product
-                                                                Affiliate</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
                                         </li>
-                                        <li class="dropdown-holder"><a href="blog-left-sidebar.html">PC Builder</a>
-                                            <ul class="hb-dropdown">                                               
-                                                <li ><a href="blog-list-left-sidebar.html">Blog List View</a></li>
-                                                <li ><a href="blog-details-left-sidebar.html">Blog Details</a> </li>
-                                                <li><a href="blog-details-left-sidebar.html">Left Sidebar</a> </li>
-                                                <li><a href="blog-details-right-sidebar.html">Right Sidebar</a> </li>      
-                                            </ul>
-                                        </li>
-                                        <li ><a href="blog-left-sidebar.html">Blog</a></li>
-                                       
+                                        <li ><a href="blog-left-sidebar.html">Blog</a></li>                                       
                                         <li><a href="about-us.html">About Us</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                      
+                                        <li><a href="contact.html">Contact</a></li>                                    
                                     </ul>
                                 </nav>
                             </div>
