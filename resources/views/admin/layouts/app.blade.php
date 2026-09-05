@@ -301,33 +301,50 @@
                         <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="package"></i>
-                                <span>
-                                    Products
-                                </span>
+                                <span>Products</span>
                             </a>
+
                             <ul class="dropdown-menu">
+
                                 <li class="{{ request()->routeIs('product-brands.*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('product-brands.index') }}">
                                         Brands
                                     </a>
                                 </li>
+
                                 <li class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('categories.index') }}">
                                         Categories
                                     </a>
                                 </li>
+
                                 <li class="{{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('sub-categories.index') }}">
                                         Sub Categories
                                     </a>
                                 </li>
-                                <li class="{{ request()->routeIs('products.*') ? 'active' : '' }}">
+
+                                <li class="{{ request()->routeIs('products.index', 'products.create', 'products.edit', 'products.show') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('products.index') }}">
                                         Products
                                     </a>
                                 </li>
+
+                                <li class="{{ request()->routeIs('products.stock') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('products.stock') }}">
+                                        Stock Management
+                                    </a>
+                                </li>
+
+                                <li class="{{ request()->routeIs('products.inventory-history', 'products.inventory-history.data') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('products.inventory-history') }}">
+                                        Inventory History
+                                    </a>
+                                </li>
+
                             </ul>
                         </li>
+
                         <li
                             class="{{ request()->routeIs('builder-types.*', 'builder-products.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
