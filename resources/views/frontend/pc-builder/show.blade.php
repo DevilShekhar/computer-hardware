@@ -2,1029 +2,1150 @@
 
 @section('content')
 
+@php
+$builderProductsCollection = collect($builderProducts ?? []);
+
+if ($builderProductsCollection->isEmpty() && isset($products)) {
+$builderProductsCollection = collect($products)->map(function ($product) {
+return (object) [
+'id' => $product->id,
+'product_type' => $product->product_type ?? 'Other',
+'product' => $product,
+];
+});
+}
+
+$builderProductsCollection = $builderProductsCollection->filter(function ($builderProduct) {
+return !empty($builderProduct->product);
+});
+
+$groupedProducts = $builderProductsCollection->groupBy(function ($builderProduct) {
+return $builderProduct->product_type ?: 'Other';
+});
+
+$productTypeOrder = [
+'Processor',
+'Motherboard',
+'RAM',
+'Graphics Card',
+'Storage',
+'Power Supply',
+'Cabinet',
+'CPU Cooler',
+];
+
+$orderedProductTypes = collect($productTypeOrder)->filter(function ($type) use ($groupedProducts) {
+return $groupedProducts->has($type);
+});
+
+$otherProductTypes = $groupedProducts->keys()->filter(function ($type) use ($productTypeOrder) {
+return !in_array($type, $productTypeOrder);
+});
+
+$allProductTypes = $orderedProductTypes->merge($otherProductTypes)->values();
+
+$typeIcons = [
+'Processor' => 'fa fa-cog',
+'Motherboard' => 'fa fa-server',
+'RAM' => 'fa fa-th-large',
+'Graphics Card' => 'fa fa-desktop',
+'Storage' => 'fa fa-hdd-o',
+'Power Supply' => 'fa fa-bolt',
+'Cabinet' => 'fa fa-archive',
+'CPU Cooler' => 'fa fa-cog',
+];
+@endphp
+
 <style>
-    .pc-builder-page {
-        background: #f7f8fa;
-        padding: 40px 0 70px;
+.pc-builder-area {
+    min-height: 100vh;
+    padding: 40px 0 60px;
+    background: #f7f8fb;
+}
+
+.pc-builder-card {
+    overflow: hidden;
+    border: 1px solid #e2e6ec;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, .035);
+}
+
+.pc-builder-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 18px 20px;
+    border-bottom: 1px solid #e8ebf0;
+}
+
+.pc-builder-header h3 {
+    margin: 0;
+    color: #172033;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.pc-builder-header p {
+    margin: 4px 0 0;
+    color: #8a929e;
+    font-size: 10px;
+}
+
+.pc-builder-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #dfe3e9;
+    border-radius: 6px;
+    background: #fff;
+    color: #667085;
+    padding: 7px 11px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.pc-builder-clear:hover {
+    border-color: #ef4444;
+    background: #fff5f5;
+    color: #ef4444;
+}
+
+.pc-builder-products {
+    padding: 15px;
+}
+
+.frequently-accordion {
+    width: 100%;
+}
+
+.frequently-accordion #accordion {
+    width: 100%;
+}
+
+.frequently-accordion .card {
+    overflow: hidden;
+    margin-bottom: 9px;
+    border: 1px solid #e0e4ea;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.frequently-accordion .card:last-child {
+    margin-bottom: 0;
+}
+
+.frequently-accordion .card-header {
+    padding: 0;
+    border: 0;
+    background: #f8f9fc;
+}
+
+.frequently-accordion .card-header h5 {
+    margin: 0;
+}
+
+.frequently-accordion .card-header a {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 15px;
+    color: #172033;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.frequently-accordion .card-header a:hover {
+    background: #f3f6fb;
+    color: #1769e8;
+}
+
+.faq-title-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.faq-title-left i {
+    width: 18px;
+    color: #1769e8;
+    font-size: 14px;
+    text-align: center;
+}
+
+.faq-title-left span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.frequently-accordion .card-body {
+    padding: 9px;
+    border-top: 1px solid #e5e8ed;
+    background: #fff;
+}
+
+.product-row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.product-column {
+    padding-right: 0;
+    padding-left: 0;
+    margin-bottom: 7px;
+}
+
+.product-column:last-child {
+    margin-bottom: 0;
+}
+
+.builder-product-item {
+    position: relative;
+    width: 100%;
+}
+
+.builder-product-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.builder-product-label {
+    width: 100%;
+    min-height: 55px;
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    padding: 8px 11px;
+    border: 1px solid #e0e4ea;
+    border-radius: 7px;
+    background: #fff;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.builder-product-label:hover {
+    border-color: #1769e8;
+    background: #fafcff;
+}
+
+.builder-product-radio:checked+.builder-product-label {
+    border-color: #1769e8;
+    background: #f4f8ff;
+    box-shadow: 0 2px 9px rgba(23, 105, 232, .08);
+}
+
+.builder-radio {
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #c3c9d2;
+    border-radius: 50%;
+}
+
+.builder-radio:after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all .2s ease;
+}
+
+.builder-product-radio:checked+.builder-product-label .builder-radio {
+    border-color: #1769e8;
+}
+
+.builder-product-radio:checked+.builder-product-label .builder-radio:after {
+    background: #1769e8;
+}
+
+.builder-product-details {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 160px 140px;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+}
+
+.builder-product-name {
+    overflow: hidden;
+    color: #172033;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.builder-product-sku {
+    overflow: hidden;
+    color: #89919d;
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.builder-product-price {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.builder-sale-price {
+    color: #159447;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.builder-old-price {
+    color: #dc3545;
+    font-size: 9px;
+}
+.selected-product-details span {
+    display: block;
+    margin-bottom: 4px;
+}
+.selected-products-card {
+    position: sticky;
+    top: 20px;
+}
+
+.selected-products-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 18px 20px;
+    border-bottom: 1px solid #e8ebf0;
+}
+
+.selected-products-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.selected-products-title i {
+    color: #1769e8;
+    font-size: 12px;
+}
+
+.selected-products-title h4 {
+    margin: 0;
+    color: #172033;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.selected-products-count {
+    min-width: 25px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 7px;
+    border-radius: 20px;
+    background: #1769e8;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.selected-products-body {
+    padding: 12px;
+}
+
+.selected-product-item {
+    position: relative;
+    width: 100%;
+    min-height: 58px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    padding: 9px;
+    border: 1px solid #e0e4ea;
+    border-radius: 7px;
+    background: #fff;
+    animation: selectedProductFade .25s ease;
+}
+
+.selected-product-item:last-child {
+    margin-bottom: 0;
+}
+
+@keyframes selectedProductFade {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+.selected-product-type {
+    display: block;
+    margin-bottom: 2px;
+    color: #1769e8;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.selected-product-name {
+    display: block;
+    overflow: hidden;
+    color: #172033;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-product-sku {
+    overflow: hidden;
+    color: #89919d;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-product-price {
+    color: #159447;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.selected-product-remove {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 5px;
+    background: #fff1f2;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all .2s ease;
+}
+
+.selected-product-remove:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+.selected-empty {
+    padding: 55px 20px;
+    text-align: center;
+}
+
+.selected-empty-icon {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: #f5f7fa;
+    color: #bdc4ce;
+    font-size: 19px;
+}
+
+.selected-empty h5 {
+    margin: 0 0 5px;
+    color: #5d6673;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.selected-empty p {
+    max-width: 230px;
+    margin: 0 auto;
+    color: #98a0ab;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.selected-summary {
+    margin-top: 10px;
+    padding: 13px;
+    border: 1px solid #dfe7f4;
+    border-radius: 8px;
+    background: #f4f8ff;
+}
+
+.summary-label {
+    display: block;
+    margin-bottom: 2px;
+    color: #687386;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.summary-total {
+    color: #159447;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.proceed-builder {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: #1769e8;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.proceed-builder:hover {
+    background: #0d5dcc;
+}
+
+.empty-products {
+    padding: 45px 20px;
+    text-align: center;
+}
+
+.empty-products i {
+    display: block;
+    margin-bottom: 10px;
+    color: #cbd1da;
+    font-size: 35px;
+}
+
+.empty-products h5 {
+    margin: 0 0 4px;
+    color: #667085;
+    font-size: 13px;
+}
+
+.empty-products p {
+    margin: 0;
+    color: #98a0ac;
+    font-size: 10px;
+}
+
+@media (max-width: 991px) {
+    .selected-products-card {
+        position: static;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 767px) {
+    .pc-builder-area {
+        padding: 25px 0 40px;
     }
 
     .pc-builder-header {
-        background: #ffffff;
-        border: 1px solid #e8e8e8;
-        border-radius: 14px;
-        padding: 25px 30px;
-        margin-bottom: 25px;
-    }
-
-    .pc-builder-header h1 {
-        margin: 0 0 8px;
-        font-size: 28px;
-        font-weight: 700;
-        color: #222;
-    }
-
-    .pc-builder-header p {
-        margin: 0;
-        color: #777;
-        font-size: 14px;
-    }
-
-    .builder-layout {
-        display: flex;
-        gap: 25px;
         align-items: flex-start;
+        flex-direction: column;
+        padding: 17px;
     }
 
-    .builder-sidebar {
-        width: 280px;
-        flex: 0 0 280px;
-    }
-
-    .builder-content {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .builder-card {
-        background: #ffffff;
-        border: 1px solid #e8e8e8;
-        border-radius: 14px;
-        overflow: hidden;
-    }
-
-    .builder-sidebar-title {
-        padding: 18px 20px;
-        border-bottom: 1px solid #eeeeee;
-        font-size: 16px;
-        font-weight: 700;
-        color: #222;
-    }
-
-    .product-type-list {
+    .pc-builder-products {
         padding: 10px;
     }
 
-    .product-type-button {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border: 0;
-        background: transparent;
-        text-align: left;
-        padding: 12px 14px;
-        margin-bottom: 4px;
-        border-radius: 8px;
-        color: #444;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-
-    .product-type-button:hover,
-    .product-type-button.active {
-        background: #f0f3ff;
-        color: #6777ef;
-    }
-
-    .product-type-button i {
-        width: 22px;
-    }
-
-    .product-type-button .type-count {
-        min-width: 25px;
-        padding: 3px 7px;
-        border-radius: 20px;
-        background: #f1f1f1;
-        color: #777;
-        font-size: 11px;
-        text-align: center;
-    }
-
-    .product-type-button.active .type-count {
-        background: #6777ef;
-        color: #ffffff;
-    }
-
-    .builder-main-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
-        padding: 20px 25px;
-        border-bottom: 1px solid #eeeeee;
-    }
-
-    .builder-main-header h4 {
-        margin: 0;
-        font-size: 19px;
-        font-weight: 700;
-        color: #222;
-    }
-
-    .builder-main-header p {
-        margin: 5px 0 0;
-        color: #888;
-        font-size: 13px;
-    }
-
-    .selected-count {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 7px 13px;
-        border-radius: 30px;
-        background: #6777ef;
-        color: #ffffff;
-        font-size: 13px;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-    .builder-tree {
-        padding: 20px;
-    }
-
-    .product-type-section {
-        margin-bottom: 25px;
-        border: 1px solid #eeeeee;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    .product-type-section:last-child {
-        margin-bottom: 0;
-    }
-
-    .product-type-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
-        padding: 16px 18px;
-        background: #fafafa;
-        border-bottom: 1px solid #eeeeee;
-    }
-
-    .product-type-header-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .product-type-header-left i {
-        color: #6777ef;
-        font-size: 17px;
-    }
-
-    .product-type-header h5 {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 700;
-        color: #222;
-    }
-
-    .product-type-count {
-        padding: 4px 9px;
-        border-radius: 20px;
-        background: #ffffff;
-        border: 1px solid #e4e4e4;
-        color: #777;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    .product-list {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .builder-product-details {
+        grid-template-columns: minmax(0, 1fr) 120px 100px;
         gap: 12px;
-        padding: 18px;
     }
 
-    .product-option {
-        position: relative;
+    .selected-products-header {
+        padding: 17px;
     }
 
-    .product-checkbox {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
+    .selected-product-details {
+        grid-template-columns: minmax(0, 1fr) 80px 75px;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 575px) {
+    .frequently-accordion .card-header a {
+        padding: 11px;
     }
 
-    .product-label {
-        position: relative;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        width: 100%;
-        min-height: 100px;
-        padding: 12px;
-        border: 1px solid #e5e5e5;
-        border-radius: 10px;
-        background: #ffffff;
-        cursor: pointer;
-        transition: all 0.2s ease;
+    .frequently-accordion .card-body {
+        padding: 7px;
     }
 
-    .product-label:hover {
-        border-color: #6777ef;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-        transform: translateY(-1px);
+    .builder-product-label {
+        min-height: 52px;
+        padding: 7px 8px;
     }
 
-    .product-checkbox:checked + .product-label {
-        border-color: #6777ef;
-        background: #f5f6ff;
-        box-shadow: 0 4px 15px rgba(103, 119, 239, 0.12);
-    }
-
-    .product-check-icon {
-        width: 22px;
-        height: 22px;
-        min-width: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid #d5d5d5;
-        border-radius: 5px;
-        color: transparent;
-        font-size: 11px;
-        transition: 0.2s ease;
-    }
-
-    .product-checkbox:checked + .product-label .product-check-icon {
-        background: #6777ef;
-        border-color: #6777ef;
-        color: #ffffff;
-    }
-
-    .product-image {
-        width: 70px;
-        height: 70px;
-        min-width: 70px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border-radius: 8px;
-        background: #f6f6f6;
-    }
-
-    .product-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    .product-info {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .product-name {
-        display: block;
-        margin-bottom: 4px;
-        color: #333;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.4;
-    }
-
-    .product-sku {
-        display: block;
-        margin-bottom: 5px;
-        color: #999;
-        font-size: 11px;
-    }
-
-    .product-price {
-        display: flex;
-        align-items: center;
+    .builder-product-details {
+        grid-template-columns: minmax(0, 1fr) 85px;
         gap: 7px;
-        flex-wrap: wrap;
     }
 
-    .sale-price {
-        color: #28a745;
-        font-size: 14px;
-        font-weight: 700;
+    .builder-product-price {
+        grid-column: 1 / -1;
     }
 
-    .regular-price {
-        color: #999;
-        font-size: 12px;
+    .builder-product-name {
+        font-size: 10px;
     }
 
-    .builder-summary {
-        position: sticky;
-        bottom: 15px;
-        z-index: 10;
-        margin-top: 25px;
-        padding: 20px;
-        background: #ffffff;
-        border: 1px solid #e8e8e8;
-        border-radius: 12px;
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    .builder-product-sku {
+        font-size: 8px;
     }
 
-    .summary-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
+    .builder-sale-price {
+        font-size: 10px;
     }
 
-    .summary-title {
-        margin-bottom: 4px;
-        color: #222;
-        font-size: 16px;
-        font-weight: 700;
+    .selected-product-item {
+        padding: 8px;
     }
 
-    .summary-text {
-        color: #777;
-        font-size: 13px;
+    .selected-product-details {
+        grid-template-columns: minmax(0, 1fr) 75px;
+        gap: 6px;
     }
 
-    .summary-total {
-        color: #28a745;
-        font-size: 20px;
-        font-weight: 700;
+    .selected-product-price {
+        grid-column: 1 / -1;
     }
-
-    .summary-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .empty-builder {
-        padding: 60px 25px;
-        text-align: center;
-    }
-
-    .empty-builder i {
-        display: block;
-        margin-bottom: 15px;
-        color: #ccc;
-        font-size: 45px;
-    }
-
-    .empty-builder h4 {
-        margin-bottom: 8px;
-        font-weight: 700;
-    }
-
-    .empty-builder p {
-        margin: 0;
-        color: #888;
-    }
-
-    @media (max-width: 991px) {
-
-        .builder-layout {
-            display: block;
-        }
-
-        .builder-sidebar {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .product-type-list {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-        }
-
-        .product-type-button {
-            width: auto;
-            min-width: 150px;
-            margin-bottom: 0;
-            white-space: nowrap;
-        }
-
-        .product-list {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 575px) {
-
-        .pc-builder-page {
-            padding: 20px 0 50px;
-        }
-
-        .pc-builder-header {
-            padding: 20px;
-        }
-
-        .pc-builder-header h1 {
-            font-size: 22px;
-        }
-
-        .builder-main-header {
-            padding: 15px;
-        }
-
-        .builder-tree {
-            padding: 12px;
-        }
-
-        .product-list {
-            padding: 12px;
-        }
-
-        .summary-inner {
-            display: block;
-        }
-
-        .summary-actions {
-            margin-top: 15px;
-        }
-
-        .summary-actions .btn {
-            flex: 1;
-        }
-    }
+}
 </style>
 
-@php
-    $builderProductsCollection = collect($builderProducts ?? []);
-
-    if ($builderProductsCollection->isEmpty() && isset($products)) {
-        $builderProductsCollection = collect($products)->map(function ($product) {
-            return (object) [
-                'id' => $product->id,
-                'product_type' => $product->product_type ?? 'Other',
-                'product' => $product,
-            ];
-        });
-    }
-
-    $groupedProducts = $builderProductsCollection
-        ->filter(function ($builderProduct) {
-            return !empty($builderProduct->product);
-        })
-        ->groupBy(function ($builderProduct) {
-            return $builderProduct->product_type ?: 'Other';
-        });
-
-    $productTypeOrder = [
-        'Processor',
-        'Motherboard',
-        'RAM',
-        'Graphics Card',
-        'Storage',
-        'Power Supply',
-        'Cabinet',
-        'CPU Cooler',
-    ];
-
-    $orderedProductTypes = collect($productTypeOrder)
-        ->filter(function ($type) use ($groupedProducts) {
-            return $groupedProducts->has($type);
-        });
-
-    $otherProductTypes = $groupedProducts->keys()
-        ->filter(function ($type) use ($productTypeOrder) {
-            return !in_array($type, $productTypeOrder);
-        });
-
-    $allProductTypes = $orderedProductTypes
-        ->merge($otherProductTypes)
-        ->values();
-
-    $typeIcons = [
-        'Processor' => 'fas fa-microchip',
-        'Motherboard' => 'fas fa-server',
-        'RAM' => 'fas fa-memory',
-        'Graphics Card' => 'fas fa-tv',
-        'Storage' => 'fas fa-hdd',
-        'Power Supply' => 'fas fa-bolt',
-        'Cabinet' => 'fas fa-desktop',
-        'CPU Cooler' => 'fas fa-fan',
-    ];
-@endphp
-
-<section class="pc-builder-page">
-
+<section class="pc-builder-area">
     <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="pc-builder-card">
+                    <div class="pc-builder-header">
+                        <div>
+                            <h3>Products</h3>
+                            <p>Select one product from each category.</p>
+                        </div>
 
-        <div class="pc-builder-header">
+                        <button type="button" class="pc-builder-clear" id="clearSelection">
+                            <i class="fa fa-trash-o"></i>
+                            Clear All
+                        </button>
+                    </div>
 
-            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <div class="pc-builder-products">
+                        @if($allProductTypes->count())
+                        <div class="frequently-accordion">
+                            <div id="accordion">
+                                @foreach($allProductTypes as $index => $productType)
+                                @php
+                                $typeProducts = $groupedProducts->get($productType, collect());
+                                $typeIcon = $typeIcons[$productType] ?? 'fa fa-cube';
+                                $headingId = 'heading' . $index;
+                                $collapseId = 'collapse' . $index;
+                                @endphp
 
-                <div>
-                    <h1>
-                        {{ $builderType->name }}
-                    </h1>
+                                <div class="card">
+                                    <div class="card-header" id="{{ $headingId }}">
+                                        <h5>
+                                            <a class="collapsed" data-toggle="collapse" data-target="#{{ $collapseId }}"
+                                                aria-expanded="false" aria-controls="{{ $collapseId }}">
+                                                <span class="faq-title-left">
+                                                    <i class="{{ $typeIcon }}"></i>
+                                                    <span>{{ $productType }}</span>
+                                                </span>
 
-                    <p>
-                        Select the components you want to use in your PC build.
-                    </p>
+
+                                            </a>
+                                        </h5>
+                                    </div>
+
+                                    <div id="{{ $collapseId }}" class="collapse" aria-labelledby="{{ $headingId }}"
+                                        data-parent="#accordion">
+                                        <div class="card-body">
+                                            <div class="row product-row">
+                                                @foreach($typeProducts as $builderProduct)
+                                                @php
+                                                $product = $builderProduct->product;
+
+                                                $hasSalePrice = !empty($product->sale_price) &&
+                                                $product->sale_price < $product->price;
+
+                                                    $displayPrice = $hasSalePrice
+                                                    ? $product->sale_price
+                                                    : $product->price;
+                                                    @endphp
+
+                                                    <div class="col-lg-12 col-md-12 col-sm-12 product-column">
+                                                        <div class="builder-product-item">
+                                                            <input type="radio" class="builder-product-radio"
+                                                                id="builder_product_{{ $builderProduct->id }}"
+                                                                name="builder_{{ Str::slug($productType) }}"
+                                                                value="{{ $product->id }}"
+                                                                data-product-type="{{ $productType }}"
+                                                                data-product-name="{{ $product->name }}"
+                                                                data-product-sku="{{ $product->sku ?? '-' }}"
+                                                                data-product-price="{{ $displayPrice }}">
+
+                                                            <label class="builder-product-label"
+                                                                for="builder_product_{{ $builderProduct->id }}">
+                                                                <span class="builder-radio"></span>
+
+                                                                <span class="builder-product-details">
+                                                                    <span class="builder-product-name">
+                                                                        {{ $product->name }}
+                                                                    </span>
+
+                                                                    <span class="builder-product-sku">
+                                                                        SKU: {{ $product->sku ?? '-' }}
+                                                                    </span>
+
+                                                                    <span class="builder-product-price">
+                                                                        @if($hasSalePrice)
+                                                                        <span class="builder-sale-price">
+                                                                            ₹{{ number_format($product->sale_price, 2) }}
+                                                                        </span>
+
+                                                                        <span class="builder-old-price">
+                                                                            <del>
+                                                                                ₹{{ number_format($product->price, 2) }}
+                                                                            </del>
+                                                                        </span>
+                                                                        @else
+                                                                        <span class="builder-sale-price">
+                                                                            ₹{{ number_format($product->price, 2) }}
+                                                                        </span>
+                                                                        @endif
+                                                                    </span>
+                                                                </span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        @else
+                        <div class="empty-products">
+                            <i class="fa fa-cube"></i>
+                            <h5>No Products Available</h5>
+                            <p>No products have been assigned to this builder.</p>
+                        </div>
+                        @endif
+                    </div>
                 </div>
-
-                <div class="mt-2 mt-md-0">
-                    <span class="selected-count">
-                        <i class="fas fa-check-circle"></i>
-
-                        <span id="selectedProductCount">
-                            0
-                        </span>
-
-                        Selected
-                    </span>
-                </div>
-
             </div>
 
-        </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="pc-builder-card selected-products-card">
+                    <div class="selected-products-header">
+                        <div class="selected-products-title">
+                            <i class="fa fa-check-circle"></i>
+                            <h4>Selected Products</h4>
+                        </div>
 
-        <div class="builder-layout">
-
-            <aside class="builder-sidebar">
-
-                <div class="builder-card">
-
-                    <div class="builder-sidebar-title">
-                        <i class="fas fa-layer-group mr-2"></i>
-                        Product Types
+                        <span class="selected-products-count">
+                            <span id="selectedCount">0</span>
+                        </span>
                     </div>
 
-                    <div class="product-type-list">
+                    <div class="selected-products-body">
+                        <div id="selectedProductsList"></div>
 
-                        <button
-                            type="button"
-                            class="product-type-button active"
-                            data-type="all"
-                        >
-                            <span>
-                                <i class="fas fa-th-large"></i>
-                                All Components
-                            </span>
+                        <div class="selected-empty" id="selectedEmpty">
+                            <div class="selected-empty-icon">
+                                <i class="fa fa-shopping-basket"></i>
+                            </div>
 
-                            <span class="type-count">
-                                {{ $builderProductsCollection->count() }}
-                            </span>
-                        </button>
-
-                        @foreach($allProductTypes as $productType)
-
-                            <button
-                                type="button"
-                                class="product-type-button"
-                                data-type="{{ $productType }}"
-                            >
-                                <span>
-                                    <i class="{{ $typeIcons[$productType] ?? 'fas fa-cube' }}"></i>
-                                    {{ $productType }}
-                                </span>
-
-                                <span class="type-count">
-                                    {{ $groupedProducts->get($productType)->count() }}
-                                </span>
-                            </button>
-
-                        @endforeach
-
-                    </div>
-
-                </div>
-
-            </aside>
-
-            <main class="builder-content">
-
-                <div class="builder-card">
-
-                    <div class="builder-main-header">
-
-                        <div>
-                            <h4>
-                                Available Components
-                            </h4>
+                            <h5>No Products Selected</h5>
 
                             <p>
-                                Select the products you want to include in your PC build.
+                                Select products from the left side
+                                and they will appear here.
                             </p>
                         </div>
 
-                        <div>
-                            <button
-                                type="button"
-                                class="btn btn-sm btn-light"
-                                id="clearSelection"
-                            >
-                                <i class="fas fa-times"></i>
-                                Clear
-                            </button>
-                        </div>
-
-                    </div>
-
-                    <div class="builder-tree">
-
-                        @if($allProductTypes->count())
-
-                            @foreach($allProductTypes as $productType)
-
-                                @php
-                                    $typeProducts = $groupedProducts->get($productType, collect());
-                                    $typeIcon = $typeIcons[$productType] ?? 'fas fa-cube';
-                                @endphp
-
-                                <div
-                                    class="product-type-section"
-                                    data-product-type="{{ $productType }}"
-                                >
-
-                                    <div class="product-type-header">
-
-                                        <div class="product-type-header-left">
-
-                                            <i class="{{ $typeIcon }}"></i>
-
-                                            <h5>
-                                                {{ $productType }}
-                                            </h5>
-
-                                        </div>
-
-                                        <span class="product-type-count">
-                                            {{ $typeProducts->count() }}
-                                            Products
-                                        </span>
-
-                                    </div>
-
-                                    <div class="product-list">
-
-                                        @foreach($typeProducts as $builderProduct)
-
-                                            @php
-                                                $product = $builderProduct->product;
-
-                                                $primaryImage = $product->images
-                                                    ->where('is_primary', true)
-                                                    ->first()
-                                                    ?? $product->images->first();
-
-                                                $hasSalePrice =
-                                                    !empty($product->sale_price)
-                                                    && $product->sale_price < $product->price;
-
-                                                $productPrice = $hasSalePrice
-                                                    ? $product->sale_price
-                                                    : $product->price;
-                                            @endphp
-
-                                            <div class="product-option">
-
-                                                <input
-                                                    type="checkbox"
-                                                    class="product-checkbox builder-product-checkbox"
-                                                    id="product_{{ $builderProduct->id }}"
-                                                    value="{{ $product->id }}"
-                                                    data-builder-product-id="{{ $builderProduct->id }}"
-                                                    data-product-type="{{ $productType }}"
-                                                    data-price="{{ $productPrice }}"
-                                                    data-name="{{ $product->name }}"
-                                                >
-
-                                                <label
-                                                    for="product_{{ $builderProduct->id }}"
-                                                    class="product-label"
-                                                >
-
-                                                    <span class="product-check-icon">
-                                                        <i class="fas fa-check"></i>
-                                                    </span>
-
-                                                    <span class="product-image">
-
-                                                        @if($primaryImage && $primaryImage->image)
-
-                                                            <img
-                                                                src="{{ asset('storage/' . $primaryImage->image) }}"
-                                                                alt="{{ $product->name }}"
-                                                            >
-
-                                                        @else
-
-                                                            <img
-                                                                src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
-                                                                alt="{{ $product->name }}"
-                                                            >
-
-                                                        @endif
-
-                                                    </span>
-
-                                                    <span class="product-info">
-
-                                                        <span class="product-name">
-                                                            {{ $product->name }}
-                                                        </span>
-
-                                                        @if($product->sku)
-
-                                                            <span class="product-sku">
-                                                                SKU: {{ $product->sku }}
-                                                            </span>
-
-                                                        @endif
-
-                                                        <span class="product-price">
-
-                                                            @if($hasSalePrice)
-
-                                                                <span class="sale-price">
-                                                                    ₹{{ number_format($product->sale_price, 2) }}
-                                                                </span>
-
-                                                                <span class="regular-price">
-                                                                    <del>
-                                                                        ₹{{ number_format($product->price, 2) }}
-                                                                    </del>
-                                                                </span>
-
-                                                            @else
-
-                                                                <span class="sale-price">
-                                                                    ₹{{ number_format($product->price, 2) }}
-                                                                </span>
-
-                                                            @endif
-
-                                                        </span>
-
-                                                    </span>
-
-                                                </label>
-
-                                            </div>
-
-                                        @endforeach
-
-                                    </div>
-
-                                </div>
-
-                            @endforeach
-
-                        @else
-
-                            <div class="empty-builder">
-
-                                <i class="fas fa-box-open"></i>
-
-                                <h4>
-                                    No Products Available
-                                </h4>
-
-                                <p>
-                                    No products have been assigned to this PC Builder Type yet.
-                                </p>
-
-                            </div>
-
-                        @endif
-
-                    </div>
-
-                </div>
-
-                <div class="builder-summary">
-
-                    <div class="summary-inner">
-
-                        <div>
-
-                            <div class="summary-title">
-                                PC Build Selection
-                            </div>
-
-                            <div class="summary-text">
-
-                                <span id="summaryCount">
-                                    0
-                                </span>
-
-                                products selected
-
-                            </div>
-
-                        </div>
-
-                        <div>
+                        <div class="selected-summary" id="selectedSummary" style="display:none;">
+                            <span class="summary-label">
+                                Total Price
+                            </span>
 
                             <div class="summary-total">
                                 ₹<span id="summaryTotal">0.00</span>
                             </div>
 
-                        </div>
-
-                        <div class="summary-actions">
-
-                            <button
-                                type="button"
-                                class="btn btn-light"
-                                id="clearSelectionBottom"
-                            >
-                                Clear
+                            <button type="button" class="proceed-builder" id="proceedBuilder">
+                                Proceed to Build
+                                <i class="fa fa-arrow-right"></i>
                             </button>
-
-                            <button
-                                type="button"
-                                class="btn btn-primary"
-                                id="continueBuilder"
-                            >
-                                Continue
-                                <i class="fas fa-arrow-right ml-1"></i>
-                            </button>
-
                         </div>
-
                     </div>
-
                 </div>
-
-            </main>
-
+            </div>
         </div>
-
     </div>
-
 </section>
 
-@endsection
-
 @push('scripts')
-
 <script>
-    $(document).ready(function () {
+$(document).ready(function() {
+    const storageKey = 'pcBuilderProducts';
 
-        function updateSelection() {
+    function formatPrice(value) {
+        return Number(value || 0).toLocaleString('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
 
-            let selectedProducts = $('.builder-product-checkbox:checked');
+    function escapeHtml(value) {
+        return $('<div>').text(value).html();
+    }
 
-            let count = selectedProducts.length;
+    function getSavedProducts() {
+        try {
+            const saved = JSON.parse(
+                localStorage.getItem(storageKey) || '{}'
+            );
 
-            let total = 0;
+            if (
+                saved &&
+                typeof saved === 'object' &&
+                !Array.isArray(saved)
+            ) {
+                return saved;
+            }
 
-            selectedProducts.each(function () {
+            return {};
+        } catch (error) {
+            return {};
+        }
+    }
 
-                let price = parseFloat(
-                    $(this).data('price')
+    function saveProducts() {
+        const selected = {};
+
+        $('.builder-product-radio:checked').each(function() {
+            const product = $(this);
+
+            selected[
+                String(product.data('product-type'))
+            ] = String(product.val());
+        });
+
+        localStorage.setItem(
+            storageKey,
+            JSON.stringify(selected)
+        );
+    }
+
+    function updateSelectedProducts() {
+        const selectedProducts =
+            $('.builder-product-radio:checked');
+
+        const container =
+            $('#selectedProductsList');
+
+        const emptyState =
+            $('#selectedEmpty');
+
+        const summary =
+            $('#selectedSummary');
+
+        let total = 0;
+
+        container.empty();
+
+        selectedProducts.each(function() {
+            const product =
+                $(this);
+
+            const productId =
+                String(product.val());
+
+            const productType =
+                product.data('product-type') || '';
+
+            const productName =
+                product.data('product-name') || '';
+
+            const productSku =
+                product.data('product-sku') || '-';
+
+            const productPrice =
+                parseFloat(
+                    product.data('product-price')
                 ) || 0;
 
-                total += price;
-            });
+            total += productPrice;
 
-            $('#selectedProductCount').text(count);
+            const selectedItem = $(`
+                    <div
+                        class="selected-product-item"
+                        data-product-id="${productId}"
+                    >
+                        <div class="selected-product-details">
+                            <span>
+                                <span class="selected-product-type">
+                                    ${escapeHtml(productType)}
+                                </span>
 
-            $('#summaryCount').text(count);
+                                <span class="selected-product-name">
+                                    ${escapeHtml(productName)}
+                                </span>
+                            </span>
 
-            $('#summaryTotal').text(
-                total.toLocaleString('en-IN', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                })
-            );
-        }
+                            <span class="selected-product-sku">
+                                SKU: ${escapeHtml(productSku)}
+                            </span>
 
-        $(document).on(
-            'change',
-            '.builder-product-checkbox',
-            function () {
-                updateSelection();
-            }
+                            <span class="selected-product-price">
+                                ₹${formatPrice(productPrice)}
+                            </span>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="selected-product-remove"
+                            data-product-id="${productId}"
+                            data-product-type="${escapeHtml(productType)}"
+                            title="Remove"
+                        >
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                `);
+
+            container.append(selectedItem);
+        });
+
+        const count =
+            selectedProducts.length;
+
+        $('#selectedCount').text(count);
+
+        $('#summaryTotal').text(
+            formatPrice(total)
         );
 
-        $('.product-type-button').on('click', function () {
+        if (count > 0) {
+            emptyState.hide();
+            summary.show();
+        } else {
+            emptyState.show();
+            summary.hide();
+        }
+    }
 
-            let selectedType = $(this).data('type');
+    function restoreProducts() {
+        const savedProducts =
+            getSavedProducts();
 
-            $('.product-type-button').removeClass('active');
+        $('.builder-product-radio').each(function() {
+            const product =
+                $(this);
 
-            $(this).addClass('active');
+            const productType =
+                String(
+                    product.data('product-type')
+                );
 
-            if (selectedType === 'all') {
+            const productId =
+                String(
+                    product.val()
+                );
 
-                $('.product-type-section').show();
-
-            } else {
-
-                $('.product-type-section').each(function () {
-
-                    let sectionType = String(
-                        $(this).data('product-type')
-                    );
-
-                    if (sectionType === String(selectedType)) {
-
-                        $(this).show();
-
-                    } else {
-
-                        $(this).hide();
-
-                    }
-
-                });
+            if (
+                savedProducts[productType] &&
+                String(
+                    savedProducts[productType]
+                ) === productId
+            ) {
+                product.prop(
+                    'checked',
+                    true
+                );
             }
         });
 
-        function clearSelection() {
+        updateSelectedProducts();
+    }
 
-            $('.builder-product-checkbox')
-                .prop('checked', false);
+    $('.frequently-accordion .card-header a').on('click', function() {
+        const link =
+            $(this);
 
-            localStorage.removeItem(
-                'pcBuilderProducts'
+        const target =
+            $(link.data('target'));
+
+        $('.frequently-accordion .card-header a').not(link).each(function() {
+            $(this)
+                .find('.faq-toggle-icon i')
+                .removeClass('fa-minus')
+                .addClass('fa-plus');
+        });
+
+        setTimeout(function() {
+            if (target.hasClass('show')) {
+                link
+                    .find('.faq-toggle-icon i')
+                    .removeClass('fa-plus')
+                    .addClass('fa-minus');
+            } else {
+                link
+                    .find('.faq-toggle-icon i')
+                    .removeClass('fa-minus')
+                    .addClass('fa-plus');
+            }
+        }, 260);
+    });
+
+    $('.frequently-accordion .collapse').on('shown.bs.collapse', function() {
+        const collapse =
+            $(this);
+
+        const header =
+            collapse
+            .closest('.card')
+            .find('.card-header a');
+
+        header
+            .find('.faq-toggle-icon i')
+            .removeClass('fa-plus')
+            .addClass('fa-minus');
+    });
+
+    $('.frequently-accordion .collapse').on('hidden.bs.collapse', function() {
+        const collapse =
+            $(this);
+
+        const header =
+            collapse
+            .closest('.card')
+            .find('.card-header a');
+
+        header
+            .find('.faq-toggle-icon i')
+            .removeClass('fa-minus')
+            .addClass('fa-plus');
+    });
+
+    $('.builder-product-radio').on('change', function() {
+        saveProducts();
+        updateSelectedProducts();
+    });
+
+    $(document).on('click', '.selected-product-remove', function() {
+        const productId =
+            String(
+                $(this).data('product-id')
             );
 
-            updateSelection();
-        }
+        const productType =
+            String(
+                $(this).data('product-type')
+            );
 
-        $('#clearSelection').on(
-            'click',
-            function () {
-                clearSelection();
-            }
-        );
+        $('.builder-product-radio').each(function() {
+            const product =
+                $(this);
 
-        $('#clearSelectionBottom').on(
-            'click',
-            function () {
-                clearSelection();
-            }
-        );
-
-        $('#continueBuilder').on(
-            'click',
-            function () {
-
-                let selectedIds = [];
-
-                $('.builder-product-checkbox:checked')
-                    .each(function () {
-
-                        selectedIds.push(
-                            $(this).val()
-                        );
-
-                    });
-
-                if (!selectedIds.length) {
-
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'No Products Selected',
-                        text: 'Please select at least one product to continue.',
-                        confirmButtonColor: '#6777ef'
-                    });
-
-                    return;
-                }
-
-                localStorage.setItem(
-                    'pcBuilderProducts',
-                    JSON.stringify(selectedIds)
+            if (
+                String(product.val()) === productId &&
+                String(product.data('product-type')) === productType
+            ) {
+                product.prop(
+                    'checked',
+                    false
                 );
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Products Selected',
-                    text:
-                        selectedIds.length +
-                        ' product(s) selected for your PC build.',
-                    confirmButtonColor: '#6777ef'
-                });
             }
+        });
+
+        saveProducts();
+        updateSelectedProducts();
+    });
+
+    $('#clearSelection').on('click', function() {
+        $('.builder-product-radio').prop(
+            'checked',
+            false
         );
 
-        let savedProducts = JSON.parse(
-            localStorage.getItem(
-                'pcBuilderProducts'
-            ) || '[]'
+        localStorage.removeItem(
+            storageKey
         );
 
-        if (Array.isArray(savedProducts)) {
+        updateSelectedProducts();
+    });
 
-            savedProducts.forEach(function (productId) {
+    $('#proceedBuilder').on('click', function() {
+        const selectedProducts = {};
 
-                $('.builder-product-checkbox[value="' + productId + '"]')
-                    .prop('checked', true);
+        $('.builder-product-radio:checked').each(function() {
+            const product =
+                $(this);
 
-            });
+            selectedProducts[
+                String(
+                    product.data('product-type')
+                )
+            ] = String(
+                product.val()
+            );
+        });
 
+        if (!Object.keys(selectedProducts).length) {
+            alert(
+                'Please select at least one product.'
+            );
+
+            return;
         }
 
-        updateSelection();
-
+        localStorage.setItem(
+            storageKey,
+            JSON.stringify(selectedProducts)
+        );
     });
-</script>
 
+    restoreProducts();
+});
+</script>
 @endpush
+
+@endsection
