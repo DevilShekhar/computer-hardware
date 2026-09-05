@@ -345,31 +345,22 @@
                             </ul>
                         </li>
 
-                        <li
-                            class="{{ request()->routeIs('builder-types.*', 'builder-products.*') ? 'active' : '' }}">
+                       <li class="{{ request()->routeIs('builder-types.*', 'builder-products.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="cpu"></i>
                                 <span>PC Builder</span>
                             </a>
-
                             <ul class="dropdown-menu">
-
                                 <li class="{{ request()->routeIs('builder-types.*') ? 'active' : '' }}">
-                                    <a
-                                        class="nav-link"
-                                        href="{{ route('builder-types.index') }}">
-                                        Type
+                                    <a class="nav-link" href="{{ route('builder-types.index') }}">
+                                        PC Builder Type
                                     </a>
                                 </li>
-
                                 <li class="{{ request()->routeIs('builder-products.*') ? 'active' : '' }}">
-                                    <a
-                                        class="nav-link"
-                                        href="{{ route('builder-products.index') }}">
-                                        Product
+                                    <a class="nav-link" href="{{ route('builder-products.index') }}">
+                                        PC Builder Product
                                     </a>
                                 </li>
-
                             </ul>
                         </li>
                         <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
