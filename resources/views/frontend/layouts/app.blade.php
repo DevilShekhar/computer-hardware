@@ -98,9 +98,11 @@
                                         <div class="ht-language-trigger"><span>English</span></div>
                                         <div class="language ht-language">
                                             <ul class="ht-setting-list">
-                                                <li class="active"><a href="#"><img src="{{ asset('assets/frontend/assets/images/menu/flag-icon/1.jpg') }}"
+                                                <li class="active"><a href="#"><img
+                                                            src="{{ asset('assets/frontend/assets/images/menu/flag-icon/1.jpg') }}"
                                                             alt="">English</a></li>
-                                                <li><a href="#"><img src="{{ asset('assets/frontend/assets/images/menu/flag-icon/2.jpg') }}"
+                                                <li><a href="#"><img
+                                                            src="{{ asset('assets/frontend/assets/images/menu/flag-icon/2.jpg') }}"
                                                             alt="">Français</a></li>
                                             </ul>
                                         </div>
@@ -286,134 +288,151 @@
                                 <nav>
                                     <ul>
                                         <li><a href="index.html">Home</a></li>
-                                     <li class="shop-nav-item">
-                                        <a href="{{ url('/shop') }}" class="shop-nav-link">
-                                            Shop
-                                        </a>
-                                        @if(isset($productBrands) && $productBrands->count())
-                                            <div class="custom-shop-mega-menu">
-                                                <div class="custom-shop-column custom-shop-brands">
-                                                    <div class="custom-shop-column-header">
-                                                        Brands
-                                                    </div>
-                                                    <div class="custom-shop-column-body">
-                                                        @foreach($productBrands as $brand)
-                                                            <div class="custom-shop-item custom-shop-brand-item">
-                                                                <a href="{{ url('/shop/brand/' . $brand->slug) }}" class="custom-shop-item-link">
-                                                                    <div class="custom-shop-item-content">
-                                                                        @if(!empty($brand->product_brand_image))
-                                                                            <img src="{{ asset('storage/' . $brand->product_brand_image) }}" alt="{{ $brand->name }}" class="custom-shop-brand-image">
-                                                                        @else
-                                                                            <div class="custom-shop-brand-placeholder">
-                                                                                {{ strtoupper(substr($brand->name, 0, 1)) }}
-                                                                            </div>
-                                                                        @endif
-                                                                        <span>
-                                                                            {{ $brand->name }}
-                                                                        </span>
-                                                                    </div>
-                                                                    @if($brand->categories && $brand->categories->count())
-                                                                        <span class="custom-shop-arrow">
-                                                                            <i class="fa fa-angle-right"></i>
-                                                                        </span>
-                                                                    @endif
-                                                                </a>
-                                                                @if($brand->categories && $brand->categories->count())
-                                                                    <div class="custom-shop-submenu custom-shop-category-menu">
-                                                                        <div class="custom-shop-column-header">
-                                                                            {{ $brand->name }}
-                                                                        </div>
-                                                                        <div class="custom-shop-column-body">
-                                                                            @foreach($brand->categories as $category)
-                                                                                <div class="custom-shop-item custom-shop-category-item">
-                                                                                    <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug) }}" class="custom-shop-item-link">
-                                                                                        <div class="custom-shop-item-content">
-                                                                                            <span>
-                                                                                                {{ $category->name }}
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        @if($category->subCategories && $category->subCategories->count())
-                                                                                            <span class="custom-shop-arrow">
-                                                                                                <i class="fa fa-angle-right"></i>
-                                                                                            </span>
-                                                                                        @endif
-                                                                                    </a>
-                                                                                    @if($category->subCategories && $category->subCategories->count())
-                                                                                        <div class="custom-shop-submenu custom-shop-subcategory-menu">
-                                                                                            <div class="custom-shop-column-header">
-                                                                                                {{ $category->name }}
-                                                                                            </div>
-                                                                                            <div class="custom-shop-column-body">
-                                                                                                @foreach($category->subCategories as $subCategory)
-                                                                                                    <div class="custom-shop-item custom-shop-subcategory-item">
-                                                                                                        <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug . '/' . $subCategory->slug) }}" class="custom-shop-item-link">
-                                                                                                            <div class="custom-shop-item-content">
-                                                                                                                <span>
-                                                                                                                    {{ $subCategory->name }}
-                                                                                                                </span>
-                                                                                                            </div>
-                                                                                                            @if($subCategory->products && $subCategory->products->count())
-                                                                                                                <span class="custom-shop-arrow">
-                                                                                                                    <i class="fa fa-angle-right"></i>
-                                                                                                                </span>
-                                                                                                            @endif
-                                                                                                        </a>
-                                                                                                        @if($subCategory->products && $subCategory->products->count())
-                                                                                                            <div class="custom-shop-submenu custom-shop-product-menu">
-                                                                                                                <div class="custom-shop-column-header">
-                                                                                                                    {{ $subCategory->name }}
-                                                                                                                </div>
-                                                                                                                <div class="custom-shop-column-body">
-                                                                                                                    @foreach($subCategory->products as $product)
-                                                                                                                        <a href="{{ url('/product/' . $product->slug) }}" class="custom-shop-product-link">
-                                                                                                                            <span>
-                                                                                                                                {{ $product->name }}
-                                                                                                                            </span>
-                                                                                                                            <i class="fa fa-angle-right"></i>
-                                                                                                                        </a>
-                                                                                                                    @endforeach
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        @endif
-                                                                                                    </div>
-                                                                                                @endforeach
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    @endif
-                                                                                </div>
-                                                                            @endforeach
-                                                                        </div>
-                                                                    </div>
-                                                                @endif
+                                        <li class="nav-item nav-item--has-mega">
+                                            <a href="{{ route('our-products') }}" class="nav-link">
+                                                Shop
+                                            </a>
+                                            @if(isset($productBrands) && $productBrands->count())
+                                                <div class="mega-menu">
+                                                    <div class="mega-menu__inner">
+                                                        <div class="mega-col mega-col--brands">
+                                                            <div class="mega-col__title">
+                                                                Brands
                                                             </div>
-                                                        @endforeach
+                                                            <div class="mega-col__list">
+                                                                @foreach($productBrands as $brand)
+                                                                    <div class="mega-row">
+                                                                        <a href="{{ url('/shop/brand/' . $brand->slug) }}"class="mega-row__link brand-trigger" data-brand="{{ $brand->id }}">
+                                                                            <div class="mega-row__left">
+                                                                                @if(!empty($brand->product_brand_image))
+                                                                                    <img src="{{ asset('storage/' . $brand->product_brand_image) }}" class="mega-brand-img" alt="{{ $brand->name }}">
+                                                                                @else
+                                                                                    <div class="mega-brand-placeholder">
+                                                                                        {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                                                                    </div>
+                                                                                @endif
+                                                                                <span>{{ $brand->name }}</span>
+                                                                            </div>
+                                                                            @if($brand->categories && $brand->categories->count())
+                                                                                <i class="fa fa-angle-right"></i>
+                                                                            @endif
+                                                                        </a>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                        <div class="mega-col mega-col--categories">
+                                                            <div class="mega-col__title" id="category-title">
+                                                                Categories
+                                                            </div>
+                                                            <div class="mega-col__list">
+                                                                @foreach($productBrands as $brand)
+                                                                    @if($brand->categories && $brand->categories->count())
+                                                                        @foreach($brand->categories as $category)
+                                                                            <div class="mega-row category-item"
+                                                                                data-brand="{{ $brand->id }}" style="display:none;">
+                                                                                <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug) }}"
+                                                                                    class="mega-row__link category-trigger"
+                                                                                    data-category="{{ $category->id }}">
+                                                                                    <span>
+                                                                                        {{ $category->name }}
+                                                                                    </span>
+                                                                                    @if($category->subCategories && $category->subCategories->count())
+                                                                                        <i class="fa fa-angle-right"></i>
+                                                                                    @endif
+                                                                                </a>
+                                                                            </div>
+                                                                        @endforeach
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                        <div class="mega-col mega-col--subcategories">
+                                                            <div class="mega-col__title" id="subcategory-title">
+                                                                Sub Categories
+                                                            </div>
+                                                            <div class="mega-col__list">
+                                                                @foreach($productBrands as $brand)
+                                                                    @if($brand->categories)
+                                                                        @foreach($brand->categories as $category)
+                                                                            @if($category->subCategories && $category->subCategories->count())
+
+                                                                                @foreach($category->subCategories as $subCategory)
+                                                                                    <div class="mega-row subcategory-item" data-category="{{ $category->id }}" style="display:none;">
+                                                                                        <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug . '/' . $subCategory->slug) }}"
+                                                                                            class="mega-row__link subcategory-trigger"
+                                                                                            data-subcategory="{{ $subCategory->id }}">
+                                                                                            <span>
+                                                                                                {{ $subCategory->name }}
+                                                                                            </span>
+                                                                                            @if($subCategory->products && $subCategory->products->count())
+                                                                                                <i class="fa fa-angle-right"></i>
+                                                                                            @endif
+                                                                                        </a>
+                                                                                    </div>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                        <div class="mega-col mega-col--products">
+                                                            <div class="mega-col__title" id="product-title">
+                                                                Products
+                                                            </div>
+                                                            <div class="mega-col__list">
+                                                                @foreach($productBrands as $brand)
+                                                                    @if($brand->categories)
+                                                                        @foreach($brand->categories as $category)
+                                                                            @if($category->subCategories)
+                                                                                @foreach($category->subCategories as $subCategory)
+                                                                                    @if($subCategory->products && $subCategory->products->count())
+                                                                                        @foreach($subCategory->products as $product)
+                                                                                            <a href="{{ url('/product/' . $product->slug) }}"
+                                                                                                class="mega-row__link mega-product-item"
+                                                                                                data-subcategory="{{ $subCategory->id }}"
+                                                                                                style="display:none;">
+                                                                                                <span>
+                                                                                                    {{ $product->name }}
+                                                                                                </span>
+                                                                                                <i class="fa fa-angle-right"></i>
+                                                                                            </a>
+                                                                                        @endforeach
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endif
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endif
-                                    </li>
-                                    <li class="dropdown-holder">
-                                        <a href="{{ route('pc-builder.index') }}">
-                                            PC Builder
-                                        </a>
-                                        @if(isset($builderTypes) && $builderTypes->isNotEmpty())
-                                            <ul class="hb-dropdown">
-                                                @foreach($builderTypes as $builderType)
-                                                    <li>
-                                                        <a href="{{ route('pc-builder.show', $builderType->slug) }}">
-                                                            @if($builderType->image)
-                                                                <img src="{{ asset('storage/' . $builderType->image) }}" alt="{{ $builderType->name }}" width="40" height="40">
-                                                            @endif
-                                                            <span>{{ $builderType->name }}</span>
-                                                        </a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
-                                    </li>
-                                        <li ><a href="blog-left-sidebar.html">Blog</a></li>                                       
+                                            @endif
+                                        </li>
+                                        <li class="dropdown-holder">
+                                            <a href="{{ route('pc-builder.index') }}">
+                                                PC Builder
+                                            </a>
+                                            @if(isset($builderTypes) && $builderTypes->isNotEmpty())
+                                                <ul class="hb-dropdown">
+                                                    @foreach($builderTypes as $builderType)
+                                                        <li>
+                                                            <a href="{{ route('pc-builder.show', $builderType->slug) }}">
+                                                                @if($builderType->image)
+                                                                    <img src="{{ asset('storage/' . $builderType->image) }}" alt="{{ $builderType->name }}" width="40" height="40">
+                                                                @endif
+                                                                <span>{{ $builderType->name }}</span>
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </li>
+                                        <li ><a href="blog-left-sidebar.html">Blog</a></li>
                                         <li><a href="about-us.html">About Us</a></li>
-                                        <li><a href="contact.html">Contact</a></li>                                    
+                                        <li><a href="contact.html">Contact</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -867,7 +886,48 @@
 
     <!-- Main/Activator JS -->
     <script src="{{ asset('assets/frontend/assets/js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hide = (els) => els.forEach(e => e.style.display = 'none');
+            const show = (els, attr, val) => els.forEach(e => e.getAttribute(attr) === val && (e.style.display = e.classList.contains('mega-product-item') ? 'flex' : 'block'));
+            const resetActive = (els) => els.forEach(e => e.classList.remove('active'));
 
+            document.querySelectorAll('.brand-trigger').forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    const id = this.getAttribute('data-brand');
+                    resetActive(document.querySelectorAll('.brand-trigger'));
+                    this.classList.add('active');
+                    hide(document.querySelectorAll('.category-item, .subcategory-item, .mega-product-item'));
+                    show(document.querySelectorAll('.category-item'), 'data-brand', id);
+                    document.getElementById('category-title').innerText = this.querySelector('span')?.innerText || 'Categories';
+                    ['subcategory-title', 'product-title'].forEach(id => document.getElementById(id).innerText = id === 'subcategory-title' ? 'Sub Categories' : 'Products');
+                });
+            });
+
+            document.querySelectorAll('.category-trigger').forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    const id = this.getAttribute('data-category');
+                    resetActive(document.querySelectorAll('.category-trigger'));
+                    this.classList.add('active');
+                    hide(document.querySelectorAll('.subcategory-item, .mega-product-item'));
+                    show(document.querySelectorAll('.subcategory-item'), 'data-category', id);
+                    document.getElementById('subcategory-title').innerText = this.querySelector('span')?.innerText || 'Sub Categories';
+                    document.getElementById('product-title').innerText = 'Products';
+                });
+            });
+
+            document.querySelectorAll('.subcategory-trigger').forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    const id = this.getAttribute('data-subcategory');
+                    resetActive(document.querySelectorAll('.subcategory-trigger'));
+                    this.classList.add('active');
+                    hide(document.querySelectorAll('.mega-product-item'));
+                    document.querySelectorAll('.mega-product-item').forEach(p => p.getAttribute('data-subcategory') === id && (p.style.display = 'flex'));
+                    document.getElementById('product-title').innerText = this.querySelector('span')?.innerText || 'Products';
+                });
+            });
+        });
+    </script>
     @stack('scripts')
 
 </body>
