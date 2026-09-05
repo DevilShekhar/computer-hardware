@@ -14,19 +14,13 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with(['productBrand', 'createdBy', 'updatedBy'])
-            ->latest()
-            ->get();
-
+        $categories = Category::with(['productBrand','createdBy','updatedBy'])->latest()->get();
         return view('admin.categories.index', compact('categories'));
     }
 
     public function create()
     {
-        $productBrands = ProductBrand::where('status', 1)
-            ->latest()
-            ->get();
-
+        $productBrands = ProductBrand::where('status', 1)->latest()->get();
         return view('admin.categories.create', compact('productBrands'));
     }
 
@@ -47,24 +41,22 @@ class CategoryController extends Controller
             'cat_image.mimes' => 'Category image must be JPG, JPEG, PNG or WEBP.',
             'cat_image.max' => 'Category image must not be larger than 2MB.',
         ]);
-
-        $categoryImage = null;
-
-        if ($request->hasFile('cat_image')) {
-            $categoryImage = $request->file('cat_image')
-                ->store('categories', 'public');
-        }
-
         $slug = Str::slug($request->name);
-
-        $existingSlug = Category::where('product_brand_id', $request->product_brand_id)
-            ->where('slug', $slug)
-            ->exists();
-
-        if ($existingSlug) {
-            $slug .= '-' . time();
+        $existingCategory = Category::where(
+            'product_brand_id',
+            $request->product_brand_id
+        )
+        ->where('slug', $slug)
+        ->exists();
+        if ($existingCategory) {
+            return back()->withInput()->withErrors([
+                'name' => 'This category already exists under the selected brand.'
+            ]);
         }
-
+        $categoryImage = null;
+        if ($request->hasFile('cat_image')) {
+            $categoryImage = $request->file('cat_image')->store('categories', 'public');
+        }
         Category::create([
             'product_brand_id' => $request->product_brand_id,
             'name' => $request->name,
@@ -75,29 +67,18 @@ class CategoryController extends Controller
             'meta_description' => $request->meta_description,
             'status' => 1,
             'created_by' => Auth::id(),
-            'updated_by' => Auth::id(),
         ]);
-
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Category created successfully.');
+        return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
-
     public function show(Category $category)
     {
-        $category->load(['productBrand', 'createdBy', 'updatedBy']);
-
+        $category->load(['productBrand','createdBy','updatedBy']);
         return view('admin.categories.show', compact('category'));
     }
-
     public function edit(Category $category)
     {
-        $productBrands = ProductBrand::where('status', 1)
-            ->orWhere('id', $category->product_brand_id)
-            ->latest()
-            ->get();
-
-        return view('admin.categories.edit', compact('category', 'productBrands'));
+        $productBrands = ProductBrand::where('status', 1)->orWhere('id', $category->product_brand_id)->latest()->get();
+        return view('admin.categories.edit',compact('category', 'productBrands'));
     }
 
     public function update(Request $request, Category $category)
@@ -119,29 +100,27 @@ class CategoryController extends Controller
             'cat_image.mimes' => 'Category image must be JPG, JPEG, PNG or WEBP.',
             'cat_image.max' => 'Category image must not be larger than 2MB.',
         ]);
-
-        $categoryImage = $category->cat_image;
-
-        if ($request->hasFile('cat_image')) {
-            if ($categoryImage && Storage::disk('public')->exists($categoryImage)) {
-                Storage::disk('public')->delete($categoryImage);
-            }
-
-            $categoryImage = $request->file('cat_image')
-                ->store('categories', 'public');
-        }
-
         $slug = Str::slug($request->name);
-
-        $existingSlug = Category::where('product_brand_id', $request->product_brand_id)
+        $existingCategory = Category::where(
+            'product_brand_id',
+            $request->product_brand_id
+        )
             ->where('slug', $slug)
             ->where('id', '!=', $category->id)
             ->exists();
-
-        if ($existingSlug) {
-            $slug .= '-' . time();
+        if ($existingCategory) {
+            return back()->withInput()->withErrors(['name' => 'This category already exists under the selected brand.']);
         }
-
+        $categoryImage = $category->cat_image;
+        if ($request->hasFile('cat_image')) {
+            if (
+                $categoryImage &&
+                Storage::disk('public')->exists($categoryImage)
+            ) {
+                Storage::disk('public')->delete($categoryImage);
+            }
+            $categoryImage = $request->file('cat_image')->store('categories', 'public');
+        }
         $category->update([
             'product_brand_id' => $request->product_brand_id,
             'name' => $request->name,
@@ -153,21 +132,14 @@ class CategoryController extends Controller
             'status' => $request->status,
             'updated_by' => Auth::id(),
         ]);
-
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Category updated successfully.');
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
-
     public function destroy(Category $category)
     {
         $category->update([
             'status' => 0,
             'updated_by' => Auth::id(),
         ]);
-
-        return redirect()
-            ->route('categories.index')
-            ->with('success', 'Category deactivated successfully.');
+        return redirect()->route('categories.index')->with('success', 'Category deactivated successfully.');
     }
 }
