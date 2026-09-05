@@ -561,7 +561,7 @@ textarea:focus {
 .slider-active .owl-item.active .slider-progress {
     -webkit-animation: 5000ms ease-in-out 0s normal none 1 running timebar;
     animation: 10000ms ease-in-out 0s normal none 1 running timebar;
-    background:rgb(254 215 0);
+    background: rgb(254 215 0);
     height: 5px;
     left: 0;
     opacity: 0.8;
@@ -5831,8 +5831,6 @@ span.required {
    PRODUCT DETAILS
 ========================================= */
 
- 
-
 /* Heading */
 
 .product-details-heading {
@@ -5865,7 +5863,7 @@ span.required {
     overflow: hidden;
     border-radius: 15px;
     background: #142944;
-    padding:20px;
+    padding: 20px;
 }
 
 .product-price-item,
@@ -6094,7 +6092,6 @@ span.required {
     margin-top: 20px;
 }
 
-
 /* =========================================
    HEADING
 ========================================= */
@@ -6115,7 +6112,6 @@ span.required {
     font-weight: 700;
     text-transform: uppercase;
 }
-
 
 /* =========================================
    SPECIFICATION ROW
@@ -6141,7 +6137,6 @@ span.required {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
 }
 
-
 /* =========================================
    ICON
 ========================================= */
@@ -6161,7 +6156,6 @@ span.required {
     font-size: 24px;
 }
 
-
 /* =========================================
    NAME
 ========================================= */
@@ -6177,7 +6171,6 @@ span.required {
     text-transform: uppercase;
 }
 
-
 /* =========================================
    COLON
 ========================================= */
@@ -6191,7 +6184,6 @@ span.required {
 
     text-align: center;
 }
-
 
 /* =========================================
    VALUE
@@ -6207,7 +6199,6 @@ span.required {
 
     line-height: 1.5;
 }
-
 
 /* =========================================
    EMPTY
@@ -6234,13 +6225,11 @@ span.required {
     font-size: 20px;
 }
 
-
 /* =========================================
    MOBILE
 ========================================= */
 
 @media (max-width: 767px) {
-
     .product-specifications-card {
         padding: 20px 15px;
     }
@@ -6276,12 +6265,9 @@ span.required {
         padding: 0 10px;
         font-size: 14px;
     }
-
 }
 
-
 @media (max-width: 480px) {
-
     .specification-name {
         font-size: 12px;
     }
@@ -6289,7 +6275,6 @@ span.required {
     .specification-value {
         font-size: 13px;
     }
-
 }
 /* Full Screen Slider */
 .full-screen-slider {
@@ -6371,7 +6356,6 @@ span.required {
     margin-bottom: 15px;
 }
 
-
 /* =========================================================
    PRODUCT CARDS
    ========================================================= */
@@ -6383,13 +6367,13 @@ span.required {
     border: 1px solid #e7e7e7;
     border-radius: 16px;
     text-align: center;
-    box-shadow: 0 5px 25px rgba(0,0,0,.06);
-    transition: all .3s ease;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
 }
 
 .compare-product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0,0,0,.10);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 .compare-product-image {
@@ -6436,7 +6420,6 @@ span.required {
     color: #e74c3c;
 }
 
-
 /* =========================================================
    PRODUCT PRICE
    ========================================================= */
@@ -6464,7 +6447,6 @@ span.required {
     text-decoration: line-through;
 }
 
-
 /* =========================================================
    CART BUTTON
    ========================================================= */
@@ -6482,14 +6464,13 @@ span.required {
     font-size: 14px;
     font-weight: 600;
     text-decoration: none !important;
-    transition: .3s ease;
+    transition: 0.3s ease;
 }
 
 .compare-cart-btn:hover {
     background: #218838;
     border-color: #218838;
 }
-
 
 /* =========================================================
    COMPARISON TABLE
@@ -6501,7 +6482,7 @@ span.required {
     border: 1px solid #e8e8e8;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 5px 30px rgba(0,0,0,.05);
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
 }
 
 .compare-table {
@@ -6516,7 +6497,6 @@ span.required {
     table-layout: fixed !important;
     border-collapse: collapse;
 }
-
 
 /* =========================================================
    SAME WIDTH FOR ALL TABLE SECTIONS
@@ -6536,7 +6516,6 @@ span.required {
     width: 20% !important;
 }
 
-
 /*
  * COLUMN 2
  * Product 1
@@ -6549,7 +6528,6 @@ span.required {
     width: 40% !important;
 }
 
-
 /*
  * COLUMN 3
  * Product 2
@@ -6561,7 +6539,6 @@ span.required {
 .compare-table td:nth-child(3) {
     width: 40% !important;
 }
-
 
 /* =========================================================
    TABLE CELLS
@@ -6581,7 +6558,6 @@ span.required {
     word-break: break-word;
     overflow-wrap: anywhere;
 }
-
 
 /* =========================================================
    TABLE HEADER
@@ -6606,7 +6582,6 @@ span.required {
     text-align: left;
 }
 
-
 /* =========================================================
    PRODUCT INFORMATION LABELS
    ========================================================= */
@@ -6624,7 +6599,6 @@ span.required {
 
     word-break: break-word;
 }
-
 
 /* =========================================================
    PRODUCT 1 / PRODUCT 2 VALUES
@@ -6645,7 +6619,6 @@ span.required {
     overflow-wrap: anywhere;
 }
 
-
 /* =========================================================
    PRODUCT NAME LINK
    ========================================================= */
@@ -6660,7 +6633,6 @@ span.required {
     color: #e74c3c;
 }
 
-
 /* =========================================================
    SHORT DESCRIPTION
    ========================================================= */
@@ -6670,7 +6642,6 @@ span.required {
     overflow-wrap: anywhere;
     text-align: left !important;
 }
-
 
 /* =========================================================
    PRICE INSIDE COMPARISON TABLE
@@ -6693,7 +6664,6 @@ span.required {
     line-height: 1.4;
     text-decoration: line-through;
 }
-
 
 /* =========================================================
    SPECIFICATION HEADING
@@ -6723,7 +6693,6 @@ span.required {
     margin-right: 8px;
 }
 
-
 /* =========================================================
    SPECIFICATION NAME
    ========================================================= */
@@ -6745,7 +6714,6 @@ span.required {
     color: #aaa;
 }
 
-
 /* =========================================================
    SPECIFICATION VALUES
    ========================================================= */
@@ -6757,7 +6725,6 @@ span.required {
 .compare-table .spec-value:nth-child(2) {
     width: 40% !important;
 }
-
 
 /*
  * Product 2 specification value
@@ -6774,7 +6741,6 @@ span.required {
     text-align: center;
 }
 
-
 /* =========================================================
    DIFFERENT SPECIFICATION
    ========================================================= */
@@ -6785,7 +6751,6 @@ span.required {
     font-weight: 600;
 }
 
-
 /* =========================================================
    SAME SPECIFICATION
    ========================================================= */
@@ -6793,7 +6758,6 @@ span.required {
 .spec-same {
     background: #fff !important;
 }
-
 
 /* =========================================================
    EMPTY VALUE
@@ -6804,7 +6768,6 @@ span.required {
     font-style: italic;
 }
 
-
 /* =========================================================
    ACTION ROW
    ========================================================= */
@@ -6813,7 +6776,6 @@ span.required {
     text-align: center;
     vertical-align: middle;
 }
-
 
 /* =========================================================
    CLEAR BUTTON
@@ -6841,7 +6803,7 @@ span.required {
     font-size: 14px;
     font-weight: 600;
 
-    transition: .3s ease;
+    transition: 0.3s ease;
 }
 
 .compare-clear-btn:hover {
@@ -6849,7 +6811,6 @@ span.required {
     border-color: #222;
     color: #fff;
 }
-
 
 /* =========================================================
    TABLE RESPONSIVE
@@ -6861,13 +6822,11 @@ span.required {
     -webkit-overflow-scrolling: touch;
 }
 
-
 /* =========================================================
    MOBILE
    ========================================================= */
 
-@media(max-width: 767px) {
-
+@media (max-width: 767px) {
     .compare-page {
         padding: 35px 0 50px;
     }
@@ -6924,5 +6883,648 @@ span.required {
 
     .compare-table tbody th {
         min-width: 0 !important;
+    }
+}
+/* ============================================================
+   PROFESSIONAL SHOP MEGA MENU
+   Brand -> Category -> Sub Category -> Product
+============================================================ */
+
+/* ============================================================
+   SHOP NAVIGATION
+============================================================ */
+
+.shop-nav-item {
+    position: static !important;
+}
+
+/* SHOP LINK */
+
+.shop-nav-link {
+    position: relative;
+
+    display: inline-flex !important;
+
+    align-items: center;
+
+    height: 50px;
+
+    padding: 0 18px;
+
+    color: #222222 !important;
+
+    text-decoration: none !important;
+}
+
+/* ============================================================
+   MAIN MEGA MENU
+============================================================ */
+
+.custom-shop-mega-menu {
+    position: absolute !important;
+
+    top: 50px !important;
+
+    left: 50% !important;
+
+    width: 1120px !important;
+
+    max-width: calc(100vw - 30px) !important;
+
+    height: 440px !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+
+    background: #ffffff !important;
+
+    border: 1px solid #e5e5e5 !important;
+
+    border-radius: 5px !important;
+
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+
+    z-index: 999999 !important;
+
+    transform: translateX(-50%) translateY(10px) !important;
+
+    opacity: 0 !important;
+
+    visibility: hidden !important;
+
+    pointer-events: none !important;
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease,
+        transform 0.2s ease !important;
+
+    overflow: visible !important;
+}
+
+/* ============================================================
+   OPEN MENU
+============================================================ */
+
+.shop-nav-item:hover > .custom-shop-mega-menu {
+    opacity: 1 !important;
+
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+
+    transform: translateX(-50%) translateY(0) !important;
+}
+
+/* ============================================================
+   FIRST COLUMN
+============================================================ */
+
+.custom-shop-column {
+    position: absolute !important;
+
+    top: 0 !important;
+
+    left: 0 !important;
+
+    width: 25% !important;
+
+    height: 440px !important;
+
+    background: #ffffff !important;
+
+    border-right: 1px solid #e7e7e7 !important;
+
+    overflow: hidden !important;
+}
+
+/* ============================================================
+   COLUMN HEADER
+============================================================ */
+
+.custom-shop-column-header {
+    display: flex !important;
+
+    align-items: center !important;
+
+    height: 56px !important;
+
+    min-height: 56px !important;
+
+    padding: 0 20px !important;
+
+    color: #222222 !important;
+
+    background: #ffffff !important;
+
+    border-bottom: 1px solid #eeeeee !important;
+
+    font-size: 15px !important;
+
+    font-weight: 700 !important;
+
+    white-space: nowrap !important;
+
+    overflow: hidden !important;
+
+    text-overflow: ellipsis !important;
+}
+
+/* ============================================================
+   COLUMN BODY
+============================================================ */
+
+.custom-shop-column-body {
+    height: calc(440px - 56px) !important;
+
+    overflow-y: auto !important;
+
+    overflow-x: hidden !important;
+}
+
+/* ============================================================
+   MENU ITEM
+============================================================ */
+
+.custom-shop-item {
+    position: static !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    padding: 0 !important;
+}
+
+/* ============================================================
+   MENU LINK
+============================================================ */
+
+.custom-shop-item-link {
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: space-between !important;
+
+    width: 100% !important;
+
+    min-height: 54px !important;
+
+    padding: 8px 16px !important;
+
+    margin: 0 !important;
+
+    color: #333333 !important;
+
+    background: #ffffff !important;
+
+    border: 0 !important;
+
+    border-bottom: 1px solid #eeeeee !important;
+
+    text-decoration: none !important;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        padding 0.18s ease !important;
+}
+
+/* ============================================================
+   LINK HOVER
+============================================================ */
+
+.custom-shop-item:hover > .custom-shop-item-link {
+    color: #e53935 !important;
+
+    background: #fafafa !important;
+
+    padding-left: 21px !important;
+}
+
+/* ============================================================
+   ITEM CONTENT
+============================================================ */
+
+.custom-shop-item-content {
+    display: flex !important;
+
+    align-items: center !important;
+
+    min-width: 0 !important;
+
+    flex: 1 !important;
+
+    gap: 11px !important;
+}
+
+/* TEXT */
+
+.custom-shop-item-content > span {
+    display: block !important;
+
+    min-width: 0 !important;
+
+    overflow: hidden !important;
+
+    white-space: nowrap !important;
+
+    text-overflow: ellipsis !important;
+
+    font-size: 14px !important;
+
+    font-weight: 500 !important;
+}
+
+/* ============================================================
+   BRAND IMAGE
+============================================================ */
+
+.custom-shop-brand-image {
+    width: 34px !important;
+
+    height: 34px !important;
+
+    min-width: 34px !important;
+
+    object-fit: contain !important;
+
+    background: #ffffff !important;
+
+    border-radius: 4px !important;
+
+    border: 1px solid #eeeeee !important;
+}
+
+/* ============================================================
+   BRAND PLACEHOLDER
+============================================================ */
+
+.custom-shop-brand-placeholder {
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    width: 34px !important;
+
+    height: 34px !important;
+
+    min-width: 34px !important;
+
+    color: #777777 !important;
+
+    background: #f3f3f3 !important;
+
+    border-radius: 4px !important;
+
+    font-size: 13px !important;
+
+    font-weight: 700 !important;
+}
+
+/* ============================================================
+   ARROW
+============================================================ */
+
+.custom-shop-arrow {
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    width: 18px !important;
+
+    min-width: 18px !important;
+
+    margin-left: 8px !important;
+
+    color: #aaa !important;
+
+    font-size: 12px !important;
+
+    transition:
+        color 0.18s ease,
+        transform 0.18s ease !important;
+}
+
+.custom-shop-item:hover > .custom-shop-item-link .custom-shop-arrow {
+    color: #e53935 !important;
+
+    transform: translateX(3px) !important;
+}
+
+/* ============================================================
+   CATEGORY PANEL
+============================================================ */
+
+.custom-shop-category-menu {
+    position: absolute !important;
+
+    top: 0 !important;
+
+    left: 25% !important;
+
+    width: 25% !important;
+
+    height: 440px !important;
+
+    background: #ffffff !important;
+
+    border-right: 1px solid #e7e7e7 !important;
+
+    overflow: hidden !important;
+
+    opacity: 0 !important;
+
+    visibility: hidden !important;
+
+    pointer-events: none !important;
+
+    transform: translateX(8px) !important;
+
+    transition:
+        opacity 0.18s ease,
+        visibility 0.18s ease,
+        transform 0.18s ease !important;
+
+    z-index: 10 !important;
+}
+
+/* SHOW CATEGORY */
+
+.custom-shop-brand-item:hover > .custom-shop-category-menu {
+    opacity: 1 !important;
+
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+
+    transform: translateX(0) !important;
+}
+
+/* ============================================================
+   SUB CATEGORY PANEL
+============================================================ */
+
+.custom-shop-subcategory-menu {
+    position: absolute !important;
+
+    top: 0 !important;
+
+    left: 100% !important;
+
+    width: 100% !important;
+
+    height: 440px !important;
+
+    background: #ffffff !important;
+
+    border-right: 1px solid #e7e7e7 !important;
+
+    overflow: hidden !important;
+
+    opacity: 0 !important;
+
+    visibility: hidden !important;
+
+    pointer-events: none !important;
+
+    transform: translateX(8px) !important;
+
+    transition:
+        opacity 0.18s ease,
+        visibility 0.18s ease,
+        transform 0.18s ease !important;
+
+    z-index: 20 !important;
+}
+
+/* SHOW SUB CATEGORY */
+
+.custom-shop-category-item:hover > .custom-shop-subcategory-menu {
+    opacity: 1 !important;
+
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+
+    transform: translateX(0) !important;
+}
+
+/* ============================================================
+   PRODUCT PANEL
+============================================================ */
+
+.custom-shop-product-menu {
+    position: absolute !important;
+
+    top: 0 !important;
+
+    left: 100% !important;
+
+    width: 100% !important;
+
+    height: 440px !important;
+
+    background: #ffffff !important;
+
+    overflow: hidden !important;
+
+    opacity: 0 !important;
+
+    visibility: hidden !important;
+
+    pointer-events: none !important;
+
+    transform: translateX(8px) !important;
+
+    transition:
+        opacity 0.18s ease,
+        visibility 0.18s ease,
+        transform 0.18s ease !important;
+
+    z-index: 30 !important;
+}
+
+/* SHOW PRODUCTS */
+
+.custom-shop-subcategory-item:hover > .custom-shop-product-menu {
+    opacity: 1 !important;
+
+    visibility: visible !important;
+
+    pointer-events: auto !important;
+
+    transform: translateX(0) !important;
+}
+
+/* ============================================================
+   PRODUCT LINK
+============================================================ */
+
+.custom-shop-product-link {
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: space-between !important;
+
+    width: 100% !important;
+
+    min-height: 56px !important;
+
+    padding: 10px 17px !important;
+
+    color: #444444 !important;
+
+    background: #ffffff !important;
+
+    border-bottom: 1px solid #eeeeee !important;
+
+    font-size: 13px !important;
+
+    line-height: 1.4 !important;
+
+    text-decoration: none !important;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        padding 0.18s ease !important;
+}
+
+.custom-shop-product-link:hover {
+    color: #e53935 !important;
+
+    background: #fafafa !important;
+
+    padding-left: 22px !important;
+}
+
+.custom-shop-product-link span {
+    flex: 1 !important;
+
+    min-width: 0 !important;
+
+    display: -webkit-box !important;
+
+    -webkit-line-clamp: 2 !important;
+
+    -webkit-box-orient: vertical !important;
+
+    overflow: hidden !important;
+}
+
+/* ============================================================
+   SCROLLBAR
+============================================================ */
+
+.custom-shop-column-body::-webkit-scrollbar {
+    width: 4px !important;
+}
+
+.custom-shop-column-body::-webkit-scrollbar-track {
+    background: #f8f8f8 !important;
+}
+
+.custom-shop-column-body::-webkit-scrollbar-thumb {
+    background: #d0d0d0 !important;
+
+    border-radius: 10px !important;
+}
+
+/* ============================================================
+   DESKTOP
+============================================================ */
+
+@media (min-width: 1200px) {
+    .custom-shop-mega-menu {
+        width: 1120px !important;
+    }
+}
+
+/* ============================================================
+   SMALL DESKTOP / TABLET
+============================================================ */
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .custom-shop-mega-menu {
+        width: calc(100vw - 20px) !important;
+
+        max-width: calc(100vw - 20px) !important;
+    }
+}
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 991px) {
+    .shop-nav-item {
+        position: relative !important;
+    }
+
+    .custom-shop-mega-menu {
+        position: static !important;
+
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        height: auto !important;
+
+        transform: none !important;
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        display: none !important;
+
+        box-shadow: none !important;
+
+        border: 0 !important;
+
+        border-radius: 0 !important;
+    }
+
+    .shop-nav-item:hover > .custom-shop-mega-menu {
+        transform: none !important;
+    }
+
+    .custom-shop-column,
+    .custom-shop-category-menu,
+    .custom-shop-subcategory-menu,
+    .custom-shop-product-menu {
+        position: static !important;
+
+        width: 100% !important;
+
+        height: auto !important;
+
+        min-height: auto !important;
+
+        opacity: 1 !important;
+
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        transform: none !important;
+
+        border: 0 !important;
+    }
+
+    .custom-shop-column-body {
+        height: auto !important;
+
+        max-height: 300px !important;
     }
 }

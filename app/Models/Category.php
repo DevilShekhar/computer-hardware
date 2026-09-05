@@ -33,6 +33,11 @@ class Category extends Model
         return $this->belongsTo(ProductBrand::class, 'product_brand_id');
     }
 
+    public function subCategories()
+    {
+        return $this->hasMany(SubCategory::class, 'category_id');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
