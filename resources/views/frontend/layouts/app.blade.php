@@ -392,28 +392,25 @@
                                             </div>
                                         @endif
                                     </li>
-                                        <li class="dropdown-holder">
-                                            <a href="{{ url('/pc-builder') }}">
-                                                PC Builder
-                                            </a>
-                                            @if(isset($builderTypes) && $builderTypes->isNotEmpty())
-                                                <ul class="hb-dropdown">
-
-                                                    @foreach($builderTypes as $builderType)
-                                                        <li>
-                                                            <a href="{{ url('/pc-builder/' . $builderType->slug) }}">
-                                                                @if($builderType->image)
-                                                                    <img src="{{ asset('storage/' . $builderType->image) }}" alt="{{ $builderType->name }}" width="40" height="40">
-                                                                @endif
-                                                                <span>
-                                                                    {{ $builderType->name }}
-                                                                </span>
-                                                            </a>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            @endif
-                                        </li>
+                                    <li class="dropdown-holder">
+                                        <a href="{{ route('pc-builder.index') }}">
+                                            PC Builder
+                                        </a>
+                                        @if(isset($builderTypes) && $builderTypes->isNotEmpty())
+                                            <ul class="hb-dropdown">
+                                                @foreach($builderTypes as $builderType)
+                                                    <li>
+                                                        <a href="{{ route('pc-builder.show', $builderType->slug) }}">
+                                                            @if($builderType->image)
+                                                                <img src="{{ asset('storage/' . $builderType->image) }}" alt="{{ $builderType->name }}" width="40" height="40">
+                                                            @endif
+                                                            <span>{{ $builderType->name }}</span>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
                                         <li ><a href="blog-left-sidebar.html">Blog</a></li>                                       
                                         <li><a href="about-us.html">About Us</a></li>
                                         <li><a href="contact.html">Contact</a></li>                                    

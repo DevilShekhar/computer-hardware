@@ -19,6 +19,7 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OurProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\ProductReviewController;
+use App\Http\Controllers\Frontend\PcBuilderController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -76,8 +77,7 @@ Route::get('/login-for-review/{slug}', function ($slug) {
     session(['url.intended' => route('product.details', ['slug' => $slug]) . '?review=1']);
     return redirect()->route('login');
 })->name('login.for.review');
-Route::get('/compare', [OurProductController::class, 'compare'])
-    ->name('compare');
-
-Route::get('/compare/products', [OurProductController::class, 'compareProducts'])
-    ->name('compare.products');
+Route::get('/compare', [OurProductController::class, 'compare'])->name('compare');
+Route::get('/compare/products', [OurProductController::class, 'compareProducts'])->name('compare.products');
+Route::get('/pc-builder', [PcBuilderController::class, 'index'])->name('pc-builder.index');
+Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
