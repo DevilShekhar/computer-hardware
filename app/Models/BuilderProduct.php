@@ -8,58 +8,52 @@ use Illuminate\Database\Eloquent\Model;
 class BuilderProduct extends Model
 {
     use HasFactory;
-
     protected $table = 'builder_products';
-
     protected $fillable = [
-        'product_id',
         'builder_type_id',
-        'builder_brand_id',
-        'builder_category_id',
-        'builder_sub_category_id',
+        'product_type',
+        'product_id',
         'sort_order',
         'status',
         'created_by',
         'updated_by',
     ];
-
     protected $casts = [
-        'status' => 'boolean',
-        'sort_order' => 'integer',
+        'builder_type_id' => 'integer',
+        'product_id'      => 'integer',
+        'sort_order'      => 'integer',
+        'status'          => 'boolean',
     ];
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class, 'product_id');
-    }
-
     public function builderType()
     {
-        return $this->belongsTo(BuilderType::class, 'builder_type_id');
+        return $this->belongsTo(
+            BuilderType::class,
+            'builder_type_id'
+        );
     }
-
-    public function builderBrand()
+    public function getProductTypeNameAttribute()
     {
-        return $this->belongsTo(BuilderBrand::class, 'builder_brand_id');
+        return $this->product_type;
     }
-
-    public function builderCategory()
+    public function product()
     {
-        return $this->belongsTo(BuilderCategory::class, 'builder_category_id');
+        return $this->belongsTo(
+            Product::class,
+            'product_id'
+        );
     }
-
-    public function builderSubCategory()
-    {
-        return $this->belongsTo(BuilderSubCategory::class, 'builder_sub_category_id');
-    }
-
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(
+            User::class,
+            'created_by'
+        );
     }
-
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(
+            User::class,
+            'updated_by'
+        );
     }
 }

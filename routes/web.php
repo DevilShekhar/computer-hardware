@@ -1,54 +1,54 @@
 <?php
 
-use App\Http\Controllers\Admin\BuilderBrandController;
-use App\Http\Controllers\Admin\BuilderCategoryController;
 use App\Http\Controllers\Admin\BuilderProductController;
-use App\Http\Controllers\Admin\BuilderSubCategoryController;
 use App\Http\Controllers\Admin\BuilderTypeController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductBrandController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\PromotionalBannerController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\PromotionalBannerController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OurProductController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Frontend\PcBuilderController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Route::middleware(['auth'])->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/my-change-password', [ProfileController::class, 'changePassword'])->name('password.index');
     Route::post('/my-change-password/verify', [ProfileController::class, 'verifyOldPassword'])->name('password.verify');
     Route::get('/my-change-password/new', [ProfileController::class, 'newPassword'])->name('password.new');
     Route::post('/my-change-password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+
     Route::resource('roles', RoleController::class);
     Route::get('roles/{role}/permissions-data', [RoleController::class, 'getPermissionsData'])->name('roles.permissions.data');
     Route::get('roles/{role}/permissions', [RoleController::class, 'managePermissions'])->name('roles.permissions');
     Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
+
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('/users', UserController::class)->names('admin.users');
+
+    Route::resource('users', UserController::class)->names('admin.users');
+
     Route::resource('builder-types', BuilderTypeController::class);
-    Route::resource('builder-brands', BuilderBrandController::class);
-    Route::resource('builder-categories', BuilderCategoryController::class);
-    Route::get('builder-sub-categories/brands-by-type/{builderType}', [BuilderSubCategoryController::class, 'getBrandsByType'])->name('builder-sub-categories.brands-by-type');
-    Route::get('builder-sub-categories/categories-by-brand/{brand}', [BuilderSubCategoryController::class, 'getByBrand'])->name('builder-sub-categories.categories-by-brand');
-    Route::resource('builder-sub-categories', BuilderSubCategoryController::class);
-    Route::get('builder-sub-categories/categories-by-brand/{brand}', [BuilderSubCategoryController::class, 'getByBrand'])->name('builder-sub-categories.categories-by-brand');
+    Route::resource('builder-products', BuilderProductController::class);
+
     Route::resource('product-brands', ProductBrandController::class);
     Route::resource('categories', CategoryController::class);
+
     Route::get('sub-categories/categories-by-brand/{brand}', [SubCategoryController::class, 'getCategoriesByBrand'])->name('sub-categories.categories-by-brand');
     Route::resource('sub-categories', SubCategoryController::class);
+
     Route::delete('products/images/{image}', [ProductController::class, 'deleteImage'])->name('products.images.delete');
     Route::get('/products/inventory-history', [ProductController::class, 'inventoryHistory'])->name('products.inventory-history');
     Route::get('/products/inventory-history-data/{product?}', [ProductController::class, 'inventoryHistoryData'])->name('products.inventory-history.data');
@@ -56,14 +56,14 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::get('products/categories-by-brand/{brand}', [ProductController::class, 'getCategoriesByBrand'])->name('products.categories-by-brand');
     Route::get('products/sub-categories-by-category/{category}', [ProductController::class, 'getSubCategoriesByCategory'])->name('products.sub-categories-by-category');
+
     Route::resource('coupons', CouponController::class)->names('coupons');
-    Route::get('/builder-products/brands/{type}', [BuilderProductController::class, 'getBrands'])->name('builder-products.brands');
-    Route::get('/builder-products/categories/{brand}', [BuilderProductController::class, 'getCategories'])->name('builder-products.categories');
-    Route::get('/builder-products/sub-categories/{category}', [BuilderProductController::class, 'getSubCategories'])->name('builder-products.sub-categories');
-    Route::resource('builder-products', BuilderProductController::class);
+
     Route::post('/products/{product}/add-stock', [ProductController::class, 'addStock'])->name('products.add-stock');
+
     Route::resource('promotional-banners', PromotionalBannerController::class);
-    Route::patch('promotional-banners/{promotionalBanner}/activate',[PromotionalBannerController::class, 'activate'])->name('promotional-banners.activate');
+    Route::patch('promotional-banners/{promotionalBanner}/activate', [PromotionalBannerController::class, 'activate'])->name('promotional-banners.activate');
+
     Route::get('/product-review', [ProductReviewController::class, 'index'])->name('product-review.index');
     Route::post('/product-review/{review}/approve', [ProductReviewController::class, 'approve'])->name('product-review.approve');
     Route::post('/product-review/{review}/reject', [ProductReviewController::class, 'reject'])->name('product-review.reject');
@@ -72,12 +72,16 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/our-products', [OurProductController::class, 'index'])->name('our-products');
 Route::get('/our-product/{slug}', [OurProductController::class, 'show'])->name('product.details');
+
 Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')->name('reviews.store');
+
 Route::get('/login-for-review/{slug}', function ($slug) {
     session(['url.intended' => route('product.details', ['slug' => $slug]) . '?review=1']);
     return redirect()->route('login');
 })->name('login.for.review');
+
 Route::get('/compare', [OurProductController::class, 'compare'])->name('compare');
 Route::get('/compare/products', [OurProductController::class, 'compareProducts'])->name('compare.products');
+
 Route::get('/pc-builder', [PcBuilderController::class, 'index'])->name('pc-builder.index');
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
