@@ -94,10 +94,24 @@ class OurProductController extends Controller
 
         return view('frontend.our-products.discounted-products', compact('products'));
     }
-
     public function show($slug)
     {
-        $product = Product::with([
+        $brand = ProductBrand::where('slug', $slug)->where('status', 1)->first();
+        $data = [
+            'brand' => null,
+            'products' => null,
+            'product' => null,
+            'relatedProducts' => collect()
+        ];
+        if ($brand) {
+            $data['brand'] = $brand;
+            $data['products'] = Product::with(['productBrand', 'category', 'subCategory', 'images'])
+                ->where('product_brand_id', $brand->id)
+                ->where('status', 1)
+                ->latest()
+                ->paginate(12);
+        } else {
+            $data['product'] = Product::with([
             'productBrand',
             'category',
             'subCategory',
@@ -106,16 +120,16 @@ class OurProductController extends Controller
             'reviews.user'
         ])->where('slug', $slug)->where('status', 1)->firstOrFail();
 
-        // Related products: same category + same sub category
-        $relatedProducts = Product::with(['productBrand','images'])
+        $data['relatedProducts'] = Product::with(['productBrand', 'images'])
         ->where('status', 1)
-        ->where('id', '!=', $product->id)
-        ->where('category_id', $product->category_id)
-        ->where('sub_category_id', $product->sub_category_id)
+        ->where('id', '!=', $data['product']->id)
+        ->where('category_id', $data['product']->category_id)
+        ->where('sub_category_id', $data['product']->sub_category_id)
         ->latest()
         ->take(8)
         ->get();
-        return view('frontend.our-products.details',compact('product', 'relatedProducts'));
+        }
+        return view('frontend.our-products.details', $data);
     }
     public function compare()
     {
@@ -217,18 +231,5 @@ class OurProductController extends Controller
                 ];
             })->values(),
         ]);
-    }
-    public function brand($slug)
-    {
-        $brand = ProductBrand::where('slug', $slug)
-            ->where('status', 1)
-            ->firstOrFail();
-
-        $products = Product::where('product_brand_id', $brand->id)
-            ->where('status', 1)
-            ->latest()
-            ->paginate(12);
-
-        return view('frontend.our-products.product-details', compact('brand', 'products'));
     }
 }
