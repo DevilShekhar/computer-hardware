@@ -18,7 +18,10 @@ use App\Http\Controllers\Frontend\OurProductController;
 use App\Http\Controllers\Frontend\PcBuilderController;
 use App\Http\Controllers\Frontend\OurBrandController;
 use App\Http\Controllers\Frontend\AboutUsController;
-
+use App\Http\Controllers\Frontend\PrivacyPolicyController;
+use App\Http\Controllers\Frontend\TermsAndConditionController;
+use App\Http\Controllers\Frontend\DisclaimerController;
+use App\Http\Controllers\Frontend\SiteMapController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -90,3 +93,8 @@ Route::get('/pc-builder', [PcBuilderController::class, 'index'])->name('pc-build
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
 Route::get('/our-brand', [OurBrandController::class, 'index'])->name('our-brand');
 Route::get('/our-brand/{slug}', [OurBrandController::class, 'show'])->name('our-brand.show');
+Route::get('/about-us', [AboutUsController::class, 'index'])->name('about-us');
+Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index'])->name('privacy-policy');
+Route::get('/terms-and-conditions', [TermsAndConditionController::class, 'index'])->name('terms-and-conditions');
+Route::get('/disclaimer', [DisclaimerController::class, 'index'])->name('disclaimer');
+Route::get('/sitemap.xml', [SiteMapController::class, 'index'])->name('sitemap');
