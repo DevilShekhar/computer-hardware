@@ -88,3 +88,4 @@ Route::get('/pc-builder', [PcBuilderController::class, 'index'])->name('pc-build
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
 Route::get('/our-brand', [OurBrandController::class, 'index'])->name('our-brand');
 Route::get('/our-brand/{slug}', [OurBrandController::class, 'show'])->name('our-brand.show');
+Route::get('/shop/brand/{slug}', [OurProductController::class, 'brand'])->name('shop.brand');

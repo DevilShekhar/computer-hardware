@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ProductBrand;
 
 class OurProductController extends Controller
 {
@@ -216,5 +217,18 @@ class OurProductController extends Controller
                 ];
             })->values(),
         ]);
+    }
+    public function brand($slug)
+    {
+        $brand = ProductBrand::where('slug', $slug)
+            ->where('status', 1)
+            ->firstOrFail();
+
+        $products = Product::where('product_brand_id', $brand->id)
+            ->where('status', 1)
+            ->latest()
+            ->paginate(12);
+
+        return view('frontend.our-products.product-details', compact('brand', 'products'));
     }
 }
