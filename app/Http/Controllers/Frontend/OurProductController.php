@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductBrand;
+use App\Models\SubCategory;
 
 class OurProductController extends Controller
 {
@@ -14,13 +16,26 @@ class OurProductController extends Controller
         $products=Product::with(['productBrand','category','subCategory','images'])
             ->where('status',1)
             ->when($request->filled('brand'),function($query) use($request){
-                $query->where('product_brand_id',$request->brand);
+                $brand=ProductBrand::where('slug',$request->brand)->first();
+                if ($brand) {
+                    $query->where('product_brand_id',$brand->id);
+                }
+                return $query;
             })
             ->when($request->filled('category'),function($query) use($request){
-                $query->where('category_id',$request->category);
+                // Find category by slug
+                $category = Category::where('slug', $request->category)->first();
+                if ($category) {
+                    $query->where('category_id',$category->id);
+                }
+                return $query;
             })
             ->when($request->filled('sub_category'),function($query) use($request){
-                $query->where('sub_category_id',$request->sub_category);
+                $subCategory = SubCategory::where('slug',$request->sub_category)->first();
+                if ($subCategory) {
+                    $query->where('sub_category_id', $subCategory->id);
+                }
+                return $query;
             })
             ->when($request->filled('sort'),function($query) use($request){
                 if($request->sort==='name-asc'){
@@ -44,9 +59,7 @@ class OurProductController extends Controller
             return response()->json([
                 'products'=>$products->map(function($product){
                     $primaryImage=$product->images->where('is_primary',true)->first()??$product->images->first();
-
                     $hasDiscount=$product->sale_price&&$product->price>$product->sale_price;
-
                     $discountPercentage=$hasDiscount
                         ?round((($product->price-$product->sale_price)/$product->price)*100)
                         :null;
@@ -70,7 +83,6 @@ class OurProductController extends Controller
                 'count'=>$products->count()
             ]);
         }
-
         $allProducts=Product::with(['productBrand','category','subCategory'])
             ->where('status',1)
             ->get();
