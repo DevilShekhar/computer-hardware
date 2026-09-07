@@ -102,5 +102,8 @@ Route::get('/disclaimer', [DisclaimerController::class, 'index'])->name('disclai
 Route::get('/sitemap.xml', [SiteMapController::class, 'index'])->name('sitemap');
 Route::get('/our-category', [OurCategoryController::class, 'index'])->name('our-category');
 Route::get('/our-category/{slug}', [OurCategoryController::class, 'show'])->name('our-category.show');
+Route::get('/wishlist', function () {
+    return view('frontend.wishlist');
+})->name('wishlist');
 Route::get('/our-sub-category', [OurSubCategoryController::class, 'index'])->name('our-sub-category');
 Route::get('/our-sub-category/{slug}', [OurSubCategoryController::class, 'show'])->name('our-sub-category.show');

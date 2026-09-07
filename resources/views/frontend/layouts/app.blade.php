@@ -214,7 +214,7 @@
                                 <ul class="hm-menu">
                                     <!-- Begin Header Middle Wishlist Area -->
                                     <li class="hm-wishlist">
-                                        <a href="wishlist.html">
+                                        <a href="{{ route('wishlist') }}">
                                             <span class="cart-item-count wishlist-item-count">0</span>
                                             <i class="fa fa-heart-o"></i>
                                         </a>
@@ -222,52 +222,40 @@
                                     <!-- Header Middle Wishlist Area End Here -->
                                     <!-- Begin Header Mini Cart Area -->
                                     <li class="hm-minicart">
-                                        <div class="hm-minicart-trigger">
-                                            <span class="item-icon"></span>
-                                            <span class="item-text">£80.00
-                                                <span class="cart-item-count">2</span>
-                                            </span>
+                                    <div class="hm-minicart-trigger">
+                                        <span class="item-icon"></span>
+                                        <span class="item-text">
+                                            ₹<span id="minicart-header-total">0.00</span>
+                                            <span class="cart-item-count" id="minicart-count">0</span>
+                                        </span>
+                                    </div>
+
+                                    <span></span>
+
+                                    <div class="minicart">
+
+                                        <ul class="minicart-product-list" id="minicart-product-list">
+                                        </ul>
+
+                                        <p class="minicart-total">
+                                            SUBTOTAL:
+                                            <span id="minicart-subtotal">₹0.00</span>
+                                        </p>
+
+                                        <div class="minicart-button">
+                                            <a href="shopping-cart.html"
+                                            class="li-button li-button-fullwidth li-button-dark">
+                                                <span>View Full Cart</span>
+                                            </a>
+
+                                            <a href="checkout.html"
+                                            class="li-button li-button-fullwidth">
+                                                <span>Checkout</span>
+                                            </a>
                                         </div>
-                                        <span></span>
-                                        <div class="minicart">
-                                            <ul class="minicart-product-list">
-                                                <li>
-                                                    <a href="single-product.html" class="minicart-product-image">
-                                                        <img src="{{ asset('assets/frontend/assets/images/product/small-size/5.jpg') }}" alt="cart products">
-                                                    </a>
-                                                    <div class="minicart-product-details">
-                                                        <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                                                        <span>£40 x 1</span>
-                                                    </div>
-                                                    <button class="close" title="Remove">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <a href="single-product.html" class="minicart-product-image">
-                                                        <img src="{{ asset('assets/frontend/assets/images/product/small-size/6.jpg') }}" alt="cart products">
-                                                    </a>
-                                                    <div class="minicart-product-details">
-                                                        <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                                                        <span>£40 x 1</span>
-                                                    </div>
-                                                    <button class="close" title="Remove">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                            <p class="minicart-total">SUBTOTAL: <span>£80.00</span></p>
-                                            <div class="minicart-button">
-                                                <a href="shopping-cart.html"
-                                                    class="li-button li-button-fullwidth li-button-dark">
-                                                    <span>View Full Cart</span>
-                                                </a>
-                                                <a href="checkout.html" class="li-button li-button-fullwidth">
-                                                    <span>Checkout</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </li>
+
+                                    </div>
+                                </li>
                                     <!-- Header Mini Cart Area End Here -->
                                 </ul>
                             </div>
@@ -926,6 +914,221 @@
                     document.getElementById('product-title').innerText = this.querySelector('span')?.innerText || 'Products';
                 });
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateWishlistCount() {
+                const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+                document.querySelectorAll('.wishlist-item-count').forEach(function (count) {
+                    count.textContent = wishlist.length;
+                });
+            }
+            updateWishlistCount();
+            document.querySelectorAll('.wishlist-btn').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+                    const productId = this.dataset.productId;
+                    const existingIndex = wishlist.findIndex(
+                        item => item.id == productId
+                    );
+                    if (existingIndex !== -1) {
+                        wishlist.splice(existingIndex, 1);
+                        button.classList.remove('active');
+                    } else {
+                        wishlist.push({
+                            id: productId,
+                            name: button.dataset.productName,
+                            slug: button.dataset.productSlug,
+                            price: button.dataset.productPrice,
+                            image: button.dataset.productImage
+                        });
+                        button.classList.add('active');
+                    }
+
+                    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                    const toast = document.createElement('div');
+                    toast.textContent = existingIndex !== -1 ? 'Removed from Wishlist' : 'Added to Wishlist';
+                    toast.style.cssText = `
+                        position:fixed;
+                        top:80px;
+                        right:20px;
+                        background:#fffdf3;
+                        color:#d89b00;
+                        border:1px solid #fed700;
+                        border-radius:5px;
+                        padding:8px 12px;
+                        min-width:200px;
+                        z-index:9999;
+                        box-shadow:0 2px 8px rgba(0,0,0,.12);
+                    `;                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2000);
+                    updateWishlistCount();
+                });
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+            document.querySelectorAll('.wishlist-btn').forEach(function (button) {
+                const productId = button.dataset.productId;
+
+                if (wishlist.some(item => String(item.id) === String(productId))) {
+                    button.classList.add('active');
+
+                    const icon = button.querySelector('i');
+                    icon.classList.remove('fa-heart-o');
+                    icon.classList.add('fa-heart');
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function loadMiniCart() {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const list = document.getElementById('minicart-product-list');
+                const count = document.getElementById('minicart-count');
+                const subtotal = document.getElementById('minicart-subtotal');
+                const headerTotal = document.getElementById('minicart-header-total');
+
+                if (!list) return;
+
+                list.innerHTML = '';
+                let total = 0;
+
+                cart.forEach(function (product) {
+                    // Calculate total with quantity
+                    const price = parseFloat(product.price) || 0;
+                    const quantity = parseInt(product.quantity) || 1;
+                    total += price * quantity;
+
+                    list.innerHTML += `
+                        <li>
+                            <a href="/our-product/${product.slug}" class="minicart-product-image">
+                                <img src="${product.image}" alt="${product.name}">
+                            </a>
+                            <div class="minicart-product-details">
+                                <h6>
+                                    <a href="/our-product/${product.slug}">
+                                        ${product.name}
+                                    </a>
+                                </h6>
+                                <span>₹${price.toFixed(2)} x ${quantity}</span>
+                            </div>
+                            <button class="close minicart-remove"
+                                    data-id="${product.id}"
+                                    title="Remove">
+                                <i class="fa fa-close"></i>
+                            </button>
+                        </li>
+                    `;
+                });
+
+                // Update cart count
+                const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.quantity) || 1), 0);
+                count.textContent = totalItems;
+
+                // Update both subtotal and header total
+                const formattedTotal = total.toFixed(2);
+                subtotal.textContent = '₹' + formattedTotal;
+
+                // Update header total
+                if (headerTotal) {
+                    headerTotal.textContent = formattedTotal;
+                }
+
+                // Show empty cart message
+                if (cart.length === 0) {
+                    list.innerHTML = `
+                        <li style="text-align:center;padding:20px;">
+                            Your cart is empty
+                        </li>
+                    `;
+                }
+
+                // Remove item functionality
+                document.querySelectorAll('.minicart-remove').forEach(function (button) {
+                    button.onclick = function () {
+                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                        cart = cart.filter(function (product) {
+                            return String(product.id) !== String(button.dataset.id);
+                        });
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        loadMiniCart();
+                    };
+                });
+            }
+            // Add / Remove Cart
+            document.querySelectorAll('.cart-btn').forEach(function (button) {
+                const id = button.dataset.productId;
+                const link = button.querySelector('a');
+                function updateCartButton() {
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    if (cart.some(item => String(item.id) === String(id))) {
+                        button.classList.add('added');
+                        link.textContent = 'Added to cart';
+                    } else {
+                        button.classList.remove('added');
+                        link.textContent = 'Add to cart';
+                    }
+                }
+                updateCartButton();
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    const existingIndex = cart.findIndex(
+                        item => String(item.id) === String(id)
+                    );
+                    if (existingIndex !== -1) {
+                        cart.splice(existingIndex, 1);
+                        button.classList.remove('added');
+                        link.textContent = 'Add to cart';
+                    } else {
+                        cart.push({
+                            id: id,
+                            name: button.dataset.productName,
+                            slug: button.dataset.productSlug,
+                            price: button.dataset.productPrice,
+                            image: button.dataset.productImage
+                        });
+                        button.classList.add('added');
+                        link.textContent = 'Added to cart';
+                    }
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    // IMPORTANT
+                    loadMiniCart();
+                    const toast = document.createElement('div');
+                    toast.innerHTML = `
+                        <i class="fa fa-exclamation-triangle"></i>
+                        <span>
+                            ${existingIndex !== -1
+                                ? 'Removed from Cart'
+                                : 'Added to Cart'}
+                        </span>
+                    `;
+                    toast.style.cssText = `
+                        position:fixed;
+                        top:80px;
+                        right:20px;
+                        background:#fffdf3;
+                        color:#d89b00;
+                        border:1px solid #fed700;
+                        border-radius:5px;
+                        padding:8px 12px;
+                        min-width:200px;
+                        display:flex;
+                        align-items:center;
+                        gap:10px;
+                        z-index:9999;
+                        box-shadow:0 2px 8px rgba(0,0,0,.12);
+                    `;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 3000);
+                });
+            });
+            // Load cart when page loads / refreshes
+            loadMiniCart();
         });
     </script>
     @stack('scripts')
