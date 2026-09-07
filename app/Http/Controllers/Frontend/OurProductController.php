@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\ProductBrand;
-use App\Models\SubCategory;
 
 class OurProductController extends Controller
 {
@@ -16,26 +13,13 @@ class OurProductController extends Controller
         $products=Product::with(['productBrand','category','subCategory','images'])
             ->where('status',1)
             ->when($request->filled('brand'),function($query) use($request){
-                $brand=ProductBrand::where('slug',$request->brand)->first();
-                if ($brand) {
-                    $query->where('product_brand_id',$brand->id);
-                }
-                return $query;
+                $query->where('product_brand_id',$request->brand);
             })
             ->when($request->filled('category'),function($query) use($request){
-                // Find category by slug
-                $category = Category::where('slug', $request->category)->first();
-                if ($category) {
-                    $query->where('category_id',$category->id);
-                }
-                return $query;
+                $query->where('category_id',$request->category);
             })
             ->when($request->filled('sub_category'),function($query) use($request){
-                $subCategory = SubCategory::where('slug',$request->sub_category)->first();
-                if ($subCategory) {
-                    $query->where('sub_category_id', $subCategory->id);
-                }
-                return $query;
+                $query->where('sub_category_id',$request->sub_category);
             })
             ->when($request->filled('sort'),function($query) use($request){
                 if($request->sort==='name-asc'){
@@ -59,7 +43,9 @@ class OurProductController extends Controller
             return response()->json([
                 'products'=>$products->map(function($product){
                     $primaryImage=$product->images->where('is_primary',true)->first()??$product->images->first();
+
                     $hasDiscount=$product->sale_price&&$product->price>$product->sale_price;
+
                     $discountPercentage=$hasDiscount
                         ?round((($product->price-$product->sale_price)/$product->price)*100)
                         :null;
@@ -83,6 +69,7 @@ class OurProductController extends Controller
                 'count'=>$products->count()
             ]);
         }
+
         $allProducts=Product::with(['productBrand','category','subCategory'])
             ->where('status',1)
             ->get();
@@ -106,24 +93,10 @@ class OurProductController extends Controller
 
         return view('frontend.our-products.discounted-products', compact('products'));
     }
+
     public function show($slug)
     {
-        $brand = ProductBrand::where('slug', $slug)->where('status', 1)->first();
-        $data = [
-            'brand' => null,
-            'products' => null,
-            'product' => null,
-            'relatedProducts' => collect()
-        ];
-        if ($brand) {
-            $data['brand'] = $brand;
-            $data['products'] = Product::with(['productBrand', 'category', 'subCategory', 'images'])
-                ->where('product_brand_id', $brand->id)
-                ->where('status', 1)
-                ->latest()
-                ->paginate(12);
-        } else {
-            $data['product'] = Product::with([
+        $product = Product::with([
             'productBrand',
             'category',
             'subCategory',
@@ -132,16 +105,16 @@ class OurProductController extends Controller
             'reviews.user'
         ])->where('slug', $slug)->where('status', 1)->firstOrFail();
 
-        $data['relatedProducts'] = Product::with(['productBrand', 'images'])
+        // Related products: same category + same sub category
+        $relatedProducts = Product::with(['productBrand','images'])
         ->where('status', 1)
-        ->where('id', '!=', $data['product']->id)
-        ->where('category_id', $data['product']->category_id)
-        ->where('sub_category_id', $data['product']->sub_category_id)
+        ->where('id', '!=', $product->id)
+        ->where('category_id', $product->category_id)
+        ->where('sub_category_id', $product->sub_category_id)
         ->latest()
         ->take(8)
         ->get();
-        }
-        return view('frontend.our-products.details', $data);
+        return view('frontend.our-products.details',compact('product', 'relatedProducts'));
     }
     public function compare()
     {
