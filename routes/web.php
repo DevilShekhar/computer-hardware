@@ -22,6 +22,7 @@ use App\Http\Controllers\Frontend\PrivacyPolicyController;
 use App\Http\Controllers\Frontend\TermsAndConditionController;
 use App\Http\Controllers\Frontend\DisclaimerController;
 use App\Http\Controllers\Frontend\SiteMapController;
+use App\Http\Controllers\Frontend\OurCategoryController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -98,3 +99,5 @@ Route::get('/privacy-policy', [PrivacyPolicyController::class, 'index'])->name('
 Route::get('/terms-and-conditions', [TermsAndConditionController::class, 'index'])->name('terms-and-conditions');
 Route::get('/disclaimer', [DisclaimerController::class, 'index'])->name('disclaimer');
 Route::get('/sitemap.xml', [SiteMapController::class, 'index'])->name('sitemap');
+Route::get('/our-category', [OurCategoryController::class, 'index'])->name('our-category');
+Route::get('/our-category/{slug}', [OurCategoryController::class, 'show'])->name('our-category.show');
