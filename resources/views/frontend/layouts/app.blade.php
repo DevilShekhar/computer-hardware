@@ -645,47 +645,50 @@
             </div>
             <!-- Footer Static Middle Area End Here -->
             <!-- Begin Footer Static Bottom Area -->
-            <div class="footer-static-bottom pt-55 pb-55">
+            <div class="vh-footer-bottom">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <!-- Begin Footer Links Area -->
-                            <div class="footer-links">
-                                <ul>
-                                    <li><a href="#">Online Shopping</a></li>
-                                    <li><a href="#">Promotions</a></li>
-                                    <li><a href="#">My Orders</a></li>
-                                    <li><a href="#">Help</a></li>
-                                    <li><a href="#">Customer Service</a></li>
-                                    <li><a href="#">Support</a></li>
-                                    <li><a href="#">Most Populars</a></li>
-                                    <li><a href="#">New Arrivals</a></li>
-                                    <li><a href="#">Special Products</a></li>
-                                    <li><a href="#">Manufacturers</a></li>
-                                    <li><a href="#">Our Stores</a></li>
-                                    <li><a href="#">Shipping</a></li>
-                                    <li><a href="#">Payments</a></li>
-                                    <li><a href="#">Warantee</a></li>
-                                    <li><a href="#">Refunds</a></li>
-                                    <li><a href="#">Checkout</a></li>
-                                    <li><a href="#">Discount</a></li>
-                                    <li><a href="#">Refunds</a></li>
-                                    <li><a href="#">Policy Shipping</a></li>
+                    <div class="row vh-footer-row">
+                        <!-- Copyright / Developer -->
+                        <div class="col-lg-7 col-md-12">
+                            <div class="vh-footer-copyright">
+                                <span class="vh-footer-copyright-text">
+                                    © 2026 Computer Hardware. All Rights Reserved.
+                                </span>
+                                <span class="vh-footer-divider">|</span>
+                                <span class="vh-footer-developer">
+                                    Developed &amp; Marketed by
+                                    <a class="vh-footer-developer-link" target="_blank" rel="noopener noreferrer"  href="https://eternalhightech.com/">
+                                        <strong>Eternal HighTech</strong>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- Footer Policy Links -->
+                        <div class="col-lg-5 col-md-12">
+                            <div class="vh-footer-navigation">
+                                <ul class="vh-footer-policy-list">
+                                    <li class="vh-footer-policy-item">
+                                        <a class="vh-footer-policy-link"  href="{{ url('/privacy-policy') }}" >
+                                            Privacy Policy
+                                        </a>
+                                    </li>
+                                    <li class="vh-footer-policy-item">
+                                        <a class="vh-footer-policy-link" href="{{ url('/terms-and-conditions') }}">
+                                            Terms of Use
+                                        </a>
+                                    </li>
+                                    <li class="vh-footer-policy-item">
+                                        <a class="vh-footer-policy-link" href="{{ url('/disclaimer') }}">
+                                            Disclaimer
+                                        </a>
+                                    </li>
+                                    <li class="vh-footer-policy-item">
+                                        <a class="vh-footer-policy-link" href="{{ url('/sitemap.xml') }}">
+                                            Sitemap
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
-                            <!-- Footer Links Area End Here -->
-                            <!-- Begin Footer Payment Area -->
-                            <div class="copyright text-center">
-                                <a href="#">
-                                    <img src="{{ asset('assets/frontend/assets/images/payment/1.png') }}" alt="">
-                                </a>
-                            </div>
-                            <!-- Footer Payment Area End Here -->
-                            <!-- Begin Copyright Area -->
-                            <div class="copyright text-center pt-25">
-                                <span><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></span>
-                            </div>
-                            <!-- Copyright Area End Here -->
                         </div>
                     </div>
                 </div>
