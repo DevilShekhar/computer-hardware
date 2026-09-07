@@ -10,7 +10,7 @@ class OurCategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('productBrand')->where('status', 1)->latest()->get();
+        $categories = Category::with('productBrand')->where('status', 1)->latest()->paginate(8);
         return view('frontend.our-category.index', compact('categories'));
     }
 

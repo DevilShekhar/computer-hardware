@@ -1,18 +1,18 @@
 @extends('frontend.layouts.app')
-@section('title', 'Our Categories')
+@section('title', 'Our Sub Categories')
 @section('content')
     <div class="breadcrumb-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb-content text-center">
-                        <h2>Our Categories</h2>
+                        <h2>Our Sub Categories</h2>
                         <ul>
                             <li>
                                 <a href="{{ route('home') }}">Home</a>
                             </li>
                             <li class="active">
-                                Our Categories
+                                Our Sub Categories
                             </li>
                         </ul>
                     </div>
@@ -26,33 +26,36 @@
                 <div class="col-12">
                     <div class="li-section-title capitalize mb-25">
                         <h2>
-                            <span>Our Categories</span>
+                            <span>Our Sub Categories</span>
                         </h2>
                     </div>
                 </div>
             </div>
-            @if($categories->isNotEmpty())
+            @if($subCategories->isNotEmpty())
                 <div class="row">
-                    @foreach($categories as $category)
+                    @foreach($subCategories as $subCategory)
                         <div class="col-lg-3 col-md-6 col-sm-6">
                             <div class="team-member mb-60 mb-sm-30 mb-xs-30">
                                 <div class="team-thumb">
-                                    <a href="{{ route('our-category.show', ['slug' => $category->slug]) }}">
-                                        @if($category->cat_image)
-                                            <img src="{{ $category->cat_image ? asset('storage/' . $category->cat_image) : asset('images/no-image.png') }}" alt="{{ $category->name }}" style="width: 100%; height: 220px; object-fit: contain;">
-                                        @else
-                                            <img src="{{ asset('images/no-image.png') }}" alt="{{ $category->name }}" style="width: 100%; height: 220px; object-fit: contain;">
-                                        @endif
+                                    <a href="{{ route('our-sub-category.show', ['slug' => $subCategory->slug]) }}">
+                                        <img src="{{ $subCategory->sub_cat_image ? asset('storage/' . $subCategory->sub_cat_image) : asset('images/no-image.png') }}"
+                                             alt="{{ $subCategory->name }}"
+                                             style="width: 100%; height: 220px; object-fit: contain;">
                                     </a>
                                 </div>
                                 <div class="team-content text-center">
                                     <h3>
-                                        <a href="{{ route('our-category.show', ['slug' => $category->slug]) }}">
-                                            {{ $category->name }}
+                                        <a href="{{ route('our-sub-category.show', ['slug' => $subCategory->slug]) }}">
+                                            {{ $subCategory->name }}
                                         </a>
                                     </h3>
+                                    @if($subCategory->category)
+                                        <p>
+                                            {{ $subCategory->category->name }}
+                                        </p>
+                                    @endif
                                     <p>
-                                        <a href="{{ route('our-category.show', ['slug' => $category->slug]) }}">
+                                        <a href="{{ route('our-sub-category.show', ['slug' => $subCategory->slug]) }}">
                                             View Products
                                         </a>
                                     </p>
@@ -61,23 +64,23 @@
                         </div>
                     @endforeach
                 </div>
-                @if($categories->hasPages())
+                @if($subCategories->hasPages())
                     <div class="paginatoin-area">
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
                                 <p>
                                     Showing
-                                    {{ $categories->firstItem() }}
+                                    {{ $subCategories->firstItem() }}
                                     -
-                                    {{ $categories->lastItem() }}
+                                    {{ $subCategories->lastItem() }}
                                     of
-                                    {{ $categories->total() }}
+                                    {{ $subCategories->total() }}
                                     item(s)
                                 </p>
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <ul class="pagination-box">
-                                    @if($categories->onFirstPage())
+                                    @if($subCategories->onFirstPage())
                                         <li>
                                             <span class="Previous disabled">
                                                 <i class="fa fa-chevron-left"></i>
@@ -86,14 +89,15 @@
                                         </li>
                                     @else
                                         <li>
-                                            <a href="{{ $categories->previousPageUrl() }}"  class="Previous">
+                                            <a href="{{ $subCategories->previousPageUrl() }}"
+                                               class="Previous">
                                                 <i class="fa fa-chevron-left"></i>
                                                 Previous
                                             </a>
                                         </li>
                                     @endif
-                                    @foreach($categories->getUrlRange(1, $categories->lastPage()) as $page => $url)
-                                        @if($page == $categories->currentPage())
+                                    @foreach($subCategories->getUrlRange(1, $subCategories->lastPage()) as $page => $url)
+                                        @if($page == $subCategories->currentPage())
                                             <li class="active">
                                                 <a href="javascript:void(0);">
                                                     {{ $page }}
@@ -107,9 +111,10 @@
                                             </li>
                                         @endif
                                     @endforeach
-                                    @if($categories->hasMorePages())
+                                    @if($subCategories->hasMorePages())
                                         <li>
-                                            <a href="{{ $categories->nextPageUrl() }}"  class="Next">
+                                            <a href="{{ $subCategories->nextPageUrl() }}"
+                                               class="Next">
                                                 Next
                                                 <i class="fa fa-chevron-right"></i>
                                             </a>
@@ -131,9 +136,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="text-center pt-40 pb-60">
-                            <h3>No Categories Available</h3>
+                            <h3>No Sub Categories Available</h3>
                             <p>
-                                There are currently no categories available.
+                                There are currently no sub categories available.
                             </p>
                         </div>
                     </div>
