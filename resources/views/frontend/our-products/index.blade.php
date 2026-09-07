@@ -601,10 +601,16 @@ $filterBrands = $allProducts
                                                 </div>
                                                 <div class="add-actions">
                                                     <ul class="add-actions-link">
-                                                        <li class="add-cart active">
-                                                            <a href="{{ url('/cart/add/' . $product->id) }}">
-                                                                Add to cart
-                                                            </a>
+                                                        <li class="add-cart active cart-btn"
+                                                            data-product-id="{{ $product->id }}"
+                                                            data-product-name="{{ $product->name }}"
+                                                            data-product-slug="{{ $product->slug }}"
+                                                            data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                                            data-product-image="{{ $primaryImage && $primaryImage->image
+                                                                ? asset('storage/' . $primaryImage->image)
+                                                                : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+
+                                                            <a href="javascript:void(0);">Add to cart</a>
                                                         </li>
                                                         <li>
                                                             <a href="javascript:void(0)" class="compare-product"
@@ -613,8 +619,16 @@ $filterBrands = $allProducts
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <a class="links-details" href="#">
-                                                                <i class="fa fa-heart-o"></i>
+                                                            <a class="links-details wishlist-btn"
+                                                                href="javascript:void(0);"
+                                                                data-product-id="{{ $product->id }}"
+                                                                data-product-name="{{ $product->name }}"
+                                                                data-product-slug="{{ $product->slug }}"
+                                                                data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                                                data-product-image="{{ $primaryImage && $primaryImage->image
+                                                                        ? asset('storage/' . $primaryImage->image)
+                                                                        : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+                                                                    <i class="fa fa-heart-o"></i>
                                                             </a>
                                                         </li>
                                                         <li>
@@ -721,22 +735,34 @@ $filterBrands = $allProducts
                                     <div class="col-lg-4">
                                         <div class="shop-add-action mb-xs-30">
                                             <ul class="add-actions-link">
-                                                <li class="add-cart">
-                                                    <a href="{{ url('/cart/add/' . $product->id) }}">
-                                                        Add to cart
-                                                    </a>
+                                                <li class="add-cart active cart-btn"
+                                                    data-product-id="{{ $product->id }}"
+                                                    data-product-name="{{ $product->name }}"
+                                                    data-product-slug="{{ $product->slug }}"
+                                                    data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                                    data-product-image="{{ $primaryImage && $primaryImage->image
+                                                        ? asset('storage/' . $primaryImage->image)
+                                                        : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+
+                                                    <a href="javascript:void(0);">Add to cart</a>
                                                 </li>
                                                 <li>
                                                     <a href="javascript:void(0)" class="compare-product"
                                                         data-id="{{ $product->id }}" title="Compare Product">
                                                         <i class="fa fa-exchange"></i>
-                                                        Compare
                                                     </a>
                                                 </li>
-                                                <li class="wishlist">
-                                                    <a href="#">
-                                                        <i class="fa fa-heart-o"></i>
-                                                        Add to wishlist
+                                                <li>
+                                                    <a class="links-details wishlist-btn"
+                                                        href="javascript:void(0);"
+                                                        data-product-id="{{ $product->id }}"
+                                                        data-product-name="{{ $product->name }}"
+                                                        data-product-slug="{{ $product->slug }}"
+                                                        data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                                        data-product-image="{{ $primaryImage && $primaryImage->image
+                                                                ? asset('storage/' . $primaryImage->image)
+                                                                : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+                                                            <i class="fa fa-heart-o"></i>
                                                     </a>
                                                 </li>
                                                 <li>

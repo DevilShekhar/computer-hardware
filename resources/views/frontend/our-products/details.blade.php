@@ -80,10 +80,13 @@
                                                         </div>
                                                         <div class="add-actions">
                                                             <ul class="add-actions-link">
-                                                                <li class="add-cart active">
-                                                                    <a href="{{ url('/cart/add/' . $product->id) }}">
-                                                                        Add to cart
-                                                                    </a>
+                                                               <li class="add-cart active cart-btn"
+                                                                    data-product-id="{{ $product->id }}"
+                                                                    data-product-name="{{ $product->name }}"
+                                                                    data-product-slug="{{ $product->slug }}"
+                                                                    data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                                                    data-product-image="{{ $primaryImage && $primaryImage->image ? asset('storage/' . $primaryImage->image) : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+                                                                    <a href="javascript:void(0);">Add to cart</a>
                                                                 </li>
                                                                 <li>
                                                                     <a href="#" title="quick view" class="quick-view-btn"
@@ -342,22 +345,45 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="add-to-cart" type="submit" @if($product->stock_quantity <= 0) disabled
-                                        @endif>
-                                        @if($product->stock_quantity > 0)
-                                        Add to cart
-                                        @else
-                                        Out of stock
-                                        @endif
+                                @php
+                                    $primaryImage = $product->images->where('is_primary', true)->first();
+
+                                    if (!$primaryImage) {
+                                        $primaryImage = $product->images->first();
+                                    }
+                                @endphp
+                                <button class="add-to-cart add-cart active cart-btn {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}"
+                                    type="button"
+                                    data-product-id="{{ $product->id }}"
+                                    data-product-name="{{ $product->name }}"
+                                    data-product-slug="{{ $product->slug }}"
+                                    data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                    data-product-image="{{ $primaryImage && $primaryImage->image
+                                        ? asset('storage/' . $primaryImage->image)
+                                        : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
+                                    {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}>
+
+                                    <a href="javascript:void(0);">
+                                        {{ $product->stock_quantity > 0 ? 'Add to cart' : 'Out of stock' }}
+                                    </a>
                                 </button>
                             </form>
                         </div>
                         <div class="product-additional-info pt-25">
-                            <a class="wishlist-btn" href="#">
-                                <i class="fa fa-heart-o"></i>
-                                Add to wishlist
-                            </a>
-                        </div>
+    <a class="wishlist-btn"
+       href="javascript:void(0);"
+       data-product-id="{{ $product->id }}"
+       data-product-name="{{ $product->name }}"
+       data-product-slug="{{ $product->slug }}"
+       data-product-price="{{ $product->sale_price ?? $product->price }}"
+       data-product-image="{{ $primaryImage && $primaryImage->image
+            ? asset('storage/' . $primaryImage->image)
+            : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+
+        <i class="fa fa-heart-o"></i>
+        <span class="wishlist-text">Add to wishlist</span>
+    </a>
+</div>
                     </div>
                 </div>
             </div>
@@ -852,10 +878,16 @@
                                         </div>
                                         <div class="add-actions">
                                             <ul class="add-actions-link">
-                                                <li class="add-cart active">
-                                                    <a href="{{ url('/cart/add/' . $relatedProduct->id) }}">
-                                                        Add to cart
-                                                    </a>
+                                                <li class="add-cart active cart-btn"
+                                                    data-product-id="{{ $relatedProduct->id }}"
+                                                    data-product-name="{{ $relatedProduct->name }}"
+                                                    data-product-slug="{{ $relatedProduct->slug }}"
+                                                    data-product-price="{{ $relatedProduct->sale_price ?? $relatedProduct->price }}"
+                                                    data-product-image="{{ $relatedProduct->images->first() && $relatedProduct->images->first()->image
+                                                        ? asset('storage/' . $relatedProduct->images->first()->image)
+                                                        : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+
+                                                    <a href="javascript:void(0);">Add to cart</a>
                                                 </li>
                                                 <li>
                                                     <a class="links-details" href="#">
