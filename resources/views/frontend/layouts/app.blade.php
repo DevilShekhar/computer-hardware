@@ -319,7 +319,7 @@
                                                                         @foreach($brand->categories as $category)
                                                                             <div class="mega-row category-item"
                                                                                 data-brand="{{ $brand->id }}" style="display:none;">
-                                                                                <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug) }}"
+                                                                                <a href="{{ route('our-category.show', ['slug' => $category->slug]) }}"
                                                                                     class="mega-row__link category-trigger"
                                                                                     data-category="{{ $category->id }}">
                                                                                     <span>
@@ -347,7 +347,7 @@
 
                                                                                 @foreach($category->subCategories as $subCategory)
                                                                                     <div class="mega-row subcategory-item" data-category="{{ $category->id }}" style="display:none;">
-                                                                                        <a href="{{ url('/shop/' . $brand->slug . '/' . $category->slug . '/' . $subCategory->slug) }}"
+                                                                                        <a href="{{ route('our-sub-category.show', ['slug' => $subCategory->slug]) }}"
                                                                                             class="mega-row__link subcategory-trigger"
                                                                                             data-subcategory="{{ $subCategory->id }}">
                                                                                             <span>
@@ -377,7 +377,7 @@
                                                                                 @foreach($category->subCategories as $subCategory)
                                                                                     @if($subCategory->products && $subCategory->products->count())
                                                                                         @foreach($subCategory->products as $product)
-                                                                                            <a href="{{ url('/product/' . $product->slug) }}"
+                                                                                            <a href="{{ route('product.details', ['slug' => $product->slug]) }}"
                                                                                                 class="mega-row__link mega-product-item"
                                                                                                 data-subcategory="{{ $subCategory->id }}"
                                                                                                 style="display:none;">
