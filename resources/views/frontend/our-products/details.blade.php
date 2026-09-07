@@ -1,6 +1,137 @@
 @extends('frontend.layouts.app')
-@section('title', $product->name)
+@section('title', isset($product) ? $product->name : (isset($brand) ? $brand->name : 'Product'))
 @section('content')
+@if(isset($brand))
+
+<div class="content-wraper pt-60 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="mb-4" style="font-size: 28px; font-weight: 600; color: #333;">{{ $brand->name }}</h1>
+
+                <div class="shop-products-wrapper">
+                    <div class="tab-content">
+                        <div id="grid-view" class="tab-pane fade active show" role="tabpanel">
+                            <div class="product-area shop-product-area">
+                                <div class="row">
+                                    @if($products->count())
+                                        @foreach($products as $product)
+                                            @php
+                                                $primaryImage = $product->images->where('is_primary', true)->first();
+                                                if (!$primaryImage) {
+                                                    $primaryImage = $product->images->first();
+                                                }
+                                                $hasDiscount = $product->price > 0 && $product->sale_price && $product->sale_price < $product->price;
+                                                $discountPercentage = $hasDiscount ? round((($product->price - $product->sale_price) / $product->price) * 100) : 0;
+                                            @endphp
+
+                                            <div class="col-lg-4 col-md-4 col-sm-6 mt-40">
+                                                <div class="single-product-wrap">
+                                                    <div class="product-image">
+                                                        <a href="{{ route('product.details', $product->slug) }}">
+                                                            @if($primaryImage && $primaryImage->image)
+                                                                <img src="{{ asset('storage/' . $primaryImage->image) }}"
+                                                                     alt="{{ $product->name }}"
+                                                                     style="width: 270px; height: 270px; object-fit: cover;">
+                                                            @else
+                                                                <img src="{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
+                                                                     alt="{{ $product->name }}"
+                                                                     style="width: 270px; height: 270px; object-fit: cover;">
+                                                            @endif
+                                                        </a>
+                                                        @if($product->is_new ?? false)
+                                                            <span class="sticker">New</span>
+                                                        @endif
+                                                        @if($hasDiscount)
+                                                            <span class="sticker" style="background: #e74c3c;">-{{ $discountPercentage }}%</span>
+                                                        @endif
+                                                    </div>
+                                                    <div class="product_desc">
+                                                        <div class="product_desc_info">
+                                                            <div class="product-review">
+                                                                <h5 class="manufacturer">
+                                                                    <a href="#">{{ $product->productBrand->name ?? 'Graphic Corner' }}</a>
+                                                                </h5>
+                                                                <div class="rating-box">
+                                                                    <ul class="rating">
+                                                                        @for($i = 1; $i <= 5; $i++)
+                                                                            <li class="{{ $i <= ($product->rating ?? 0) ? '' : 'no-star' }}">
+                                                                                <i class="fa fa-star-o"></i>
+                                                                            </li>
+                                                                        @endfor
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <h4>
+                                                                <a class="product_name" href="{{ route('product.details', $product->slug) }}">
+                                                                    {{ Str::limit($product->name, 30) }}
+                                                                </a>
+                                                            </h4>
+                                                            <div class="price-box">
+                                                                @if($hasDiscount)
+                                                                    <span class="new-price" style="color: #28a745;">₹{{ number_format($product->sale_price, 2) }}</span>
+                                                                    <span class="old-price" style="text-decoration: line-through; color: #999; margin-left: 5px; font-size: 12px;">
+                                                                        ₹{{ number_format($product->price, 2) }}
+                                                                    </span>
+                                                                @else
+                                                                    <span class="new-price" style="color: #28a745;">₹{{ number_format($product->price, 2) }}</span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="add-actions">
+                                                            <ul class="add-actions-link">
+                                                                <li class="add-cart active">
+                                                                    <a href="{{ url('/cart/add/' . $product->id) }}">
+                                                                        Add to cart
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" title="quick view" class="quick-view-btn"
+                                                                       data-toggle="modal" data-target="#exampleModalCenter"
+                                                                       style="color: #333; padding: 8px 10px; border-radius: 4px; font-size: 14px; display: inline-block; text-decoration: none;">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="links-details" href="#"
+                                                                       style="color: #333; padding: 8px 10px; border-radius: 4px; font-size: 14px; display: inline-block; text-decoration: none;">
+                                                                        <i class="fa fa-heart-o"></i>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+
+                                        <div class="col-12">
+                                            <div class="paginatoin-area">
+                                                <div class="row">
+                                                    <div class="col-lg-6 col-md-6">
+                                                        <p>Showing {{ $products->firstItem() }}-{{ $products->lastItem() }} of {{ $products->total() }} item(s)</p>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6">
+                                                        {{ $products->links('pagination::bootstrap-4') }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="col-12">
+                                            <p class="text-muted">No products found for this brand.</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 <div class="breadcrumb-area">
     <div class="container">
         <div class="breadcrumb-content">
@@ -630,7 +761,7 @@
         </div>
     </div>
 </div>
-@if($relatedProducts->count() > 0)
+@if(isset($relatedProducts) && $relatedProducts->count() > 0)
 <section class="product-area li-laptop-product pt-60 pb-45 pt-sm-50 pt-xs-60">
     <div class="container">
         <div class="row">

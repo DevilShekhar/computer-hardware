@@ -302,7 +302,7 @@
                                                             <div class="mega-col__list">
                                                                 @foreach($productBrands as $brand)
                                                                     <div class="mega-row">
-                                                                        <a href="{{ url('/shop/brand/' . $brand->slug) }}"class="mega-row__link brand-trigger" data-brand="{{ $brand->id }}">
+                                                                        <a href="{{ route('our-products', ['brand' => $brand->slug]) }}" class="mega-row__link brand-trigger" data-brand="{{ $brand->id }}">
                                                                             <div class="mega-row__left">
                                                                                 @if(!empty($brand->product_brand_image))
                                                                                     <img src="{{ asset('storage/' . $brand->product_brand_image) }}" class="mega-brand-img" alt="{{ $brand->name }}">
