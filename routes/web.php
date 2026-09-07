@@ -23,6 +23,7 @@ use App\Http\Controllers\Frontend\TermsAndConditionController;
 use App\Http\Controllers\Frontend\DisclaimerController;
 use App\Http\Controllers\Frontend\SiteMapController;
 use App\Http\Controllers\Frontend\OurCategoryController;
+use App\Http\Controllers\Frontend\OurSubCategoryController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -101,3 +102,5 @@ Route::get('/disclaimer', [DisclaimerController::class, 'index'])->name('disclai
 Route::get('/sitemap.xml', [SiteMapController::class, 'index'])->name('sitemap');
 Route::get('/our-category', [OurCategoryController::class, 'index'])->name('our-category');
 Route::get('/our-category/{slug}', [OurCategoryController::class, 'show'])->name('our-category.show');
+Route::get('/our-sub-category', [OurSubCategoryController::class, 'index'])->name('our-sub-category');
+Route::get('/our-sub-category/{slug}', [OurSubCategoryController::class, 'show'])->name('our-sub-category.show');
