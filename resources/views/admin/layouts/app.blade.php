@@ -380,8 +380,12 @@
                                 <li><a class="nav-link" href="{{ route('coupons.index') }}">Coupon List</a></li>
                             </ul>
                         </li>
-                        <li>
-
+                        <li class="{{ request()->routeIs('admin.contact-submissions.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.contact-submissions.index') }}" class="nav-link">
+                                <i data-feather="mail"></i>
+                                <span>Contact Submissions</span>
+                            </a>
+                        </li>
                         <li class="menu-header">Pages</li>
 
                         <li class="dropdown">

@@ -24,7 +24,9 @@ use App\Http\Controllers\Frontend\DisclaimerController;
 use App\Http\Controllers\Frontend\SiteMapController;
 use App\Http\Controllers\Frontend\OurCategoryController;
 use App\Http\Controllers\Frontend\OurSubCategoryController;
+use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Admin\ContactSubmissionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/product-review', [ProductReviewController::class, 'index'])->name('product-review.index');
     Route::post('/product-review/{review}/approve', [ProductReviewController::class, 'approve'])->name('product-review.approve');
     Route::post('/product-review/{review}/reject', [ProductReviewController::class, 'reject'])->name('product-review.reject');
+    Route::get('/contact-submissions',[ContactSubmissionController::class, 'index'])->name('admin.contact-submissions.index');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -104,3 +107,6 @@ Route::get('/our-category', [OurCategoryController::class, 'index'])->name('our-
 Route::get('/our-category/{slug}', [OurCategoryController::class, 'show'])->name('our-category.show');
 Route::get('/our-sub-category', [OurSubCategoryController::class, 'index'])->name('our-sub-category');
 Route::get('/our-sub-category/{slug}', [OurSubCategoryController::class, 'show'])->name('our-sub-category.show');
+Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/contact-us/thank-you', [ContactController::class, 'thankYou'])->name('contact.thank-you');
