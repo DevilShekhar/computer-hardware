@@ -73,25 +73,18 @@ class OurProductController extends Controller
         $allProducts=Product::with(['productBrand','category','subCategory'])
             ->where('status',1)
             ->get();
-
-        return view('frontend.our-products.index',compact('products','allProducts'));
+        $meta_title = 'Our Products | Buy Computer Hardware Online';
+        $meta_keyword = 'computer products, computer hardware, computer parts, PC components, graphics cards, processors, RAM, SSD, motherboard';
+        $meta_description = 'Explore our range of computer hardware, PC components and accessories including graphics cards, processors, RAM, SSDs, motherboards and more.';
+        return view('frontend.our-products.index',compact('products','allProducts','meta_title','meta_keyword','meta_description'));
     }
     public function discountedProducts()
     {
-        $products = Product::with([
-            'productBrand',
-            'category',
-            'subCategory',
-            'images',
-        ])
-            ->where('status', 1)
-            ->where('is_discounted', 1)
-            ->whereNotNull('sale_price')
-            ->whereColumn('sale_price', '<', 'price')
-            ->latest('id')
-            ->get();
-
-        return view('frontend.our-products.discounted-products', compact('products'));
+        $products = Product::with(['productBrand','category','subCategory','images',])->where('status', 1)->where('is_discounted', 1)->whereNotNull('sale_price')->whereColumn('sale_price', '<', 'price')->latest('id')->get();
+        $meta_title = 'Discounted Computer Products | Best Deals & Offers';
+        $meta_keyword = 'discounted computer products, computer hardware deals, PC parts offers, graphics card deals, processor offers, computer accessories discounts';
+        $meta_description = 'Shop discounted computer hardware, PC components and accessories at great prices. Find deals on graphics cards, processors, RAM, SSDs, motherboards and more.';
+        return view('frontend.our-products.discounted-products', compact('products','meta_title','meta_keyword','meta_description'));
     }
 
     public function show($slug)
@@ -114,11 +107,17 @@ class OurProductController extends Controller
         ->latest()
         ->take(8)
         ->get();
-        return view('frontend.our-products.details',compact('product', 'relatedProducts'));
+        $meta_title = $product->meta_title ?: $product->name . ' | Computer Hardware';
+        $meta_keyword = $product->meta_keywords ?: $product->name . ', computer hardware, computer parts';
+        $meta_description = $product->meta_description ?: 'Buy ' . $product->name . ' online. Explore product details, specifications, pricing and availability.';
+        return view('frontend.our-products.details',compact('product', 'relatedProducts','meta_title','meta_keyword','meta_description'));
     }
     public function compare()
     {
-        return view('frontend.our-products.compare');
+        $meta_title = 'Compare Computer Products | Compare PC Components';
+        $meta_keyword = 'compare products, computer product comparison, compare computer hardware, compare PC components, graphics card comparison, processor comparison';
+        $meta_description = 'Compare two computer hardware products side by side. Check prices, specifications, features and other details to choose the right PC component for your needs.';
+        return view('frontend.our-products.compare', compact('meta_title','meta_keyword','meta_description'));
     }
 
     public function compareProducts(Request $request)

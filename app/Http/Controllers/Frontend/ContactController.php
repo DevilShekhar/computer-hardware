@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index()
-    {
-        return view('frontend.contact-us.index');
+    public function index() { 
+        $meta_title = 'Contact Us | Computer Hardware'; 
+        $meta_keyword = 'contact us, computer hardware, computer parts, PC components, computer accessories'; 
+        $meta_description = 'Contact us for enquiries about computer hardware, PC components, computer parts, accessories, products and services.'; 
+        return view('frontend.contact-us.index', compact( 'meta_title', 'meta_keyword', 'meta_description' )); 
     }
 
     public function store(Request $request)
@@ -31,6 +33,9 @@ class ContactController extends Controller
     }
     public function thankYou()
     {
-        return view('frontend.contact-us.thank-you');
+        $meta_title = 'Thank You | Computer Hardware';
+        $meta_keyword = 'thank you, contact us, computer hardware, computer parts';
+        $meta_description = 'Thank you for contacting us. We have received your enquiry and will get back to you soon.';
+        return view('frontend.contact-us.thank-you',compact('meta_title','meta_keyword','meta_description'));
     }
 }

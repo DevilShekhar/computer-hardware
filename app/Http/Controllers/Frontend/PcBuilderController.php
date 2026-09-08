@@ -13,15 +13,11 @@ class PcBuilderController extends Controller
      */
     public function index()
     {
-        $builderTypes = BuilderType::query()
-            ->where('status', true)
-            ->orderBy('name', 'asc')
-            ->get();
-
-        return view(
-            'frontend.pc-builder.index',
-            compact('builderTypes')
-        );
+        $builderTypes = BuilderType::query()->where('status', true)->orderBy('name', 'asc')->get();
+        $meta_title = 'PC Builder | Build Your Custom PC Online'; 
+        $meta_keyword = 'PC builder, custom PC builder, build a PC, gaming PC builder, custom computer builder, PC components'; 
+        $meta_description = 'Build your custom PC online with our PC Builder. Choose compatible components including processors, graphics cards, motherboards, RAM, storage and other PC parts.';
+        return view( 'frontend.pc-builder.index', compact( 'builderTypes', 'meta_title', 'meta_keyword', 'meta_description' ) );
     }
 
 
@@ -45,22 +41,8 @@ class PcBuilderController extends Controller
      */
     public function show($slug)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Get Builder Type
-        |--------------------------------------------------------------------------
-        */
-        $builderType = BuilderType::query()
-            ->where('slug', $slug)
-            ->where('status', true)
-            ->firstOrFail();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Get Products Assigned To This Builder Type
-        |--------------------------------------------------------------------------
-        */
+        
+        $builderType = BuilderType::query()->where('slug', $slug)->where('status', true)->firstOrFail();
         $builderProducts = BuilderProduct::query()
             ->with([
                 'product.productBrand',
@@ -76,13 +58,6 @@ class PcBuilderController extends Controller
             ->orderBy('sort_order', 'asc')
             ->latest('id')
             ->get();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Only Valid Products
-        |--------------------------------------------------------------------------
-        */
         $products = $builderProducts
             ->filter(function ($builderProduct) {
 
@@ -90,81 +65,47 @@ class PcBuilderController extends Controller
 
             })
             ->map(function ($builderProduct) {
-
                 return $builderProduct->product;
-
             })
             ->unique('id')
             ->values();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Group Products
-        |--------------------------------------------------------------------------
-        |
-        | Brand
-        |   ↓
-        | Category
-        |   ↓
-        | Sub Category
-        |   ↓
-        | Products
-        |
-        */
         $groupedProducts = $products
             ->groupBy(function ($product) {
-
                 return optional($product->productBrand)->id ?? 0;
-
             })
             ->map(function ($brandProducts) {
-
                 return $brandProducts
                     ->groupBy(function ($product) {
-
                         return optional($product->category)->id ?? 0;
-
                     })
                     ->map(function ($categoryProducts) {
-
                         return $categoryProducts
                             ->groupBy(function ($product) {
-
                                 return optional($product->subCategory)->id ?? 0;
-
                             });
-
                     });
-
             });
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Brand List
-        |--------------------------------------------------------------------------
-        */
         $brands = $products
             ->map(function ($product) {
-
                 return $product->productBrand;
-
             })
             ->filter()
             ->unique('id')
             ->sortBy('name')
             ->values();
-
-
-        return view(
-            'frontend.pc-builder.show',
+            $meta_title = $builderType->meta_title ?: $builderType->name . ' | PC Builder';
+            $meta_keyword = $builderType->meta_keywords ?: $builderType->name . ', PC builder, custom PC, computer hardware, PC components';
+            $meta_description = $builderType->meta_description ?: 'Build your ' . $builderType->name . ' with compatible computer components including processors, graphics cards, motherboards, RAM and storage.';
+        return view('frontend.pc-builder.show',
             compact(
                 'builderType',
                 'builderProducts',
                 'products',
                 'groupedProducts',
-                'brands'
+                'brands',
+                'meta_title',
+                'meta_keyword',
+                'meta_description'
             )
         );
     }

@@ -1,4 +1,7 @@
 @extends('frontend.layouts.app')
+@section('title', $meta_title)
+@section('meta_keyword', $meta_keyword)
+@section('meta_description', $meta_description)
 @section('content')
 <div class="content-wraper pt-60 pb-60">
     <div class="container">

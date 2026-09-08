@@ -1,5 +1,7 @@
 @extends('frontend.layouts.app')
-@section('title', 'Home')
+@section('title', $meta_title)
+@section('meta_keyword', $meta_keyword)
+@section('meta_description', $meta_description)
 @section('content')
 <!-- Start Hero Area -->
 <div class="slider-with-banner full-screen-slider">

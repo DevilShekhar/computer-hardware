@@ -1,5 +1,7 @@
 @extends('frontend.layouts.app')
-@section('title', 'Our Products')
+@section('title', $meta_title)
+@section('meta_keyword', $meta_keyword)
+@section('meta_description', $meta_description)
 @section('content')
 <style>
 .product-filter-sidebar {
