@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Inventory;
 use App\Models\InventoryHistory;
 use App\Models\Product;
+use App\Models\Gst;
 use App\Models\ProductBrand;
 use App\Models\ProductImage;
 use App\Models\ProductSpecification;
@@ -35,8 +36,8 @@ class ProductController extends Controller
     public function create()
     {
         $productBrands = ProductBrand::where('status', 1)->latest()->get();
-
-        return view('admin.products.create', compact('productBrands'));
+        $gst = Gst::where('status', 1)->first();
+        return view('admin.products.create', compact('productBrands','gst'));
     }
 
     public function store(Request $request)
@@ -55,7 +56,8 @@ class ProductController extends Controller
             'sale_price' => 'nullable|numeric|min:0|lte:price',
             'stock_quantity' => 'required|integer|min:0',
             'hsn' => 'nullable|string|max:255',
-            'gst_rate' => 'nullable|numeric|min:0|max:100',
+            'gst_type' => 'required|in:yes,no',
+            'gst_id' => 'nullable|exists:gsts,id',
             'warranty_information' => 'nullable|string|max:255',
             'specification_name' => 'nullable|array',
             'specification_value' => 'nullable|array',
@@ -102,7 +104,20 @@ class ProductController extends Controller
                     'sub_category_id' => 'Selected sub category does not belong to the selected category and product brand.',
                 ]);
         }
-
+        $gstId = null;
+        if ($request->gst_type === 'yes') {
+            $gst = Gst::where('id', $request->gst_id)
+                ->where('status', 1)
+                ->first();
+            if (! $gst) {
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'gst_type' => 'Active GST rate is not available.',
+                    ]);
+            }
+            $gstId = $gst->id;
+        }
         $slug = Str::slug($request->name);
 
         if (Product::where('slug', $slug)->exists()) {
@@ -122,7 +137,8 @@ class ProductController extends Controller
             'sale_price' => $request->sale_price,
             'stock_quantity' => $request->stock_quantity,
             'hsn' => $request->hsn,
-            'gst_rate' => $request->gst_rate,
+            'gst_type' => $request->gst_type,
+            'gst_id' => $gstId,
             'warranty_information' => $request->warranty_information,
             'meta_title' => $request->meta_title,
             'meta_keywords' => $request->meta_keywords,
@@ -202,17 +218,17 @@ class ProductController extends Controller
             })
             ->latest()
             ->get();
-
         $product->load([
             'images',
             'specifications',
         ]);
-
+        $gst = Gst::where('status', 1)->first();
         return view('admin.products.edit', compact(
             'product',
             'productBrands',
             'categories',
-            'subCategories'
+            'subCategories',
+            'gst'
         ));
     }
 
@@ -232,7 +248,8 @@ class ProductController extends Controller
             'sale_price' => 'nullable|numeric|min:0|lte:price',
             'stock_quantity' => 'required|integer|min:0',
             'hsn' => 'nullable|string|max:255',
-            'gst_rate' => 'nullable|numeric|min:0|max:100',
+            'gst_type' => 'required|in:yes,no',
+            'gst_id' => 'nullable|exists:gsts,id',
             'warranty_information' => 'nullable|string|max:255',
             'status' => 'required|boolean',
             'is_discounted' => 'required|boolean',
@@ -254,6 +271,24 @@ class ProductController extends Controller
                 'sub_category_id' => 'Selected sub category does not belong to the selected category and product brand.',
             ]);
         }
+         $gstId = null;
+
+    if ($request->gst_type === 'yes') {
+
+        $gst = Gst::where('id', $request->gst_id)
+            ->where('status', 1)
+            ->first();
+
+        if (! $gst) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'gst_type' => 'Active GST rate is not available.',
+                ]);
+        }
+
+        $gstId = $gst->id;
+    }
         $slug = Str::slug($request->name);
         if (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
             $slug .= '-'.time();
@@ -271,7 +306,8 @@ class ProductController extends Controller
             'sale_price' => $request->sale_price,
             'stock_quantity' => $request->stock_quantity,
             'hsn' => $request->hsn,
-            'gst_rate' => $request->gst_rate,
+            'gst_type' => $request->gst_type,
+            'gst_id' => $gstId,
             'warranty_information' => $request->warranty_information,
             'meta_title' => $request->meta_title,
             'meta_keywords' => $request->meta_keywords,

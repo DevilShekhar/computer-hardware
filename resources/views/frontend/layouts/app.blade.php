@@ -419,8 +419,8 @@
                                             @endif
                                         </li>
                                         <li ><a href="blog-left-sidebar.html">Blog</a></li>
-                                        <li><a href="about-us.html">About Us</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
+                                        <li><a href="{{ route('about-us') }}">About Us</a></li>
+                                        <li><a href="{{ route('contact.index') }}">Contact</a></li>
                                     </ul>
                                 </nav>
                             </div>

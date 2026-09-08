@@ -25,7 +25,8 @@ class Product extends Model
         'sale_price',
         'stock_quantity',
         'hsn',
-        'gst_rate',
+        'gst_type',
+        'gst_id',
         'warranty_information',
         'status',
         'created_by',
@@ -54,6 +55,11 @@ class Product extends Model
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
+    }
+    
+    public function gst()
+    {
+        return $this->belongsTo(Gst::class, 'gst_id');
     }
 
     public function images()

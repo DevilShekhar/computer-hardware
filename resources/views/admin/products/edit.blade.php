@@ -138,9 +138,30 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>GST Rate</label>
-                                    <input type="number"  step="0.01"  name="gst_rate" value="{{ old('gst_rate', $product->gst_rate) }}" class="form-control @error('gst_rate') is-invalid @enderror"  placeholder="Enter GST rate">
-                                    @error('gst_rate')
+                                    <label>  GST Type</label>
+                                    <select name="gst_type" id="gst_type" class="form-control @error('gst_type') is-invalid @enderror">
+                                        <option value="no" {{ old('gst_type', $product->gst_id ? 'yes' : 'no') == 'no' ? 'selected' : '' }}>  No </option>
+                                        <option value="yes" {{ old('gst_type', $product->gst_id ? 'yes' : 'no') == 'yes' ? 'selected' : '' }}> Yes </option>
+                                    </select>
+                                    @error('gst_type')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4" id="gst_field">
+                                    <label> GST </label>
+                                    @if($gst)
+                                        <input type="hidden"  name="gst_id" id="gst_id" value="{{ old('gst_type', $product->gst_id ? 'yes' : 'no') == 'yes' ? $gst->id : '' }}">
+                                        <input type="text"  id="gst_amount" class="form-control" value="{{ old('gst_type', $product->gst_id ? 'yes' : 'no') == 'yes' ? number_format($gst->gst_amount, 2) . '%' : '' }}" placeholder="GST Rate"   readonly>
+                                    @else
+                                        <input type="hidden"  name="gst_id"  id="gst_id"  value="">
+                                        <input type="text" id="gst_amount" class="form-control" value=""  placeholder="No active GST available" readonly>
+                                        <small class="form-text text-danger">
+                                            No active GST rate is available.
+                                        </small>
+                                    @endif
+                                    @error('gst_id')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
@@ -667,6 +688,26 @@ $(document).ready(function () {
             }
         }
     );
+    function toggleGst() {
+        if ($('#gst_type').val() === 'yes') {
+            $('#gst_field').show();
+            @if($gst)
+                $('#gst_id').val("{{ $gst->id }}");
+                $('#gst_amount').val("{{ number_format($gst->gst_amount, 2) }}%");
+            @else
+                $('#gst_id').val('');
+                $('#gst_amount').val('');
+            @endif
+        } else {
+            $('#gst_field').hide();
+            $('#gst_id').val('');
+            $('#gst_amount').val('');
+        }
+    }
+    $('#gst_type').on('change', function () {
+        toggleGst();
+    });
+    toggleGst();
 });
 </script>
 @endpush

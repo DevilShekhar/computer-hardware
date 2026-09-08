@@ -80,8 +80,30 @@
                                                 <td>{{ $product->hsn ?? '-' }}</td>
                                             </tr>
                                             <tr>
-                                                <th>GST Rate</th>
-                                                <td>{{ $product->gst_rate ? $product->gst_rate.'%' : '-' }}</td>
+                                                <th>GST Type</th>
+                                                <td>
+                                                    @if($product->gst_id)
+                                                        <span class="badge badge-success badge-shadow">
+                                                            Yes
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-secondary badge-shadow">
+                                                            No
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>GST Amount</th>
+                                                <td>
+                                                    @if($product->gst)
+                                                        <strong>
+                                                            {{ number_format($product->gst->gst_amount, 2) }}%
+                                                        </strong>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <th>Warranty</th>
