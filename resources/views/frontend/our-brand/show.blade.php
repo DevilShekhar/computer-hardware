@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
-
-@section('title', $productBrand->name)
-
+@section('title', $meta_title) 
+@section('meta_keyword', $meta_keyword) 
+@section('meta_description', $meta_description)
 @section('content')
 
     <div class="breadcrumb-area">

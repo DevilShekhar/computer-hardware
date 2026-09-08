@@ -1,5 +1,7 @@
 @extends('frontend.layouts.app')
-@section('title', isset($product) ? $product->name : (isset($brand) ? $brand->name : 'Product'))
+@section('title', $meta_title) 
+@section('meta_keyword', $meta_keyword) 
+@section('meta_description', $meta_description)
 @section('content')
 @if(isset($brand))
 
