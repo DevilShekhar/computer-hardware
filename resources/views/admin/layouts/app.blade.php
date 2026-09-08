@@ -298,6 +298,12 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="{{ request()->routeIs('gsts.*') ? 'active' : '' }}">
+                            <a href="{{ route('gsts.index') }}" class="nav-link">
+                                <i data-feather="percent"></i>
+                                <span>GST</span>
+                            </a>
+                        </li>
                         <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="package"></i>

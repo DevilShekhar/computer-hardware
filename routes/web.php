@@ -27,6 +27,7 @@ use App\Http\Controllers\Frontend\OurSubCategoryController;
 use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\ContactSubmissionController;
+use App\Http\Controllers\Admin\GstController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -78,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/product-review/{review}/approve', [ProductReviewController::class, 'approve'])->name('product-review.approve');
     Route::post('/product-review/{review}/reject', [ProductReviewController::class, 'reject'])->name('product-review.reject');
     Route::get('/contact-submissions',[ContactSubmissionController::class, 'index'])->name('admin.contact-submissions.index');
+    Route::resource('gsts', GstController::class);
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
