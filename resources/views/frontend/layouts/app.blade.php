@@ -516,12 +516,11 @@
                     <div class="footer-logo-wrap pt-50 pb-35">
                         <div class="row">
                             <!-- Begin Footer Logo Area -->
-                            <div class="col-lg-4 col-md-6">
+                            <div class="col-lg-6 col-md-6">
                                 <div class="footer-logo">
                                     <img src="{{ asset('assets/frontend/assets/images/menu/logo/1.jpg') }}" alt="Footer Logo">
                                     <p class="info">
-                                        We are a team of designers and developers that create high quality HTML Template
-                                        & Woocommerce, Shopify Theme.
+                                        computer hardwareis your trusted destination for quality products, competitive prices, and reliable service. Explore our products, discover leading brands, and build your perfect PC with our PC Builder.
                                     </p>
                                 </div>
                                 <ul class="des">
@@ -540,35 +539,37 @@
                                 </ul>
                             </div>
                             <!-- Footer Logo Area End Here -->
-                            <!-- Begin Footer Block Area -->
+                            <!-- Begin Footer Quick Links Area -->
                             <div class="col-lg-2 col-md-3 col-sm-6">
                                 <div class="footer-block">
-                                    <h3 class="footer-block-title">Product</h3>
+                                    <h3 class="footer-block-title">Quick Links</h3>
                                     <ul>
-                                        <li><a href="#">Prices drop</a></li>
-                                        <li><a href="#">New products</a></li>
-                                        <li><a href="#">Best sales</a></li>
-                                        <li><a href="#">Contact us</a></li>
+                                        <li>
+                                            <a href="{{ route('home') }}">Home</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('about-us') }}">About Us</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('our-brand') }}">Our Brand</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('our-products') }}">Our Products</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('our-products.discounted') }}">Discounted Products</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('pc-builder.index') }}">PC Builder</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('contact.index') }}">Contact Us</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
-                            <!-- Footer Block Area End Here -->
-                            <!-- Begin Footer Block Area -->
-                            <div class="col-lg-2 col-md-3 col-sm-6">
-                                <div class="footer-block">
-                                    <h3 class="footer-block-title">Our company</h3>
-                                    <ul>
-                                        <li><a href="#">Delivery</a></li>
-                                        <li><a href="#">Legal Notice</a></li>
-                                        <li><a href="#">About us</a></li>
-                                        <li><a href="#">Contact us</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <!-- Footer Block Area End Here -->
-                            <!-- Begin Footer Block Area -->
                             <div class="col-lg-4">
-                                <div class="footer-block">
+                                <div class="footer-block mb-10">
                                     <h3 class="footer-block-title">Follow Us</h3>
                                     <ul class="social-link">
                                         <li class="twitter">
@@ -608,23 +609,14 @@
                                             </a>
                                         </li>
                                     </ul>
+                                </div><br>
+                                <div class="footer-block mt-10">
+                                   <h3 class="footer-block-title">We Accept</h3>
+                                    <div class="footer-payment-methods">
+                                        <img src="{{ asset('assets/frontend/assets/images/payment/1.png') }}" alt="Payment Method 1">
+                                    </div>
                                 </div>
-                                <!-- Begin Footer Newsletter Area -->
-                                <div class="footer-newsletter">
-                                    <h4>Sign up to newsletter</h4>
-                                    <form action="#" method="post" id="mc-embedded-subscribe-form"
-                                        name="mc-embedded-subscribe-form" class="footer-subscribe-form validate"
-                                        target="_blank" novalidate>
-                                        <div id="mc_embed_signup_scroll">
-                                            <div id="mc-form" class="mc-form subscribe-form form-group">
-                                                <input id="mc-email" type="email" autocomplete="off"
-                                                    placeholder="Enter your email" />
-                                                <button class="btn" id="mc-submit">Subscribe</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!-- Footer Newsletter Area End Here -->
+                                
                             </div>
                             <!-- Footer Block Area End Here -->
                         </div>
@@ -633,52 +625,40 @@
             </div>
             <!-- Footer Static Middle Area End Here -->
             <!-- Begin Footer Static Bottom Area -->
-            <div class="footer-static-bottom pt-55 pb-55">
+            <div class="footer-static-bottom pt-15 pb-15">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <!-- Begin Footer Links Area -->
-                            <div class="footer-links">
+                    <div class="row align-items-center vh-footer-row">
+                        <div class="col-lg-7 col-md-7 vh-footer-copyright">
+                            <div class="vh-footer-copy-content">
+                                <p>
+                                    © 2026 Computer Hardware. All Rights Reserved. Developed &amp; Marketed by
+                                    <a href="https://eternalhightech.com/"  target="_blank"   rel="noopener noreferrer">
+                                        <strong>Eternal HighTech</strong>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 vh-footer-policies">
+                            <div class="vh-footer-policy-content">
                                 <ul>
-                                    <li><a href="#">Online Shopping</a></li>
-                                    <li><a href="#">Promotions</a></li>
-                                    <li><a href="#">My Orders</a></li>
-                                    <li><a href="#">Help</a></li>
-                                    <li><a href="#">Customer Service</a></li>
-                                    <li><a href="#">Support</a></li>
-                                    <li><a href="#">Most Populars</a></li>
-                                    <li><a href="#">New Arrivals</a></li>
-                                    <li><a href="#">Special Products</a></li>
-                                    <li><a href="#">Manufacturers</a></li>
-                                    <li><a href="#">Our Stores</a></li>
-                                    <li><a href="#">Shipping</a></li>
-                                    <li><a href="#">Payments</a></li>
-                                    <li><a href="#">Warantee</a></li>
-                                    <li><a href="#">Refunds</a></li>
-                                    <li><a href="#">Checkout</a></li>
-                                    <li><a href="#">Discount</a></li>
-                                    <li><a href="#">Refunds</a></li>
-                                    <li><a href="#">Policy Shipping</a></li>
+                                    <li>
+                                        <a href="{{ url('/privacy-policy') }}">Privacy Policy</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/terms-and-conditions') }}">Terms of Use</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/disclaimer') }}">Disclaimer</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('/sitemap.xml') }}">Sitemap</a>
+                                    </li>
                                 </ul>
                             </div>
-                            <!-- Footer Links Area End Here -->
-                            <!-- Begin Footer Payment Area -->
-                            <div class="copyright text-center">
-                                <a href="#">
-                                    <img src="{{ asset('assets/frontend/assets/images/payment/1.png') }}" alt="">
-                                </a>
-                            </div>
-                            <!-- Footer Payment Area End Here -->
-                            <!-- Begin Copyright Area -->
-                            <div class="copyright text-center pt-25">
-                                <span><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></span>
-                            </div>
-                            <!-- Copyright Area End Here -->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Footer Static Bottom Area End Here -->
         </div>
         <!-- Footer Area End Here -->
         <!-- Begin Quick View | Modal Area -->
