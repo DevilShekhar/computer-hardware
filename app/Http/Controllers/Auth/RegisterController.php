@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Services\CartService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -63,10 +66,24 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+         session()->put('guest_cart_session_id', session()->getId());
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+    protected function registered(Request $request, $user)
+    {
+        $guestSessionId = $request->session()->get('guest_cart_session_id');
+
+        if ($guestSessionId) {
+            app(CartService::class)->mergeGuestCart($guestSessionId);
+
+            // Remove temporary session value
+            $request->session()->forget('guest_cart_session_id');
+        }
+
+        return redirect()->intended('/checkout');
     }
 }
