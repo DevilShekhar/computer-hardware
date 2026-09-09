@@ -28,6 +28,8 @@ use App\Http\Controllers\Frontend\ContactController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\ContactSubmissionController;
 use App\Http\Controllers\Admin\GstController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -116,4 +118,18 @@ Route::get('/our-sub-category/{slug}', [OurSubCategoryController::class, 'show']
 Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/contact-us/thank-you', [ContactController::class, 'thankYou'])->name('contact.thank-you');
+//CartControllerfr
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{productId}', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart/mini', [CartController::class, 'miniCart'])->name('cart.mini');
+Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout.index');
+    Route::post('/checkout/place-order', [CartController::class, 'placeOrder'])->name('checkout.place-order');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/checkout/apply-coupon',[OrderController::class,'applyCoupon'])->name('checkout.apply-coupon');
+});
 

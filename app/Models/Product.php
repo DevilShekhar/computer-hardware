@@ -56,7 +56,6 @@ class Product extends Model
     {
         return $this->belongsTo(SubCategory::class);
     }
-    
     public function gst()
     {
         return $this->belongsTo(Gst::class, 'gst_id');
@@ -100,5 +99,9 @@ class Product extends Model
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
     }
 }

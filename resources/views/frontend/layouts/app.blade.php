@@ -44,6 +44,7 @@
     <link rel="stylesheet" href="{{ asset('assets/frontend/assets/css/responsive.css') }}">
     <!-- Modernizr JS -->
     <script src="{{ asset('assets/frontend/assets/js/vendor/modernizr-2.8.3.min.js') }}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @stack('styles')
 </head>
 
@@ -243,17 +244,14 @@
                                         </p>
 
                                         <div class="minicart-button">
-                                            <a href="shopping-cart.html"
-                                            class="li-button li-button-fullwidth li-button-dark">
-                                                <span>View Full Cart</span>
+                                            <a href="{{ route('cart.index') }}" class="li-button li-button-fullwidth li-button-dark">
+                                                View Full Cart
                                             </a>
 
-                                            <a href="checkout.html"
-                                            class="li-button li-button-fullwidth">
-                                                <span>Checkout</span>
+                                            <a href="{{ route('checkout.index') }}" class="li-button li-button-fullwidth">
+                                                Checkout
                                             </a>
                                         </div>
-
                                     </div>
                                 </li>
                                     <!-- Header Mini Cart Area End Here -->
@@ -616,7 +614,7 @@
                                         <img src="{{ asset('assets/frontend/assets/images/payment/1.png') }}" alt="Payment Method 1">
                                     </div>
                                 </div>
-                                
+
                             </div>
                             <!-- Footer Block Area End Here -->
                         </div>
@@ -963,151 +961,302 @@
             });
         });
     </script>
-    <script>
+   <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
             function loadMiniCart() {
-                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                fetch("{{ route('cart.mini') }}", {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Unable to load cart.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.success) {
+                        return;
+                    }
+
+                    renderMiniCart(data.cart);
+                    updateCartButtons(data.cart.items || []);
+                })
+                .catch(error => {
+                    console.error('Mini cart error:', error);
+                });
+            }
+
+            function renderMiniCart(cart) {
+
                 const list = document.getElementById('minicart-product-list');
                 const count = document.getElementById('minicart-count');
                 const subtotal = document.getElementById('minicart-subtotal');
                 const headerTotal = document.getElementById('minicart-header-total');
 
-                if (!list) return;
-
-                list.innerHTML = '';
-                let total = 0;
-
-                cart.forEach(function (product) {
-                    // Calculate total with quantity
-                    const price = parseFloat(product.price) || 0;
-                    const quantity = parseInt(product.quantity) || 1;
-                    total += price * quantity;
-
-                    list.innerHTML += `
-                        <li>
-                            <a href="/our-product/${product.slug}" class="minicart-product-image">
-                                <img src="${product.image}" alt="${product.name}">
-                            </a>
-                            <div class="minicart-product-details">
-                                <h6>
-                                    <a href="/our-product/${product.slug}">
-                                        ${product.name}
-                                    </a>
-                                </h6>
-                                <span>₹${price.toFixed(2)} x ${quantity}</span>
-                            </div>
-                            <button class="close minicart-remove"
-                                    data-id="${product.id}"
-                                    title="Remove">
-                                <i class="fa fa-close"></i>
-                            </button>
-                        </li>
-                    `;
-                });
-
-                // Update cart count
-                const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.quantity) || 1), 0);
-                count.textContent = totalItems;
-
-                // Update both subtotal and header total
-                const formattedTotal = total.toFixed(2);
-                subtotal.textContent = '₹' + formattedTotal;
-
-                // Update header total
-                if (headerTotal) {
-                    headerTotal.textContent = formattedTotal;
+                if (!list) {
+                    return;
                 }
 
-                // Show empty cart message
-                if (cart.length === 0) {
+                list.innerHTML = '';
+
+                const items = cart?.items || [];
+
+                if (items.length === 0) {
+
                     list.innerHTML = `
                         <li style="text-align:center;padding:20px;">
                             Your cart is empty
                         </li>
                     `;
+
+                    if (count) {
+                        count.textContent = '0';
+                    }
+
+                    if (subtotal) {
+                        subtotal.textContent = '₹0.00';
+                    }
+
+                    if (headerTotal) {
+                        headerTotal.textContent = '0.00';
+                    }
+
+                    return;
                 }
 
-                // Remove item functionality
+                items.forEach(function (product) {
+
+                    const price = parseFloat(product.price) || 0;
+                    const quantity = parseInt(product.quantity) || 1;
+
+                    const productId = product.id;
+                    const productName = product.name || 'Product';
+                    const productSlug = product.slug || '';
+                    const image = product.image || '';
+
+                    const imageHtml = image
+            ? `<img src="${image}" alt="${escapeHtml(productName)}" loading="lazy">`
+            : `<div style="width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:#f5f5f5;font-size:11px;color:#999;">No Image</div>`;
+
+                    list.innerHTML += `
+                        <li class="minicart-product-item">
+
+                            <a href="/our-product/${encodeURIComponent(productSlug)}"
+                            class="minicart-product-image">
+
+                                ${imageHtml}
+
+                            </a>
+
+                            <div class="minicart-product-details">
+
+                                <h6>
+                                    <a href="/our-product/${encodeURIComponent(productSlug)}">
+                                        ${escapeHtml(productName)}
+                                    </a>
+                                </h6>
+
+                                <span>
+                                    ₹${price.toFixed(2)} × ${quantity}
+                                </span>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="close minicart-remove"
+                                data-id="${productId}"
+                                title="Remove">
+
+                                <i class="fa fa-close"></i>
+
+                            </button>
+
+                        </li>
+                    `;
+                });
+
+                if (count) {
+                    count.textContent = cart.item_count || 0;
+                }
+
+                const formattedTotal = parseFloat(cart.subtotal || 0).toFixed(2);
+
+                if (subtotal) {
+                    subtotal.textContent = '₹' + formattedTotal;
+                }
+
+                if (headerTotal) {
+                    headerTotal.textContent = formattedTotal;
+                }
+
                 document.querySelectorAll('.minicart-remove').forEach(function (button) {
-                    button.onclick = function () {
-                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                        cart = cart.filter(function (product) {
-                            return String(product.id) !== String(button.dataset.id);
-                        });
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        loadMiniCart();
-                    };
+                    button.addEventListener('click', function () {
+                        const productId = this.dataset.id;
+                        if (productId) {
+                            removeFromCart(productId);
+                        }
+                    });
                 });
             }
-            // Add / Remove Cart
-            document.querySelectorAll('.cart-btn').forEach(function (button) {
-                const id = button.dataset.productId;
-                const link = button.querySelector('a');
-                function updateCartButton() {
-                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    if (cart.some(item => String(item.id) === String(id))) {
+            function updateCartButtons(items) {
+
+                const cartProductIds = (items || []).map(function (item) {
+                    return String(item.id);
+                });
+
+                document.querySelectorAll('.cart-btn').forEach(function (button) {
+                    const productId = String(button.dataset.productId || '');
+                    const link = button.querySelector('a');
+                    if (!link) {
+                        return;
+                    }
+                    if (cartProductIds.includes(productId)) {
+
                         button.classList.add('added');
                         link.textContent = 'Added to cart';
                     } else {
                         button.classList.remove('added');
                         link.textContent = 'Add to cart';
                     }
+                });
+            }
+            document.querySelectorAll('.cart-btn').forEach(function (button) {
+
+                const link = button.querySelector('a');
+                if (!link) {
+                    return;
                 }
-                updateCartButton();
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
-                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    const existingIndex = cart.findIndex(
-                        item => String(item.id) === String(id)
-                    );
-                    if (existingIndex !== -1) {
-                        cart.splice(existingIndex, 1);
-                        button.classList.remove('added');
-                        link.textContent = 'Add to cart';
-                    } else {
-                        cart.push({
-                            id: id,
-                            name: button.dataset.productName,
-                            slug: button.dataset.productSlug,
-                            price: button.dataset.productPrice,
-                            image: button.dataset.productImage
-                        });
-                        button.classList.add('added');
-                        link.textContent = 'Added to cart';
+                    const productId = button.dataset.productId;
+                    if (!productId) {
+                        console.error('Product ID missing.');
+                        return;
                     }
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    // IMPORTANT
-                    loadMiniCart();
-                    const toast = document.createElement('div');
-                    toast.innerHTML = `
-                        <i class="fa fa-exclamation-triangle"></i>
-                        <span>
-                            ${existingIndex !== -1
-                                ? 'Removed from Cart'
-                                : 'Added to Cart'}
-                        </span>
-                    `;
-                    toast.style.cssText = `
-                        position:fixed;
-                        top:80px;
-                        right:20px;
-                        background:#fffdf3;
-                        color:#d89b00;
-                        border:1px solid #fed700;
-                        border-radius:5px;
-                        padding:8px 12px;
-                        min-width:200px;
-                        display:flex;
-                        align-items:center;
-                        gap:10px;
-                        z-index:9999;
-                        box-shadow:0 2px 8px rgba(0,0,0,.12);
-                    `;
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 3000);
+                    link.textContent = 'Adding...';
+                    fetch("{{ route('cart.add') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: 1
+                        })
+                    })
+                    .then(async response => {
+                        const data = await response.json();
+                        if (!response.ok) {
+                            throw new Error(
+                                data.message || 'Unable to add product.'
+                            );
+                        }
+                        return data;
+
+                    })
+                    .then(data => {
+                        if (!data.success) {
+                            throw new Error(
+                                data.message || 'Unable to add product.'
+                            );
+                        }
+                        renderMiniCart(data.cart);
+                        updateCartButtons(data.cart.items || []);
+                        showCartToast('Added to Cart');
+
+                    })
+                    .catch(error => {
+                        console.error('Add cart error:', error);
+                        showCartToast(error.message);
+                        link.textContent = 'Add to cart';
+                    });
                 });
             });
-            // Load cart when page loads / refreshes
+            function removeFromCart(productId) {
+                fetch(`/cart/remove/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(async response => {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(
+                            data.message || 'Unable to remove product.'
+                        );
+                    }
+                    return data;
+                })
+                .then(data => {
+                    if (!data.success) {
+                        throw new Error(
+                            data.message || 'Unable to remove product.'
+                        );
+                    }
+                    renderMiniCart(data.cart);
+                    updateCartButtons(data.cart.items || []);
+                    showCartToast('Removed from Cart');
+                })
+                .catch(error => {
+                    console.error('Remove cart error:', error);
+                    showCartToast(error.message);
+
+                });
+            }
+            function escapeHtml(value) {
+                const div = document.createElement('div');
+                div.textContent = value ?? '';
+                return div.innerHTML;
+            }
+            function showCartToast(message) {
+                const oldToast = document.querySelector('.cart-toast');
+                if (oldToast) {
+                    oldToast.remove();
+                }
+                const toast = document.createElement('div');
+                toast.className = 'cart-toast';
+                toast.innerHTML = `
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>${escapeHtml(message)}</span>
+                `;
+                toast.style.cssText = `
+                    position:fixed;
+                    top:80px;
+                    right:20px;
+                    background:#fffdf3;
+                    color:#d89b00;
+                    border:1px solid #fed700;
+                    border-radius:5px;
+                    padding:8px 12px;
+                    min-width:200px;
+                    display:flex;
+                    align-items:center;
+                    gap:10px;
+                    z-index:9999;
+                    box-shadow:0 2px 8px rgba(0,0,0,.12);
+                `;
+
+                document.body.appendChild(toast);
+
+                setTimeout(function () {
+                    toast.remove();
+                }, 3000);
+            }
+
             loadMiniCart();
         });
     </script>
