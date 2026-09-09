@@ -21,7 +21,7 @@
             <div class="col-12">
                 <div id="empty-wishlist" class="text-center" style="display: none;">
                     <h4>Your wishlist is empty.</h4>
-                    <a href="{{ url('our-products') }}" class="li-button mt-20">Continue Shopping</a>
+                    <a href="{{ url('our-products') }}" class="li-button m-20">Continue Shopping</a>
                 </div>
 
                 <div id="wishlist-items">
@@ -140,45 +140,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Add to Cart functionality - WITHOUT page refresh
         document.querySelectorAll('.add-to-cart').forEach(btn => {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault();
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
 
-                const product = {
-                    id: this.getAttribute('data-product-id'),
-                    name: this.getAttribute('data-product-name'),
-                    slug: this.getAttribute('data-product-slug'),
-                    price: this.getAttribute('data-product-price'),
-                    image: this.getAttribute('data-product-image'),
-                    thumbnail: this.getAttribute('data-product-thumbnail'),
-                    quantity: 1
-                };
+            const product={
+                id:this.getAttribute('data-product-id'),
+                name:this.getAttribute('data-product-name')
+            };
+            try{
+                const response=await fetch('{{ route('cart.add') }}',{
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json',
+                        'Accept':'application/json',
+                        'X-CSRF-TOKEN':'{{ csrf_token() }}'
+                    },
+                    body:JSON.stringify({
+                        product_id:product.id,
+                        quantity:1
+                    })
+                });
 
-                // Get existing cart from localStorage
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const data=await response.json();
 
-                // Check if product already exists in cart
-                const existingIndex = cart.findIndex(item => String(item.id) === String(product.id));
-                if (existingIndex > -1) {
-                    cart[existingIndex].quantity += 1;
-                } else {
-                    cart.push(product);
+                if(!response.ok || !data.success){
+                    throw new Error(data.message || 'Unable to add product to cart.');
                 }
 
-                localStorage.setItem('cart', JSON.stringify(cart));
+                let wishlist=JSON.parse(localStorage.getItem('wishlist')) || [];
 
-                // Update mini cart without page refresh
-                if (typeof loadMiniCart === 'function') {
-                    loadMiniCart();
+                wishlist=wishlist.filter(item =>
+                    String(item.id) !== String(product.id)
+                );
+
+                localStorage.setItem('wishlist',JSON.stringify(wishlist));
+
+                loadWishlist();
+
+                if(typeof window.loadMiniCart === 'function'){
+                    window.loadMiniCart();
                 }
 
-                // Update cart counter
-                updateCartCounter();
-                updateWishlistCounter();
-
-                // Show custom toast notification
                 showToast(`${product.name} added to cart!`);
-            });
+
+                setTimeout(function(){
+                    window.location.reload();
+                },500);
+            }catch(error){
+                console.error('Add to cart error:',error);
+                showToast(error.message,'error');
+            }
         });
+    });
     }
 
     // Custom Toast notification function
@@ -296,21 +309,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     `;
     document.head.appendChild(style);
-
-    // Update cart counter
-    function updateCartCounter() {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const totalItems = cart.reduce(function (sum, item) {
-            return sum + (parseInt(item.quantity) || 1);
-        }, 0);
-
-        document.querySelectorAll('.cart-item-count:not(.wishlist-item-count)').forEach(function (counter) {
-            if (counter) {
-                counter.textContent = totalItems;
-            }
-        });
-    }
-
     // Update wishlist counter
     function updateWishlistCounter() {
         const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
@@ -322,79 +320,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-    // Load mini cart function
-    function loadMiniCart() {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const list = document.getElementById('minicart-product-list');
-        const count = document.getElementById('minicart-count');
-        const subtotal = document.getElementById('minicart-subtotal');
-        const headerTotal = document.getElementById('minicart-header-total');
-
-        if (!list) return;
-
-        list.innerHTML = '';
-        let total = 0;
-
-        cart.forEach(function (product) {
-            const price = parseFloat(product.price) || 0;
-            const quantity = parseInt(product.quantity) || 1;
-            total += price * quantity;
-
-            list.innerHTML += `
-                <li>
-                    <a href="/our-product/${product.slug}" class="minicart-product-image">
-                        <img src="${product.image}" alt="${product.name}">
-                    </a>
-                    <div class="minicart-product-details">
-                        <h6>
-                            <a href="/our-product/${product.slug}">
-                                ${product.name}
-                            </a>
-                        </h6>
-                        <span>₹${price.toFixed(2)} x ${quantity}</span>
-                    </div>
-                    <button class="close minicart-remove"
-                            data-id="${product.id}"
-                            title="Remove">
-                        <i class="fa fa-close"></i>
-                    </button>
-                </li>
-            `;
-        });
-
-        // Update cart count
-        const totalItems = cart.reduce((sum, item) => sum + (parseInt(item.quantity) || 1), 0);
-        if (count) count.textContent = totalItems;
-
-        // Update both subtotal and header total
-        const formattedTotal = total.toFixed(2);
-        if (subtotal) subtotal.textContent = '₹' + formattedTotal;
-        if (headerTotal) headerTotal.textContent = formattedTotal;
-
-        // Show empty cart message
-        if (cart.length === 0) {
-            list.innerHTML = `
-                <li style="text-align:center;padding:20px;">
-                    Your cart is empty
-                </li>
-            `;
-        }
-
-        // Remove item functionality
-        document.querySelectorAll('.minicart-remove').forEach(function (button) {
-            button.onclick = function () {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                cart = cart.filter(function (product) {
-                    return String(product.id) !== String(button.dataset.id);
-                });
-                localStorage.setItem('cart', JSON.stringify(cart));
-                loadMiniCart();
-                updateCartCounter();
-            };
-        });
-    }
-
     // Make functions globally accessible
     window.loadMiniCart = loadMiniCart;
     window.updateCartCounter = updateCartCounter;
@@ -402,8 +327,6 @@ document.addEventListener('DOMContentLoaded', function () {
     window.loadWishlist = loadWishlist;
     window.showToast = showToast;
 
-    // Initialize counters
-    updateCartCounter();
     updateWishlistCounter();
 });
 </script>

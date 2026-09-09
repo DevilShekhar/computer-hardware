@@ -32,22 +32,24 @@ class CartController extends Controller
 
         return view('customer.cart', compact('cart', 'subtotal'));
     }
-
-    public function add(Request $request)
+   public function add(Request $request)
     {
         $validated = $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
-            'quantity' => ['nullable', 'integer', 'min:1'],
+            'quantity' => ['required', 'integer', 'min:1'],
         ]);
         $product = Product::findOrFail($validated['product_id']);
-        $quantity = $validated['quantity'] ?? 1;
-        if (isset($product->stock_quantity) && $product->stock_quantity < $quantity) {
+        if (isset($product->stock_quantity) && $product->stock_quantity < $validated['quantity']) {
             return response()->json([
                 'success' => false,
                 'message' => 'Not enough stock available.',
             ], 422);
         }
-        $cart = $this->cartService->add($product, $quantity);
+        $cart = $this->cartService->add(
+            $product,
+            (int) $validated['quantity']
+        );
+        $cart->load(['items.product.images']);
 
         return response()->json([
             'success' => true,
@@ -146,21 +148,27 @@ class CartController extends Controller
             $product = $item->product;
             $image = null;
             if ($product) {
-                $image = $product->image ?? null;
-            }
+                $primaryImage = $product->images
+                    ->sortByDesc('is_primary')
+                    ->sortBy('sort_order')
+                    ->first();
 
+                if ($primaryImage) {
+                    $image = asset('storage/' . $primaryImage->image);
+                }
+            }
             return [
                 'id' => $item->product_id,
                 'cart_item_id' => $item->id,
+                'product_id' => $item->product_id,
                 'name' => $product?->name ?? 'Product',
                 'slug' => $product?->slug,
                 'price' => (float) $item->price,
                 'quantity' => (int) $item->quantity,
                 'image' => $image,
-                'line_total' => (float) $item->price * $item->quantity,
+                'line_total' => (float) $item->price * (int) $item->quantity,
             ];
         })->values();
-
         return [
             'items' => $items,
             'item_count' => $items->sum('quantity'),

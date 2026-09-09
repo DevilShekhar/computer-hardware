@@ -98,16 +98,25 @@
                                     </div>
                                     <div class="add-actions">
                                         <ul class="add-actions-link">
-                                            <li class="add-cart active">
-                                                <a href="{{ url('/cart/add/' . $product->id) }}">
-                                                    Add to cart
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="links-details" href="#">
-                                                    <i class="fa fa-heart-o"></i>
-                                                </a>
-                                            </li>
+                                            <li class="add-cart active cart-btn"
+                                            data-product-id="{{ $product->id }}"
+                                            data-product-name="{{ $product->name }}"
+                                            data-product-slug="{{ $product->slug }}"
+                                            data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                            data-product-image="{{ $primaryImage && $primaryImage->image ? asset('storage/' . $primaryImage->image) : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+                                            <a href="javascript:void(0);">Add to cart</a>
+                                        </li>
+                                        <li>
+                                            <a class="links-details wishlist-btn"
+                                                href="javascript:void(0);"
+                                                data-product-id="{{ $product->id }}"
+                                                data-product-name="{{ $product->name }}"
+                                                data-product-slug="{{ $product->slug }}"
+                                                data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                                data-product-image="{{ $primaryImage && $primaryImage->image ? asset('storage/' . $primaryImage->image) : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+                                                <i class="fa fa-heart-o"></i>
+                                            </a>
+                                        </li>
                                             <li>
                                                 <a class="quick-view" href="{{ route('product.details', $product->slug) }}">
                                                     <i class="fa fa-eye"></i>
