@@ -216,4 +216,30 @@ class OurProductController extends Controller
             })->values(),
         ]);
     }
+    public function search(Request $request)
+    {
+        $search = trim($request->get('search'));
+        if (strlen($search) < 2) {
+            return response()->json([]);
+        }
+        $products = Product::query()
+            ->where('status', true)
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('sku', 'like', '%' . $search . '%');
+            })
+            ->orderBy('name', 'asc')
+            ->limit(10)
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'name' => $product->name,
+                    'sku'  => $product->sku,
+                    'url'  => route('product.details', [
+                        'slug' => $product->slug
+                    ]),
+                ];
+            });
+        return response()->json($products);
+    }
 }

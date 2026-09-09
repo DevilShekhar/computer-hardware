@@ -116,4 +116,4 @@ Route::get('/our-sub-category/{slug}', [OurSubCategoryController::class, 'show']
 Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/contact-us/thank-you', [ContactController::class, 'thankYou'])->name('contact.thank-you');
-
+Route::get('/product-search', [OurProductController::class, 'search'])->name('frontend.product.search');
