@@ -165,7 +165,7 @@ $typeIcons = [
 
 .frequently-accordion .card-header a:hover {
     background: #f3f6fb;
-    color: #1769e8;
+    color: #ea0505;
 }
 
 .faq-title-left {
@@ -177,7 +177,7 @@ $typeIcons = [
 
 .faq-title-left i {
     width: 18px;
-    color: #1769e8;
+    color: #ea0505;
     font-size: 14px;
     text-align: center;
 }
@@ -237,12 +237,12 @@ $typeIcons = [
 }
 
 .builder-product-label:hover {
-    border-color: #1769e8;
+    border-color: #ea0505;
     background: #fafcff;
 }
 
 .builder-product-radio:checked+.builder-product-label {
-    border-color: #1769e8;
+    border-color: #ea0505;
     background: #f4f8ff;
     box-shadow: 0 2px 9px rgba(23, 105, 232, .08);
 }
@@ -267,11 +267,11 @@ $typeIcons = [
 }
 
 .builder-product-radio:checked+.builder-product-label .builder-radio {
-    border-color: #1769e8;
+    border-color: #ea0505;
 }
 
 .builder-product-radio:checked+.builder-product-label .builder-radio:after {
-    background: #1769e8;
+    background: #ea0505;
 }
 
 .builder-product-details {
@@ -343,7 +343,7 @@ $typeIcons = [
 }
 
 .selected-products-title i {
-    color: #1769e8;
+    color: #ea0505;
     font-size: 12px;
 }
 
@@ -362,7 +362,7 @@ $typeIcons = [
     justify-content: center;
     padding: 2px 7px;
     border-radius: 20px;
-    background: #1769e8;
+    background: #ea0505;
     color: #fff;
     font-size: 9px;
     font-weight: 700;
@@ -409,7 +409,7 @@ $typeIcons = [
 .selected-product-type {
     display: block;
     margin-bottom: 2px;
-    color: #1769e8;
+    color: #ea0505;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -526,7 +526,7 @@ $typeIcons = [
     padding: 10px 12px;
     border: 0;
     border-radius: 6px;
-    background: #1769e8;
+    background: #ea0505;
     color: #fff;
     font-size: 10px;
     font-weight: 600;
