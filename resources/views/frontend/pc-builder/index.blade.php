@@ -303,7 +303,7 @@
     }
 
     .pc-builder-name a:hover {
-        color: #1976ed;
+        color: #ea0505;
     }
 
     .pc-builder-line {
@@ -311,7 +311,7 @@
         height: 4px;
         margin: 13px 0 21px;
         border-radius: 10px;
-        background: #1976ed;
+        background: #ea0505;
     }
 
     .pc-builder-details h3 {
@@ -348,7 +348,7 @@
     }
 
     .feature-icon {
-        color: #1976ed;
+        color: #ea0505;
         font-size: 17px;
     }
 
@@ -379,7 +379,7 @@
         align-items: center;
         gap: 14px;
         border-radius: 7px;
-        background: #1976ed;
+        background: #ea0505;
         color: #ffffff;
         text-decoration: none;
         font-size: 16px;
@@ -440,7 +440,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        background: #1976ed;
+        background: #ea0505;
         color: #ffffff;
         font-size: 12px;
     }
@@ -462,7 +462,7 @@
         justify-content: center;
         border-radius: 50%;
         background: #eef6ff;
-        color: #1976ed;
+        color: #ea0505;
         font-size: 28px;
     }
 
@@ -501,9 +501,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #1976ed;
+        border: 1px solid #ea0505;
         border-radius: 4px;
-        background: #1976ed;
+        background: #ea0505;
         color: #ffffff;
         font-size: 14px;
         font-weight: 600;

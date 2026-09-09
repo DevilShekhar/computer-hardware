@@ -50,7 +50,7 @@
 <body>
     <div class="body-wrapper">
         <!-- Begin Header Area -->
-        <header>
+        <header class="header-sticky">
             <!-- Begin Header Top Area -->
             <div class="header-top">
                 <div class="container">
@@ -122,15 +122,15 @@
                     <div class="row">
                         <!-- Begin Header Logo Area -->
                         <div class="col-lg-3">
-                            <div class="logo pb-sm-30 pb-xs-30">
+                            <div class="logo ">
                                 <a href="index.html">
-                                    <img src="{{ asset('assets/frontend/assets/images/menu/logo/1.jpg') }}" alt="">
+                                    <img src="{{ asset('assets/frontend/assets/images/menu/logo/logo.png') }}" alt="">
                                 </a>
                             </div>
                         </div>
                         <!-- Header Logo Area End Here -->
                         <!-- Begin Header Middle Right Area -->
-                        <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
+                        <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15 p-4">
                             <!-- Begin Header Middle Searchbox Area -->
                             <form action="#" class="hm-searchbox">
                                 <select class="nice-select select-search-category">
@@ -267,7 +267,7 @@
             </div>
             <!-- Header Middle Area End Here -->
             <!-- Begin Header Bottom Area -->
-            <div class="header-bottom header-sticky d-none d-lg-block d-xl-block">
+            <div class="header-bottom  d-none d-lg-block d-xl-block">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12">
@@ -518,7 +518,7 @@
                             <!-- Begin Footer Logo Area -->
                             <div class="col-lg-6 col-md-6">
                                 <div class="footer-logo">
-                                    <img src="{{ asset('assets/frontend/assets/images/menu/logo/1.jpg') }}" alt="Footer Logo">
+                                    <img src="{{ asset('assets/frontend/assets/images/menu/logo/logo.png') }}" alt="Footer Logo">
                                     <p class="info">
                                         computer hardwareis your trusted destination for quality products, competitive prices, and reliable service. Explore our products, discover leading brands, and build your perfect PC with our PC Builder.
                                     </p>
