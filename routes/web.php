@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\ContactSubmissionController;
 use App\Http\Controllers\Admin\GstController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\Admin\OrderManagementController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -82,6 +83,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/product-review/{review}/reject', [ProductReviewController::class, 'reject'])->name('product-review.reject');
     Route::get('/contact-submissions',[ContactSubmissionController::class, 'index'])->name('admin.contact-submissions.index');
     Route::resource('gsts', GstController::class);
+    Route::get('/customer-orders', [OrderManagementController::class, 'index'])->name('customer-orders.index');
+    Route::get('/customer-orders/{order}', [OrderManagementController::class, 'show'])->name('customer-orders.show');
+    Route::post('/customer-orders/{order}/status', [OrderManagementController::class, 'updateStatus'])->name('customer-orders.update-status');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
