@@ -118,6 +118,7 @@ Route::get('/our-sub-category/{slug}', [OurSubCategoryController::class, 'show']
 Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/contact-us/thank-you', [ContactController::class, 'thankYou'])->name('contact.thank-you');
+Route::get('/product-search', [OurProductController::class, 'search'])->name('frontend.product.search');
 //CartControllerfr
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -132,4 +133,3 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/checkout/apply-coupon',[OrderController::class,'applyCoupon'])->name('checkout.apply-coupon');
 });
-
