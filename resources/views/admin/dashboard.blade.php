@@ -18,7 +18,7 @@
                                     <div class="banner-img">
                                         <img src="assets/img/banner/1.png" alt="">
                                     </div>
-                                </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -93,6 +93,256 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('products.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Products</h5>
+                                            <h2 class="mb-3 font-18">{{ $productCount }}</h2>
+                                            <p class="mb-0"> Products</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/1.png') }}" alt="Products">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('product-brands.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Brands</h5>
+                                            <h2 class="mb-3 font-18">{{ $brandCount }}</h2>
+                                            <p class="mb-0"> Brands</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/2.png') }}" alt="Brands">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('categories.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Categories</h5>
+                                            <h2 class="mb-3 font-18">{{ $categoryCount }}</h2>
+                                            <p class="mb-0">Categories</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/3.png') }}" alt="Categories">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('sub-categories.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">SubCate</h5>
+                                            <h2 class="mb-3 font-18">{{ $subCategoryCount }}</h2>
+                                            <p class="mb-0">SubCategories</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/4.png') }}" alt="Sub Categories">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('admin.users.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Users</h5>
+                                            <h2 class="mb-3 font-18">{{ $userCount }}</h2>
+                                            <p class="mb-0"> Users</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/1.png') }}" alt="Users">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('product-review.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Total Reviews</h5>
+
+                                            <h2 class="mb-3 font-18">
+                                                {{ $reviewCount }}
+                                            </h2>
+
+                                            <p class="mb-0">
+                                                Total Reviews
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/3.png') }}"
+                                                alt="Total Reviews">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>            
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('product-review.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Approved Reviews</h5>
+
+                                            <h2 class="mb-3 font-18">
+                                                {{ $approvedReviewCount }}
+                                            </h2>
+
+                                            <p class="mb-0">
+                                                Approved Reviews
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/4.png') }}"
+                                                alt="Approved Reviews">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('coupons.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Active Coupons</h5>
+                                            <h2 class="mb-3 font-18">
+                                                {{ $activeCouponCount }}
+                                            </h2>
+                                            <p class="mb-0">
+                                                Active Coupons
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/3.png') }}"  alt="Active Coupons">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('coupons.index') }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Expired Coupons</h5>
+                                            <h2 class="mb-3 font-18">
+                                                {{ $expiredCouponCount }}
+                                            </h2>
+                                            <p class="mb-0">
+                                                Expired Coupons
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/4.png') }}" alt="Expired Coupons">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
                 <div class="card ">
                     <div class="card-header">
@@ -104,8 +354,7 @@
                                     <a href="#" class="dropdown-item has-icon"><i class="fas fa-eye"></i> View</a>
                                     <a href="#" class="dropdown-item has-icon"><i class="far fa-edit"></i> Edit</a>
                                     <div class="dropdown-divider"></div>
-                                    <a href="#" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>
-                                        Delete</a>
+                                    <a href="#" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>Delete</a>
                                 </div>
                             </div>
                             <a href="#" class="btn btn-primary">View All</a>
@@ -118,8 +367,7 @@
                                 <div class="row mb-0">
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                         <div class="list-inline text-center">
-                                            <div class="list-inline-item p-r-30"><i data-feather="arrow-up-circle"
-                                                    class="col-green"></i>
+                                            <div class="list-inline-item p-r-30"><i data-feather="arrow-up-circle"  class="col-green"></i>
                                                 <h5 class="m-b-0">$675</h5>
                                                 <p class="text-muted font-14 m-b-0">Weekly Earnings</p>
                                             </div>
