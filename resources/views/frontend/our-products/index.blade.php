@@ -855,147 +855,191 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function gridProduct(product) {
-        let sticker = '';
-        if (product.discount_percentage > 0) {
-            sticker =
-                '<span class="sticker">-' +
-                product.discount_percentage +
-                '%</span>';
-        }
-        return '<div class="col-lg-4 col-md-4 col-sm-6 mt-40">' +
-            '<div class="single-product-wrap">' +
-            '<div class="product-image">' +
-            '<a href="' + product.detail_url + '">' +
-            '<img src="' + product.image + '" alt="' + escapeHtml(product.name) + '">' +
-            '</a>' +
-            sticker +
-            '</div>' +
-            '<div class="product_desc">' +
-            '<div class="product_desc_info">' +
-            '<div class="product-review">' +
-            '<h5 class="manufacturer">' +
-            '<a href="#">' +
-            escapeHtml(product.brand) +
-            '</a>' +
-            '</h5>' +
-            '<div class="rating-box">' +
-            '<ul class="rating">' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '</ul>' +
-            '</div>' +
-            '</div>' +
-            '<h4>' +
-            '<a class="product_name" href="' + product.detail_url + '">' +
-            escapeHtml(product.name) +
-            '</a>' +
-            '</h4>' +
-            '<div class="price-box">' +
-            priceHtml(product) +
-            '</div>' +
-            '</div>' +
-            '<div class="add-actions">' +
-            '<ul class="add-actions-link">' +
-            '<li class="add-cart active">' +
-            '<a href="' + product.cart_url + '">' +
-            'Add to cart' +
-            '</a>' +
-            '</li>' +
-            '<li>' +
-            '<a class="compare-product" ' + 'href="javascript:void(0)" ' + 'data-id="' + product.id + '">' +
-            '<i class="fa fa-exchange"></i>' +
-            '</a>' +
-            '</li>' +
-            '<li>' +
-            '<a class="links-details" href="#">' +
-            '<i class="fa fa-heart-o"></i>' +
-            '</a>' +
-            '</li>' +
-            '<li>' +
-            '<a class="quick-view" href="' + product.detail_url + '">' +
-            '<i class="fa fa-eye"></i>' +
-            '</a>' +
-            '</li>' +
-            '</ul>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
+    let sticker = '';
+
+    if (product.discount_percentage > 0) {
+        sticker =
+            '<span class="sticker">-' +
+            product.discount_percentage +
+            '%</span>';
     }
-    function listProduct(product) {
-        return '<div class="row product-layout-list mb-30">' +
-            '<div class="col-lg-3 col-md-5">' +
-            '<div class="product-image">' +
-            '<a href="' + product.detail_url + '">' +
-            '<img src="' + product.image + '" alt="' + escapeHtml(product.name) + '">' +
-            '</a>' +
-            '</div>' +
-            '</div>' +
-            '<div class="col-lg-5 col-md-7">' +
-            '<div class="product_desc">' +
-            '<div class="product_desc_info">' +
-            '<div class="product-review">' +
-            '<h5 class="manufacturer">' +
-            '<a href="#">' +
-             escapeHtml(product.brand) +
-            '</a>' +
-            '</h5>' +
-            '<div class="rating-box">' +
-            '<ul class="rating">' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '<li><i class="fa fa-star-o"></i></li>' +
-            '</ul>' +
-            '</div>' +
-            '</div>' +
-            '<h4>' +
-            '<a class="product_name" href="' + product.detail_url + '">' +
-            escapeHtml(product.name) +
-            '</a>' +
-            '</h4>' +
-            '<div class="price-box">' +
-            priceHtml(product) +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '<div class="col-lg-4">' +
-            '<div class="shop-add-action mb-xs-30">' +
-            '<ul class="add-actions-link">' +
-            '<li class="add-cart">' +
-            '<a href="' + product.cart_url + '">' +
-            'Add to cart' +
-            '</a>' +
-            '</li>' +
-            '<li>' +
-            '<a href="javascript:void(0)" ' + 'class="compare-product" ' + 'data-id="' + product.id + '" ' +
-            'title="Compare Product">' +
-            '<i class="fa fa-exchange"></i>' +
-            ' Compare' +
-            '</a>' +
-            '</li>' +
-            '<li class="wishlist">' +
-            '<a href="#">' +
-            '<i class="fa fa-heart-o"></i>' +
-            'Add to wishlist' +
-            '</a>' +
-            '</li>' +
-            '<li>' +
-            '<a class="quick-view" href="' + product.detail_url + '">' +
-            '<i class="fa fa-eye"></i>' +
-            'View product' +
-            '</a>' +
-            '</li>' +
-            '</ul>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-    }
+
+    return '<div class="col-lg-4 col-md-4 col-sm-6 mt-40">' +
+        '<div class="single-product-wrap">' +
+        '<div class="product-image">' +
+        '<a href="' + product.detail_url + '">' +
+        '<img src="' + product.image + '" alt="' + escapeHtml(product.name) + '">' +
+        '</a>' +
+        sticker +
+        '</div>' +
+
+        '<div class="product_desc">' +
+        '<div class="product_desc_info">' +
+
+        '<div class="product-review">' +
+        '<h5 class="manufacturer">' +
+        '<a href="#">' +
+        escapeHtml(product.brand || '') +
+        '</a>' +
+        '</h5>' +
+
+        '<div class="rating-box">' +
+        '<ul class="rating">' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+
+        '<h4>' +
+        '<a class="product_name" href="' + product.detail_url + '">' +
+        escapeHtml(product.name) +
+        '</a>' +
+        '</h4>' +
+
+        '<div class="price-box">' +
+        priceHtml(product) +
+        '</div>' +
+
+        '</div>' +
+
+        '<div class="add-actions">' +
+        '<ul class="add-actions-link">' +
+
+        '<li class="add-cart active cart-btn" ' +
+        'data-product-id="' + product.id + '" ' +
+        'data-product-name="' + escapeHtml(product.name) + '" ' +
+        'data-product-slug="' + (product.slug || '') + '" ' +
+        'data-product-price="' + (product.sale_price || product.price || 0) + '" ' +
+        'data-product-image="' + (product.image || '') + '">' +
+        '<a href="javascript:void(0);">Add to cart</a>' +
+        '</li>' +
+
+        '<li>' +
+        '<a class="links-details wishlist-btn" ' +
+        'href="javascript:void(0);" ' +
+        'data-product-id="' + product.id + '" ' +
+        'data-product-name="' + escapeHtml(product.name) + '" ' +
+        'data-product-slug="' + (product.slug || '') + '" ' +
+        'data-product-price="' + (product.sale_price || product.price || 0) + '" ' +
+        'data-product-image="' + (product.image || '') + '">' +
+        '<i class="fa fa-heart-o"></i>' +
+        '</a>' +
+        '</li>' +
+
+        '<li>' +
+        '<a class="compare-product" href="javascript:void(0)" data-id="' + product.id + '">' +
+        '<i class="fa fa-exchange"></i>' +
+        '</a>' +
+        '</li>' +
+
+        '<li>' +
+        '<a class="quick-view" href="' + product.detail_url + '">' +
+        '<i class="fa fa-eye"></i>' +
+        '</a>' +
+        '</li>' +
+
+        '</ul>' +
+        '</div>' +
+
+        '</div>' +
+        '</div>' +
+        '</div>';
+}
+
+function listProduct(product) {
+    return '<div class="row product-layout-list mb-30">' +
+
+        '<div class="col-lg-3 col-md-5">' +
+        '<div class="product-image">' +
+        '<a href="' + product.detail_url + '">' +
+        '<img src="' + product.image + '" alt="' + escapeHtml(product.name) + '">' +
+        '</a>' +
+        '</div>' +
+        '</div>' +
+
+        '<div class="col-lg-5 col-md-7">' +
+        '<div class="product_desc">' +
+        '<div class="product_desc_info">' +
+
+        '<div class="product-review">' +
+        '<h5 class="manufacturer">' +
+        '<a href="#">' +
+        escapeHtml(product.brand || '') +
+        '</a>' +
+        '</h5>' +
+
+        '<div class="rating-box">' +
+        '<ul class="rating">' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '<li><i class="fa fa-star-o"></i></li>' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+
+        '<h4>' +
+        '<a class="product_name" href="' + product.detail_url + '">' +
+        escapeHtml(product.name) +
+        '</a>' +
+        '</h4>' +
+
+        '<div class="price-box">' +
+        priceHtml(product) +
+        '</div>' +
+
+        '</div>' +
+        '</div>' +
+        '</div>' +
+
+        '<div class="col-lg-4">' +
+        '<div class="shop-add-action mb-xs-30">' +
+        '<ul class="add-actions-link">' +
+
+        '<li class="add-cart cart-btn" ' +
+        'data-product-id="' + product.id + '" ' +
+        'data-product-name="' + escapeHtml(product.name) + '" ' +
+        'data-product-slug="' + (product.slug || '') + '" ' +
+        'data-product-price="' + (product.sale_price || product.price || 0) + '" ' +
+        'data-product-image="' + (product.image || '') + '">' +
+        '<a href="javascript:void(0);">Add to cart</a>' +
+        '</li>' +
+
+        '<li>' +
+        '<a class="links-details wishlist-btn" ' +
+        'href="javascript:void(0);" ' +
+        'data-product-id="' + product.id + '" ' +
+        'data-product-name="' + escapeHtml(product.name) + '" ' +
+        'data-product-slug="' + (product.slug || '') + '" ' +
+        'data-product-price="' + (product.sale_price || product.price || 0) + '" ' +
+        'data-product-image="' + (product.image || '') + '">' +
+        '<i class="fa fa-heart-o"></i>' +
+        '</a>' +
+        '</li>' +
+
+        '<li>' +
+        '<a href="javascript:void(0)" class="compare-product" data-id="' + product.id + '" title="Compare Product">' +
+        '<i class="fa fa-exchange"></i> Compare' +
+        '</a>' +
+        '</li>' +
+
+        '<li>' +
+        '<a class="quick-view" href="' + product.detail_url + '">' +
+        '<i class="fa fa-eye"></i> View product' +
+        '</a>' +
+        '</li>' +
+
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+
+        '</div>';
+}
     function updateSelectedInfo(name) {
         if (!filterSelectedInfo ||
             !filterSelectedText) {
@@ -1770,6 +1814,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
+});
+document.addEventListener('click', function(e) {
+    const cartBtn = e.target.closest('.cart-btn');
+
+    if (cartBtn) {
+        e.preventDefault();
+
+        const productId = cartBtn.dataset.productId;
+
+        fetch("{{ route('cart.add') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: 1
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.message || 'Unable to add product.');
+            }
+
+            if (typeof window.loadMiniCart === 'function') {
+                window.loadMiniCart();
+            }
+
+            setTimeout(function() {
+                window.location.reload();
+            }, 500);
+        })
+        .catch(error => {
+            console.error(error);
+            showCartToast(error.message);
+        });
+    }
 });
 </script>
 

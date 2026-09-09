@@ -9,42 +9,36 @@ use Illuminate\Support\Facades\DB;
 
 class CartService
 {
-   public function getCurrentCart(): Cart
+public function getCurrentCart(): Cart
 {
     if (Auth::check()) {
 
-        $userCart = Cart::firstOrCreate(
-            ['user_id' => Auth::id()],
-            ['session_id' => null]
-        );
-
         $guestSessionId = session('guest_cart_session_id');
-
         if ($guestSessionId) {
             $this->mergeGuestCart($guestSessionId);
         }
-
-        return $userCart;
+        return Cart::firstOrCreate(
+            ['user_id' => Auth::id()],
+            ['session_id' => null]
+        );
     }
 
     $sessionId = session()->getId();
 
     session()->put('guest_cart_session_id', $sessionId);
 
-    return Cart::firstOrCreate(
-        [
-            'session_id' => $sessionId,
-            'user_id' => null
-        ]
-    );
+    return Cart::firstOrCreate([
+        'session_id' => $sessionId,
+        'user_id' => null
+    ]);
 }
 
     public function getCartWithItems(): Cart
-{
-    return $this->getCurrentCart()->load([
-        'items.product.images'
-    ]);
-}
+    {
+        return $this->getCurrentCart()->load([
+            'items.product.images'
+        ]);
+    }
 
     public function add(Product $product, int $quantity = 1): Cart
     {

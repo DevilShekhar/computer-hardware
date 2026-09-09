@@ -3,7 +3,7 @@
 @section('meta_keyword', $meta_keyword)
 @section('meta_description', $meta_description)
 @section('content')
- 
+
     <div class="breadcrumb-area">
         <div class="container">
             <div class="row">
