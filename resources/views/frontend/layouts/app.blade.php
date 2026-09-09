@@ -189,7 +189,7 @@
                                 <select name="category" class="nice-select select-search-category">
                                     <option value="">All</option>
                                     @foreach($productBrands as $brand)
-                                        <option value="{{ $brand->id }}">
+                                        <option value="{{ $brand->id }}" data-url="{{ route('our-brand.show', ['slug' => $brand->slug]) }}">
                                             {{ $brand->name }}
                                         </option>
                                     @endforeach
@@ -1330,6 +1330,14 @@
             });
             $(document).on('click', '.product-search-item', function () {
                 const url = $(this).attr('href');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+            $('.select-search-category').on('change', function () {
+                const url = $(this)
+                    .find('option:selected')
+                    .data('url');
                 if (url) {
                     window.location.href = url;
                 }
