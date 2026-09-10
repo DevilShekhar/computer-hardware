@@ -1124,15 +1124,14 @@
                     }
                 });
             }
-            document.querySelectorAll('.cart-btn').forEach(function (button) {
-
-                const link = button.querySelector('a');
+            document.addEventListener('click', function (e) {
+                const link = e.target.closest('.cart-btn a');
                 if (!link) {
                     return;
                 }
-                link.addEventListener('click', function (e) {
                     e.preventDefault();
-                    const productId = button.dataset.productId;
+                    const button = link.closest('.cart-btn');
+                    const productId = button?.dataset.productId;
                     if (!productId) {
                         console.error('Product ID missing.');
                         return;
@@ -1178,7 +1177,6 @@
                         link.textContent = 'Add to cart';
                     });
                 });
-            });
             function removeFromCart(productId) {
                 fetch(`/cart/remove/${productId}`, {
                     method: 'DELETE',

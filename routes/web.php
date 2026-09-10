@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\BuilderProductController;
 use App\Http\Controllers\Admin\BuilderTypeController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -136,5 +137,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/checkout/apply-coupon',[OrderController::class,'applyCoupon'])->name('checkout.apply-coupon');
+    Route::resource('addresses', AddressController::class);
 });
 Route::post('/checkout/update-quantity', [OrderController::class, 'updateQuantity'])->name('checkout.update-quantity');
