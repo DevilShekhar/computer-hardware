@@ -305,88 +305,66 @@
                                 <i data-feather="shopping-bag"></i>
                                 <span>Order Management</span>
                             </a>
-
                             <ul class="dropdown-menu">
-
-                                {{-- All Orders --}}
                                 <li class="{{ request()->routeIs('customer-orders.index', 'customer-orders.show') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('customer-orders.index') }}">
                                         All Orders
                                     </a>
                                 </li>
-
-                                {{-- Pending --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 0 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 0]) }}">
                                         Pending
                                     </a>
                                 </li>
-
-                                {{-- Confirmed --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 1 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 1]) }}">
                                         Confirmed
                                     </a>
                                 </li>
-
-                                {{-- Processing --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 2 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 2]) }}">
                                         Processing
                                     </a>
                                 </li>
-
-                                {{-- Shipped --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 3 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 3]) }}">
                                         Shipped
                                     </a>
                                 </li>
-
-                                {{-- Delivered --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 4 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 4]) }}">
                                         Delivered
                                     </a>
                                 </li>
-
-                                {{-- Cancelled --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 5 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 5]) }}">
                                         Cancelled
                                     </a>
                                 </li>
-
-                                {{-- Failed --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 6 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 6]) }}">
                                         Failed
                                     </a>
                                 </li>
-
-                                {{-- Refunded --}}
                                 <li class="{{ request()->routeIs('customer-orders.index') && request('status') == 7 ? 'active' : '' }}">
                                     <a class="nav-link"
                                     href="{{ route('customer-orders.index', ['status' => 7]) }}">
                                         Refunded
                                     </a>
                                 </li>
-
                             </ul>
-
-                            </li>
-
-                        <li class="{{ request()->routeIs('gsts.*') ? 'active' : '' }}">
-                            <a href="{{ route('gsts.index') }}" class="nav-link">
-                                <i data-feather="percent"></i>
-                                <span>GST</span>
+                        </li>
+                        <li class="{{ request()->routeIs('my-orders*') ? 'active' : '' }}">
+                            <a href="{{ route('my-orders') }}" class="nav-link">
+                                <i data-feather="shopping-bag"></i>
+                                <span>My Orders</span>
                             </a>
                         </li>
                         <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
