@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-change-password', [ProfileController::class, 'changePassword'])->name('password.index');
     Route::post('/my-change-password/verify', [ProfileController::class, 'verifyOldPassword'])->name('password.verify');
     Route::get('/my-change-password/new', [ProfileController::class, 'newPassword'])->name('password.new');
-    Route::post('/my-change-password/update', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::post('/my-change-password/update', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 
     Route::resource('roles', RoleController::class);
     Route::get('roles/{role}/permissions-data', [RoleController::class, 'getPermissionsData'])->name('roles.permissions.data');
