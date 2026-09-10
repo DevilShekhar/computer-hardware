@@ -54,82 +54,115 @@
                             <div class="col-md-12">
                                 <div class="country-select clearfix">
                                     <label>Country <span class="required">*</span></label>
-                                    <select class="nice-select wide" name="country" required>
-                                        <option data-display="India">India</option>
-                                        <option value="India" {{ old('country') == 'India' ? 'selected' : '' }}>India</option>
-                                        <option value="UK" {{ old('country') == 'UK' ? 'selected' : '' }}>UK</option>
-                                        <option value="USA" {{ old('country') == 'USA' ? 'selected' : '' }}>USA</option>
-                                        <option value="Australia" {{ old('country') == 'Australia' ? 'selected' : '' }}>Australia</option>
-                                        <option value="Canada" {{ old('country') == 'Canada' ? 'selected' : '' }}>Canada</option>
+                                    <select class="nice-select wide" name="country" id="checkoutCountry" required>
+                                        <option value="India" {{ old('country', $defaultAddress->country ?? 'India') == 'India' ? 'selected' : '' }}>India</option>
+                                        <option value="UK" {{ old('country', $defaultAddress->country ?? '') == 'UK' ? 'selected' : '' }}>UK</option>
+                                        <option value="USA" {{ old('country', $defaultAddress->country ?? '') == 'USA' ? 'selected' : '' }}>USA</option>
+                                        <option value="Australia" {{ old('country', $defaultAddress->country ?? '') == 'Australia' ? 'selected' : '' }}>Australia</option>
+                                        <option value="Canada" {{ old('country', $defaultAddress->country ?? '') == 'Canada' ? 'selected' : '' }}>Canada</option>
                                     </select>
                                     @error('country')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="checkout-form-list">
+                                <label>Full Name <span class="required">*</span></label>
+                                <input type="text"
+                                    name="customer_name"
+                                    id="checkoutName"
+                                    value="{{ old('customer_name', $defaultAddress->name ?? auth()->user()->name ?? '') }}"
+                                    required>
+                                @error('customer_name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="checkout-form-list">
-                                    <label>Full Name <span class="required">*</span></label>
-                                    <input placeholder="" type="text" name="customer_name" value="{{ old('customer_name', auth()->user()->name ?? '') }}" required>
-                                    @error('customer_name')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="checkout-form-list">
+                                <label>Email Address <span class="required">*</span></label>
+                                <input type="email"
+                                    name="email"
+                                    value="{{ old('email', auth()->user()->email ?? '') }}"
+                                    required>
+                                @error('email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="checkout-form-list">
-                                    <label>Email Address <span class="required">*</span></label>
-                                    <input placeholder="" type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required>
-                                    @error('email')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="checkout-form-list">
+                                <label>Mobile Number <span class="required">*</span></label>
+                                <input type="text"
+                                    name="mobile_number"
+                                    id="checkoutMobile"
+                                    value="{{ old('mobile_number', $defaultAddress->mobile ?? auth()->user()->mobile ?? '') }}"
+                                    required>
+                                @error('mobile_number')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="checkout-form-list">
-                                    <label>Mobile Number <span class="required">*</span></label>
-                                    <input placeholder="" type="text" name="mobile_number" value="{{ old('mobile_number', auth()->user()->mobile ?? '') }}" required>
-                                    @error('mobile_number')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="checkout-form-list">
+                                <label>Address <span class="required">*</span></label>
+                                <input type="text"
+                                    name="address"
+                                    id="checkoutAddress"
+                                    placeholder="Street address"
+                                    value="{{ old('address', $defaultAddress->address ?? '') }}"
+                                    required>
+                                @error('address')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="col-md-12">
-                                <div class="checkout-form-list">
-                                    <label>Address <span class="required">*</span></label>
-                                    <input placeholder="Street address" type="text" name="address" value="{{ old('address') }}" required>
-                                    @error('address')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="checkout-form-list">
+                                <label>City <span class="required">*</span></label>
+                                <input type="text"
+                                    name="city"
+                                    id="checkoutCity"
+                                    value="{{ old('city', $defaultAddress->city ?? '') }}"
+                                    required>
+                                @error('city')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="checkout-form-list">
-                                    <label>City <span class="required">*</span></label>
-                                    <input placeholder="" type="text" name="city" value="{{ old('city') }}" required>
-                                    @error('city')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="checkout-form-list">
+                                <label>State <span class="required">*</span></label>
+                                <input type="text"
+                                    name="state"
+                                    id="checkoutState"
+                                    value="{{ old('state', $defaultAddress->state ?? '') }}"
+                                    required>
+                                @error('state')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="checkout-form-list">
-                                    <label>State <span class="required">*</span></label>
-                                    <input placeholder="" type="text" name="state" value="{{ old('state') }}" required>
-                                    @error('state')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="checkout-form-list">
+                                <label>Pincode <span class="required">*</span></label>
+                                <input type="text"
+                                    name="pincode"
+                                    id="checkoutPincode"
+                                    value="{{ old('pincode', $defaultAddress->pincode ?? '') }}"
+                                    required>
+                                @error('pincode')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="checkout-form-list">
-                                    <label>Pincode <span class="required">*</span></label>
-                                    <input placeholder="" type="text" name="pincode" value="{{ old('pincode') }}" required>
-                                    @error('pincode')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
+                        </div>
                             <div class="col-md-12">
                                 <div class="order-notes">
                                     <div class="checkout-form-list">
@@ -258,6 +291,7 @@
                                 <div class="order-button-payment">
                                     <input value="Place order" type="submit" id="placeOrderBtn">
                                 </div>
+                                <a href="{{ route('addresses.create') }}">Dont have addresss ? add from here</a>
                                 <div class="checkout-loader text-center mt-3" id="checkoutLoader" style="display:none;">
                                     <div class="checkout-spinner"
                                         style="width:30px;height:30px;border:3px solid #ddd;border-top-color:#2878f0;border-radius:50%;animation:checkoutSpin .7s linear infinite;margin:auto;">

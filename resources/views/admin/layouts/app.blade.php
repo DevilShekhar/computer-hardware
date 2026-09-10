@@ -477,6 +477,12 @@
                                 <span>Contact Submissions</span>
                             </a>
                         </li>
+                        <li class="{{ request()->routeIs('addresses.*') ? 'active' : '' }}">
+                            <a href="{{ route('addresses.index') }}" class="nav-link">
+                                <i data-feather="mail"></i>
+                                <span>Address Setting</span>
+                            </a>
+                        </li>
                         <li class="menu-header">Pages</li>
 
                         <li class="dropdown">

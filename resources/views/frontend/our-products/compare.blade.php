@@ -202,13 +202,15 @@ document.addEventListener('DOMContentLoaded', function () {
             '" title="View Product Details">' +
             escapeHtml(productName) +
             '</a>';
-        const cartUrl = product.cart_url || ('/cart/add/' + product.id);
         const actionHtml =
-            '<a href="' +
-            escapeAttribute(cartUrl) +
-            '" class="compare-cart-btn">' +
-            '<i class="fa fa-shopping-cart"></i> Add to Cart' +
-            '</a>';
+            '<li class="dd-cart active cart-btn" ' +
+            'data-product-id="' + escapeAttribute(product.id) + '" ' +
+            'data-product-name="' + escapeAttribute(product.name) + '" ' +
+            'data-product-slug="' + escapeAttribute(product.slug) + '" ' +
+            'data-product-price="' + escapeAttribute(product.sale_price || product.price) + '" ' +
+            'data-product-image="' + escapeAttribute(product.image || '') + '">' +
+            '<a href="javascript:void(0);" style="background:#ea0505;color:#fff;border-radius:4px;padding:10px 20px;display:inline-block;">Add to cart</a>' +
+            '</li>';
         document.getElementById('action' + index).innerHTML = actionHtml;
         document.getElementById('actionTable' + index).innerHTML = actionHtml;
     }

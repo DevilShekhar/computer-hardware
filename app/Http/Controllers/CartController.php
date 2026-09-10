@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -196,7 +197,12 @@ class CartController extends Controller
         }
         $subtotal = $cartService->subtotal($cart);
 
-        return view('customer.checkout', compact('cart', 'subtotal'));
+        $addresses = Address::where('user_id', Auth::id())
+            ->orderByDesc('is_default')
+            ->latest()
+            ->get();
+        $defaultAddress = $addresses->firstWhere('is_default', true);
+        return view('customer.checkout', compact('cart', 'subtotal','addresses','defaultAddress'));
     }
 
     public function placeOrder(Request $request)
