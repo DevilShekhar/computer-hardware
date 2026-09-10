@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Services\CartService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
@@ -66,8 +67,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-         session()->put('guest_cart_session_id', session()->getId());
+        session()->put('guest_cart_session_id', session()->getId());
+        $customerRoleId = DB::table('roles')
+            ->where('name', 'customer')
+            ->where('guard_name', 'web')
+            ->value('id');
+        if (!$customerRoleId) {
+            throw new \RuntimeException('Customer role not found.');
+        }
         return User::create([
+            'role_id' => $customerRoleId,
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
