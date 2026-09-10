@@ -77,7 +77,9 @@
                                                 $itemTotal = $price * $item->quantity;
                                             @endphp
 
-                                            <tr id="cart-item-{{ $product->id }}" data-product-id="{{ $product->id }}">
+                                            <tr class="cart_item" id="cart-item-{{ $product->id }}"
+                                                data-product-id="{{ $product->id }}"
+                                                data-price="{{ $price }}">
                                                 <td class="li-product-remove">
                                                     <span class="sr-no">{{ $loop->iteration }}</span>
                                                 </td>
@@ -96,19 +98,12 @@
                                                     <span class="amount">₹{{ number_format($price, 2) }}</span>
                                                 </td>
                                                 <td class="quantity">
-                                                    <label>Quantity</label>
                                                     <div class="cart-plus-minus">
-                                                        <div class="dec qtybutton decrease-btn"
-                                                            data-product-id="{{ $product->id }}">
-                                                            <i class="fa fa-angle-down"></i>
-                                                        </div>
                                                         <input class="cart-plus-minus-box quantity-input"
                                                             value="{{ $item->quantity }}" type="text"
-                                                            data-product-id="{{ $product->id }}">
-                                                        <div class="inc qtybutton increase-btn"
-                                                            data-product-id="{{ $product->id }}">
-                                                            <i class="fa fa-angle-up"></i>
-                                                        </div>
+                                                            name="quantity"
+                                                            data-product-id="{{ $product->id }}"
+                                                            data-price="{{ $price }}">
                                                     </div>
                                                 </td>
                                                 <td class="product-subtotal item-total" data-product-id="{{ $product->id }}">
@@ -164,42 +159,24 @@
         <p class="mt-3 text-muted">Updating cart...</p>
     </div>
 
-    <style>
-        .spinner {
-            width: 35px;
-            height: 35px;
-            border: 3px solid #ddd;
-            border-top-color: #2878f0;
-            border-radius: 50%;
-            animation: spin .7s linear infinite;
-            margin: auto;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
             const csrfToken = document.querySelector('meta[name="csrf-token"]')
                 ? document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 : '{{ csrf_token() }}';
 
+            let appliedDiscount = 0;
+
             function showLoader() {
                 const loader = document.getElementById('cartLoader');
-                if (loader) {
-                    loader.style.display = 'block';
-                }
+                if (loader) loader.style.display = 'block';
             }
 
             function hideLoader() {
                 const loader = document.getElementById('cartLoader');
-                if (loader) {
-                    loader.style.display = 'none';
-                }
+                if (loader) loader.style.display = 'none';
             }
 
             function showToast(message, type = 'success') {
@@ -210,11 +187,73 @@
                 alert(message);
             }
 
-            async function updateCart(productId, quantity) {
-                quantity = parseInt(quantity);
-                if (quantity < 1) {
-                    quantity = 1;
+            function formatPrice(amount) {
+                return '₹' + Number(amount || 0).toLocaleString('en-IN', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+
+            function readCurrentTotals() {
+                let subtotal = 0;
+                document.querySelectorAll('.cart_item').forEach(function (row) {
+                    const price = parseFloat(row.dataset.price) || 0;
+                    const input = row.querySelector('.quantity-input');
+                    const qty = parseInt(input?.value) || 1;
+                    subtotal += price * qty;
+                });
+                return subtotal;
+            }
+
+            function updateItemTotal(row, quantity) {
+                if (!row) return;
+                const price = parseFloat(row.dataset.price) || 0;
+                const el = row.querySelector('.item-total .amount');
+                if (el) el.textContent = formatPrice(price * quantity);
+            }
+
+            function refreshTotals(subtotalOverride) {
+                const subtotalEl = document.getElementById('cartSubtotal');
+                const grandTotalEl = document.getElementById('cartGrandTotal');
+
+                let subtotal = subtotalOverride;
+                if (subtotal === undefined || subtotal === null) {
+                    subtotal = readCurrentTotals();
                 }
+
+                if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
+
+                if (appliedDiscount > 0) {
+                    let discountRow = document.getElementById('couponDiscountRow');
+                    if (!discountRow) {
+                        const totalList = document.querySelector('.cart-page-total ul');
+                        if (totalList) {
+                            const li = document.createElement('li');
+                            li.id = 'couponDiscountRow';
+                            li.innerHTML = 'Coupon Discount <span id="couponDiscount"></span>';
+                            const totalLi = totalList.querySelector('li:last-child');
+                            if (totalLi) totalList.insertBefore(li, totalLi);
+                        }
+                    }
+                    const discountEl = document.getElementById('couponDiscount');
+                    if (discountEl) discountEl.textContent = '− ' + formatPrice(appliedDiscount);
+
+                    const grand = Math.max(0, subtotal - appliedDiscount);
+                    if (grandTotalEl) grandTotalEl.textContent = formatPrice(grand);
+                } else {
+                    const discountRow = document.getElementById('couponDiscountRow');
+                    if (discountRow) discountRow.remove();
+                    if (grandTotalEl) grandTotalEl.textContent = formatPrice(subtotal);
+                }
+            }
+
+            function updateAllTotalsLocally() {
+                refreshTotals(readCurrentTotals());
+            }
+
+            async function updateCart(productId, quantity) {
+                quantity = parseInt(quantity) || 1;
+                if (quantity < 1) quantity = 1;
 
                 showLoader();
 
@@ -241,98 +280,95 @@
                     const row = document.getElementById('cart-item-' + productId);
                     if (row) {
                         const quantityInput = row.querySelector('.quantity-input');
-                        if (quantityInput) {
+                        if (quantityInput && data.item) {
                             quantityInput.value = data.item.quantity;
                         }
 
                         const itemTotal = row.querySelector('.item-total .amount');
-                        if (itemTotal) {
-                            itemTotal.textContent = '₹' + Number(data.item.total).toLocaleString('en-IN', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            });
+                        if (itemTotal && data.item) {
+                            itemTotal.textContent = formatPrice(data.item.total);
                         }
                     }
 
-                    updateSummary(data);
+                    if (data.subtotal !== undefined) {
+                        refreshTotals(parseFloat(data.subtotal) || 0);
+                    } else {
+                        updateAllTotalsLocally();
+                    }
 
                     if (typeof window.loadMiniCart === 'function') {
                         window.loadMiniCart();
                     }
 
                 } catch (error) {
+                    console.error('Update cart error:', error);
                     showToast(error.message, 'error');
+                    updateAllTotalsLocally();
                 } finally {
                     hideLoader();
                 }
             }
 
-            function updateSummary(data) {
-                const subtotal = document.getElementById('cartSubtotal');
-                const grandTotal = document.getElementById('cartGrandTotal');
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest('.qtybutton');
+                if (!btn) return;
 
-                const formattedTotal = '₹' + Number(data.subtotal).toLocaleString('en-IN', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
+                const row = btn.closest('.cart_item');
+                if (!row) return;
 
-                if (subtotal) {
-                    subtotal.textContent = formattedTotal;
-                }
+                const input = row.querySelector('.quantity-input');
+                const productId = row.dataset.productId;
+                if (!input || !productId) return;
 
-                if (grandTotal) {
-                    grandTotal.textContent = formattedTotal;
-                }
-            }
+                setTimeout(function () {
+                    let qty = parseInt(input.value) || 1;
+                    if (qty < 1) qty = 1;
+                    if (qty > 9999) qty = 9999;
 
-            // Increase quantity
-            document.querySelectorAll('.increase-btn').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const productId = this.dataset.productId;
-                    const input = document.querySelector('.quantity-input[data-product-id="' + productId + '"]');
-                    if (!input) return;
-                    let quantity = parseInt(input.value) || 1;
-                    quantity++;
-                    updateCart(productId, quantity);
-                });
-            });
+                    input.value = qty;
 
-            // Decrease quantity
-            document.querySelectorAll('.decrease-btn').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    const productId = this.dataset.productId;
-                    const input = document.querySelector('.quantity-input[data-product-id="' + productId + '"]');
-                    if (!input) return;
-                    let quantity = parseInt(input.value) || 1;
-                    if (quantity > 1) {
-                        quantity--;
-                    }
-                    updateCart(productId, quantity);
-                });
-            });
+                    updateItemTotal(row, qty);
+                    updateAllTotalsLocally();
+                    updateCart(productId, qty);
+                }, 0);
+            }, false);
 
-            // Manual quantity input change
             document.querySelectorAll('.quantity-input').forEach(function (input) {
+                input.addEventListener('input', function () {
+                    const row = this.closest('.cart_item');
+                    if (!row) return;
+
+                    let qty = parseInt(this.value) || 1;
+                    if (qty < 1) qty = 1;
+
+                    updateItemTotal(row, qty);
+                    updateAllTotalsLocally();
+                });
+
                 input.addEventListener('change', function () {
-                    const productId = this.dataset.productId;
-                    let quantity = parseInt(this.value) || 1;
-                    if (quantity < 1) {
-                        quantity = 1;
-                        this.value = 1;
-                    }
-                    updateCart(productId, quantity);
+                    const row = this.closest('.cart_item');
+                    if (!row) return;
+
+                    const productId = row.dataset.productId;
+                    if (!productId) return;
+
+                    let qty = parseInt(this.value) || 1;
+                    if (qty < 1) qty = 1;
+
+                    this.value = qty;
+
+                    updateItemTotal(row, qty);
+                    updateAllTotalsLocally();
+                    updateCart(productId, qty);
                 });
             });
 
-            // Remove item
             document.querySelectorAll('.remove-cart-btn').forEach(function (button) {
                 button.addEventListener('click', async function (e) {
                     e.preventDefault();
                     const productId = this.dataset.productId;
 
-                    if (!confirm('Remove this product from cart?')) {
-                        return;
-                    }
+                    if (!confirm('Remove this product from cart?')) return;
 
                     showLoader();
 
@@ -352,16 +388,18 @@
                         }
 
                         const row = document.getElementById('cart-item-' + productId);
-                        if (row) {
-                            row.remove();
-                        }
+                        if (row) row.remove();
 
                         if (data.item_count === 0) {
                             window.location.reload();
                             return;
                         }
 
-                        updateSummary(data);
+                        if (data.subtotal !== undefined) {
+                            refreshTotals(parseFloat(data.subtotal) || 0);
+                        } else {
+                            updateAllTotalsLocally();
+                        }
 
                         if (typeof window.loadMiniCart === 'function') {
                             window.loadMiniCart();
@@ -377,13 +415,10 @@
                 });
             });
 
-            // Clear cart
             const clearCartBtn = document.getElementById('clearCartBtn');
             if (clearCartBtn) {
                 clearCartBtn.addEventListener('click', async function () {
-                    if (!confirm('Are you sure you want to clear your cart?')) {
-                        return;
-                    }
+                    if (!confirm('Are you sure you want to clear your cart?')) return;
 
                     showLoader();
 
@@ -411,66 +446,62 @@
                     }
                 });
             }
-            const couponCode=document.getElementById('coupon_code');
-            const applyCouponBtn=document.getElementById('applyCouponBtn');
-            const couponMessage=document.getElementById('couponMessage');
 
-            if(applyCouponBtn){
-                applyCouponBtn.addEventListener('click',async function(){
+            const couponCode = document.getElementById('coupon_code');
+            const applyCouponBtn = document.getElementById('applyCouponBtn');
+            const couponMessage = document.getElementById('couponMessage');
 
-                    const code=couponCode.value.trim();
+            if (applyCouponBtn) {
+                applyCouponBtn.addEventListener('click', async function () {
 
-                    if(!code){
-                        couponMessage.innerHTML='<span class="text-danger">Please enter coupon code.</span>';
+                    const code = couponCode.value.trim();
+
+                    if (!code) {
+                        couponMessage.innerHTML = '<span class="text-danger">Please enter coupon code.</span>';
                         return;
                     }
 
-                    applyCouponBtn.disabled=true;
-                    applyCouponBtn.value='Applying...';
+                    applyCouponBtn.disabled = true;
+                    applyCouponBtn.value = 'Applying...';
 
-                    try{
-                        const response=await fetch('{{ route('checkout.apply-coupon') }}',{
-                            method:'POST',
-                            headers:{
-                                'Content-Type':'application/json',
-                                'Accept':'application/json',
-                                'X-CSRF-TOKEN':csrfToken
+                    try {
+                        const response = await fetch('{{ route('checkout.apply-coupon') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken
                             },
-                            body:JSON.stringify({
-                                code:code
-                            })
+                            body: JSON.stringify({ code: code })
                         });
 
-                        const data=await response.json();
+                        const data = await response.json();
 
-                        if(!response.ok||!data.success){
-                            throw new Error(data.message||'Unable to apply coupon.');
+                        if (!response.ok || !data.success) {
+                            throw new Error(data.message || 'Unable to apply coupon.');
                         }
 
-                        couponMessage.innerHTML='<span class="text-success">'+data.message+'</span>';
+                        couponMessage.innerHTML = '<span class="text-success">' + data.message + '</span>';
 
-                        couponCode.disabled=true;
-                        applyCouponBtn.disabled=true;
-                        applyCouponBtn.value='Applied';
+                        couponCode.disabled = true;
+                        applyCouponBtn.disabled = true;
+                        applyCouponBtn.value = 'Applied';
 
-                        const grandTotal=document.getElementById('cartGrandTotal');
+                        appliedDiscount = parseFloat(data.discount) || 0;
 
-                        if(grandTotal){
-                            grandTotal.textContent='₹'+Number(data.total).toLocaleString('en-IN',{
-                                minimumFractionDigits:2,
-                                maximumFractionDigits:2
-                            });
-                        }
+                        refreshTotals(readCurrentTotals());
 
-                    }catch(error){
+                    } catch (error) {
 
-                        couponMessage.innerHTML='<span class="text-danger">'+error.message+'</span>';
+                        couponMessage.innerHTML = '<span class="text-danger">' + error.message + '</span>';
 
-                        applyCouponBtn.disabled=false;
-                        applyCouponBtn.value='Apply coupon';
+                        applyCouponBtn.disabled = false;
+                        applyCouponBtn.value = 'Apply coupon';
                     }
                 });
             }
+
+            updateAllTotalsLocally();
         });
     </script>
 

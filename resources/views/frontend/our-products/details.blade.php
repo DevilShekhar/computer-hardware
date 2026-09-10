@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 @section('title', $meta_title)
-@section('meta_keyword', $meta_keyword) 
+@section('meta_keyword', $meta_keyword)
 @section('meta_description', $meta_description)
 @section('content')
 @if(isset($brand))
@@ -247,25 +247,32 @@
                         </div>
                         <div class="price-box pt-20">
                             @if($product->sale_price)
-                            <span class="new-price new-price-2 sale-price">
-                                ₹{{ number_format($product->sale_price, 2) }}
-                            </span>
-                            <span class="old-price original-price">
-                                ₹{{ number_format($product->price, 2) }}
-                            </span>
-                            @if($product->price > 0)
-                            @php
-                            $discountPercentage = (($product->price - $product->sale_price) / $product->price) * 100;
-                            @endphp
-                            <span class="discount-percentage">
-                                -{{ round($discountPercentage) }}%
-                            </span>
-                            @endif
+                                <span class="new-price new-price-2 sale-price" id="unit-price">
+                                    ₹{{ number_format($product->sale_price, 2) }}
+                                </span>
+                                <span class="old-price original-price">
+                                    ₹{{ number_format($product->price, 2) }}
+                                </span>
+                                @if($product->price > 0)
+                                    @php
+                                        $discountPercentage = (($product->price - $product->sale_price) / $product->price) * 100;
+                                    @endphp
+                                    <span class="discount-percentage">
+                                        -{{ round($discountPercentage) }}%
+                                    </span>
+                                @endif
                             @else
-                            <span class="new-price new-price-2">
-                                ₹{{ number_format($product->price, 2) }}
-                            </span>
+                                <span class="new-price new-price-2" id="unit-price">
+                                    ₹{{ number_format($product->price, 2) }}
+                                </span>
                             @endif
+
+                            <div class="total-price-box mt-10">
+                                <span class="total-label">Total:</span>
+                                <span class="total-price" id="total-price">
+                                    ₹{{ number_format($product->sale_price ?? $product->price, 2) }}
+                                </span>
+                            </div>
                         </div>
                         @if($product->short_description)
                         <div class="product-desc">
@@ -372,20 +379,20 @@
                             </form>
                         </div>
                         <div class="product-additional-info pt-25">
-    <a class="wishlist-btn"
-       href="javascript:void(0);"
-       data-product-id="{{ $product->id }}"
-       data-product-name="{{ $product->name }}"
-       data-product-slug="{{ $product->slug }}"
-       data-product-price="{{ $product->sale_price ?? $product->price }}"
-       data-product-image="{{ $primaryImage && $primaryImage->image
-            ? asset('storage/' . $primaryImage->image)
-            : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+                            <a class="wishlist-btn"
+                            href="javascript:void(0);"
+                            data-product-id="{{ $product->id }}"
+                            data-product-name="{{ $product->name }}"
+                            data-product-slug="{{ $product->slug }}"
+                            data-product-price="{{ $product->sale_price ?? $product->price }}"
+                            data-product-image="{{ $primaryImage && $primaryImage->image
+                                    ? asset('storage/' . $primaryImage->image)
+                                    : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
 
-        <i class="fa fa-heart-o"></i>
-        <span class="wishlist-text">Add to wishlist</span>
-    </a>
-</div>
+                                <i class="fa fa-heart-o"></i>
+                                <span class="wishlist-text">Add to wishlist</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -929,4 +936,25 @@ document.addEventListener('DOMContentLoaded',function(){
 @endif
 @else
 @endif
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var unitPrice = parseFloat("{{ $product->sale_price ?? $product->price }}") || 0;
+        var maxQty    = parseInt("{{ $product->stock_quantity }}") || 1;
+        var $qtyInput   = $('.cart-plus-minus-box');
+        var $totalPrice = $('#total-price');
+        function updateTotal() {
+            var qty = parseInt($qtyInput.val()) || 1;
+            if (qty < 1) qty = 1;
+            if (qty > maxQty) qty = maxQty;
+            $qtyInput.val(qty);
+            var total = unitPrice * qty;
+            $totalPrice.text('₹' + total.toFixed(2));
+        }
+        $(document).on('click', '.qtybutton', function () {
+            setTimeout(updateTotal, 0);
+        });
+        $qtyInput.on('input change keyup', updateTotal);
+        updateTotal();
+    });
+</script>
 @endsection

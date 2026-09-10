@@ -987,6 +987,7 @@
                     console.error('Mini cart error:', error);
                 });
             }
+            window.loadMiniCart = loadMiniCart;
 
             function renderMiniCart(cart) {
 
@@ -1037,8 +1038,8 @@
                     const image = product.image || '';
 
                     const imageHtml = image
-            ? `<img src="${image}" alt="${escapeHtml(productName)}" loading="lazy">`
-            : `<div style="width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:#f5f5f5;font-size:11px;color:#999;">No Image</div>`;
+                        ? `<img src="${image}" alt="${escapeHtml(productName)}" loading="lazy">`
+                        : `<div style="width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:#f5f5f5;font-size:11px;color:#999;">No Image</div>`;
 
                     list.innerHTML += `
                         <li class="minicart-product-item">

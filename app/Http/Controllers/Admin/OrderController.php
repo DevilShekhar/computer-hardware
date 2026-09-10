@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CartItem;
 use App\Models\Coupon;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
@@ -80,7 +81,7 @@ class OrderController extends Controller
             ],422);
         }
 
-        
+
 
         if($coupon->discount_type==='percentage'){
             $discount=($subtotal*$coupon->discount_value)/100;
@@ -105,5 +106,54 @@ class OrderController extends Controller
             'subtotal'=>(float)$subtotal,
             'total'=>(float)$total
         ]);
+    }
+    public function updateQuantity(Request $request)
+    {
+        try {
+            $request->validate([
+                'item_id' => 'required|exists:cart_items,id',
+                'quantity' => 'required|integer|min:1'
+            ]);
+
+            $cartItem = CartItem::findOrFail($request->item_id);
+            $product = $cartItem->product;
+            $cartItem->quantity = $request->quantity;
+            $cartItem->save();
+            $cart = $request->user()->cart;
+            $subtotal = $cart->items->sum(function($item) {
+                return $item->price * $item->quantity;
+            });
+            $discount = 0;
+            $couponCode = $request->input('coupon_code');
+            if ($couponCode) {
+                $coupon = Coupon::where('code', $couponCode)->where('is_active', true)->first();
+                if ($coupon) {
+                    if ($coupon->type === 'percentage') {
+                        $discount = ($coupon->value / 100) * $subtotal;
+                    } else {
+                        $discount = min($coupon->value, $subtotal);
+                    }
+                    if ($coupon->max_discount && $discount > $coupon->max_discount) {
+                        $discount = $coupon->max_discount;
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Quantity updated successfully',
+                'subtotal' => $subtotal,
+                'discount' => $discount,
+                'total' => $subtotal - $discount,
+                'item_total' => $cartItem->price * $cartItem->quantity,
+                'quantity' => $cartItem->quantity
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating quantity: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
