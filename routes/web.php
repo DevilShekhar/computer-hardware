@@ -139,7 +139,7 @@ Route::get('/cart/mini', [CartController::class, 'miniCart'])->name('cart.mini')
 Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout.index');
-    Route::post('/checkout/place-order', [CartController::class, 'placeOrder'])->name('checkout.place-order');
+    Route::post('/checkout/place-order', [OrderController::class, 'placeOrder'])->name('checkout.place-order');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/checkout/apply-coupon',[OrderController::class,'applyCoupon'])->name('checkout.apply-coupon');
