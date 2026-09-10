@@ -32,7 +32,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ route('password.update') }}" method="POST">
+                        <form action="{{ route('profile.password.update') }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label>New Password </label>
