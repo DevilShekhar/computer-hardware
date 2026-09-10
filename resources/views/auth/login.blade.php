@@ -499,7 +499,62 @@
         font-size: 14px;
         line-height: 1.6;
     }
+    .google-login-button {
+        width: 100%;
+        height: 52px;
+        margin-top: 12px;
 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+
+        background: #ffffff;
+        color: #333333;
+
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 700;
+
+        text-decoration: none;
+        cursor: pointer;
+
+        transition: all 0.25s ease;
+    }
+
+    .google-login-button:hover {
+        background: #f8f8f8;
+        border-color: #cccccc;
+        color: #222222;
+
+        box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
+
+        transform: translateY(-1px);
+    }
+
+    .google-login-button:active {
+        transform: translateY(0);
+    }
+
+    .google-logo {
+        width: 20px;
+        height: 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+    }
+
+    .google-logo svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+    }
     </style>
 </head>
 <body>
@@ -630,6 +685,26 @@
                             Login
                         </span>
                     </button>
+                    <a href="{{ route('google.login') }}" class="google-login-button">
+                        <span class="google-logo">
+                            <svg viewBox="0 0 48 48" aria-hidden="true">
+                                <path fill="#EA4335"
+                                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.55 30.47 0 24 0 14.61 0 6.51 5.38 2.56 13.22l7.98 6.19C12.46 13.05 17.75 9.5 24 9.5z" />
+
+                                <path fill="#4285F4"
+                                    d="M46.98 24.55c0-1.64-.15-3.22-.43-4.74H24v9.02h12.91c-.56 3-2.24 5.54-4.77 7.24l7.73 6c4.51-4.16 7.11-10.29 7.11-17.52z" />
+
+                                <path fill="#FBBC05"
+                                    d="M10.54 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24 24 0 0 0 0 21.56l7.98-6.19z" />
+
+                                <path fill="#34A853"
+                                    d="M24 48c6.48 0 11.92-2.14 15.89-5.93l-7.73-6c-2.14 1.44-4.87 2.3-8.16 2.3-6.25 0-11.54-3.55-13.46-9.91l-7.98 6.19C6.51 42.62 14.61 48 24 48z" />
+                            </svg>
+                        </span>
+                        <span>
+                            Continue with Google
+                        </span>
+                    </a>
                     @if (Route::has('register')) <a href="{{ route('register') }}" class="register-button"> <i class="fa-solid fa-user-plus"></i> <span style="margin-left: 8px;"> Register </span> </a> @endif
                 </form>
                 <div class="login-footer">
