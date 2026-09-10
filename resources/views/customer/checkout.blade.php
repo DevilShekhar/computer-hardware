@@ -373,6 +373,22 @@
                 <p class="payment-option-desc">Pay when your order is delivered.</p>
             </div>
         </label>
+        <label class="payment-option {{ old('payment_method', 'Snapmint emi') == 'cod' ? 'selected' : '' }}">
+            <input type="radio"
+                   name="payment_method"
+                   value="cod"
+                   class="payment-radio"
+                   {{ old('payment_method', 'cod') == 'cod' ? 'checked' : '' }}>
+
+            <span class="payment-radio-mark"></span>
+
+            <div class="payment-option-body">
+                <div class="payment-option-head">
+                    <span class="payment-option-title">Cash on Delivery</span>
+                </div>
+                <p class="payment-option-desc">Pay when your order is delivered.</p>
+            </div>
+        </label>
 
         <label class="payment-option {{ old('payment_method') == 'razorpay' ? 'selected' : '' }}">
             <input type="radio"
@@ -932,7 +948,7 @@
                     key: data.razorpay_key,
                     amount: data.amount,
                     currency: data.currency || 'INR',
-                    name: 'Aethelweave',
+                    name: '{{ config('app.name') }}',
                     description: 'Order Payment',
                     order_id: data.razorpay_order_id,
                     prefill: {
