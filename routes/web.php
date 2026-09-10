@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\GstController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\OrderManagementController;
+use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -140,3 +141,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('addresses', AddressController::class);
 });
 Route::post('/checkout/update-quantity', [OrderController::class, 'updateQuantity'])->name('checkout.update-quantity');
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
