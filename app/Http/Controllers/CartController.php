@@ -211,13 +211,22 @@ class CartController extends Controller
             'customer_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'mobile_number' => 'required|string|max:20',
-            'address' => 'required|string',
+            'address' => 'required|string|max:1000',
             'city' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'pincode' => 'required|string|max:10',
             'country' => 'required|string|max:100',
             'payment_method' => 'required|in:cod,razorpay',
             'order_notes' => 'nullable|string|max:2000',
+            // Ship-to-different block
+            'ship_to_different' => 'nullable|boolean',
+            'ship_name'         => 'required_if:ship_to_different,1|nullable|string|max:255',
+            'ship_mobile'       => 'required_if:ship_to_different,1|nullable|string|max:20',
+            'ship_address'      => 'required_if:ship_to_different,1|nullable|string|max:1000',
+            'ship_city'         => 'required_if:ship_to_different,1|nullable|string|max:100',
+            'ship_state'        => 'required_if:ship_to_different,1|nullable|string|max:100',
+            'ship_pincode'      => 'required_if:ship_to_different,1|nullable|string|max:10',
+            'ship_country'      => 'required_if:ship_to_different,1|nullable|string|max:100',
         ]);
 
         $cart = $this->cartService->getCartWithItems();
@@ -226,6 +235,29 @@ class CartController extends Controller
             return redirect()
                 ->route('cart.index')
                 ->with('error', 'Your cart is empty.');
+        }
+        $shipToDifferent = $request->boolean('ship_to_different');
+        // Decide which address goes on the ORDER row (only existing columns)
+        if ($shipToDifferent) {
+            $orderAddress = [
+                'customer_name' => $validated['ship_name'],
+                'mobile_number' => $validated['ship_mobile'],
+                'address'       => $validated['ship_address'],
+                'city'          => $validated['ship_city'],
+                'state'         => $validated['ship_state'],
+                'pincode'       => $validated['ship_pincode'],
+                'country'       => $validated['ship_country'] ?? 'India',
+            ];
+        } else {
+            $orderAddress = [
+                'customer_name' => $validated['customer_name'],
+                'mobile_number' => $validated['mobile_number'],
+                'address'       => $validated['address'],
+                'city'          => $validated['city'],
+                'state'         => $validated['state'],
+                'pincode'       => $validated['pincode'],
+                'country'       => $validated['country'],
+            ];
         }
 
         DB::beginTransaction();
@@ -240,9 +272,7 @@ class CartController extends Controller
                     isset($item->product->stock_quantity) &&
                     $item->product->stock_quantity < $item->quantity
                 ) {
-                    throw new \Exception(
-                        $item->product->name.' does not have enough stock.'
-                    );
+                    throw new \Exception($item->product->name.' does not have enough stock.');
                 }
             }
 
@@ -257,22 +287,20 @@ class CartController extends Controller
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'order_number' => 'ORD-'.strtoupper(uniqid()),
-                'customer_name' => $validated['customer_name'],
+                'customer_name' => $orderAddress['customer_name'],
                 'email' => $validated['email'],
-                'mobile_number' => $validated['mobile_number'],
-                'address' => $validated['address'],
-                'city' => $validated['city'],
-                'state' => $validated['state'],
-                'pincode' => $validated['pincode'],
-                'country' => $validated['country'],
+                'mobile_number' => $orderAddress['mobile_number'],
+                'address' => $orderAddress['address'],
+                'city' => $orderAddress['city'],
+                'state' => $orderAddress['state'],
+                'pincode' => $orderAddress['pincode'],
+                'country' => $orderAddress['country'],
                 'subtotal' => $subtotal,
                 'shipping_amount' => $shippingAmount,
                 'discount_amount' => $discountAmount,
                 'total_amount' => $totalAmount,
                 'payment_method' => $validated['payment_method'],
-                'payment_status' => $validated['payment_method'] === 'cod'
-                    ? 'pending'
-                    : 'pending',
+                'payment_status' =>'pending',
                 'status' => 'pending',
                 'order_notes' => $validated['order_notes'] ?? null,
             ]);
@@ -295,6 +323,47 @@ class CartController extends Controller
 
                 if (isset($product->stock_quantity)) {
                     $product->decrement('stock_quantity', $quantity);
+                }
+            }
+            // Save the ship-to address into addresses table (so it shows next time)
+            if ($shipToDifferent) {
+                $userId = Auth::id();
+
+                $shipMobile  = $validated['ship_mobile'];
+                $shipAddress = $validated['ship_address'];
+                $shipCity    = $validated['ship_city'];
+                $shipState   = $validated['ship_state'];
+                $shipPincode = $validated['ship_pincode'];
+
+                $alreadyExists = Address::where('user_id', $userId)
+                    ->where('mobile',  $shipMobile)
+                    ->where('address', $shipAddress)
+                    ->where('city',    $shipCity)
+                    ->where('state',   $shipState)
+                    ->where('pincode', $shipPincode)
+                    ->exists();
+
+                if (! $alreadyExists) {
+                    $isFirstAddress = ! Address::where('user_id', $userId)->exists();
+                    $makeDefault    = $isFirstAddress;
+
+                    if ($makeDefault) {
+                        Address::where('user_id', $userId)
+                            ->update(['is_default' => false]);
+                    }
+
+                    Address::create([
+                        'user_id'      => $userId,
+                        'address_type' => 'other',
+                        'name'         => $validated['ship_name'],
+                        'mobile'       => $shipMobile,
+                        'address'      => $shipAddress,
+                        'city'         => $shipCity,
+                        'state'        => $shipState,
+                        'country'      => $validated['ship_country'] ?: 'India',
+                        'pincode'      => $shipPincode,
+                        'is_default'   => $makeDefault,
+                    ]);
                 }
             }
 

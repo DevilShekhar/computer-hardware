@@ -41,6 +41,72 @@
                 <div class="col-lg-6 col-12">
                     <div class="checkbox-form">
                         <h3>Billing Details</h3>
+                        @if(isset($addresses) && $addresses->count())
+                            <div class="saved-addresses mb-30">
+                                <div class="saved-addresses-head">
+                                    <h4 class="saved-addresses-title">Select Delivery Address</h4>
+                                    <a href="{{ route('addresses.create') }}" class="add-new-link">+ Add New</a>
+                                </div>
+
+                                <div class="address-list">
+                                    @foreach($addresses as $address)
+                                        @php
+                                            $isDefault = $address->is_default
+                                                || ($defaultAddress && $defaultAddress->id == $address->id
+                                                    && !$addresses->contains('is_default', true));
+                                            $label = $address->label ?? null;
+                                        @endphp
+
+                                        <label class="address-card {{ $isDefault ? 'selected' : '' }}"
+                                            data-address-id="{{ $address->id }}"
+                                            data-country="{{ $address->country ?? 'India' }}"
+                                            data-name="{{ $address->name }}"
+                                            data-mobile="{{ $address->mobile }}"
+                                            data-address="{{ $address->address }}"
+                                            data-city="{{ $address->city }}"
+                                            data-state="{{ $address->state }}"
+                                            data-pincode="{{ $address->pincode }}">
+
+                                            <input type="radio" name="delivery_address" class="address-radio" value="{{ $address->id }}"{{ $isDefault ? 'checked' : '' }}>
+                                            <div class="address-card-body">
+                                                <div class="address-card-head">
+                                                    <span class="address-name">{{ $address->name }}</span>
+
+                                                    <span class="address-tags">
+                                                        @if($label)
+                                                            <span class="address-tag">{{ strtoupper($label) }}</span>
+                                                        @endif
+                                                        @if($isDefault)
+                                                            <span class="address-tag address-tag-default">DEFAULT</span>
+                                                        @endif
+                                                    </span>
+                                                </div>
+
+                                                <div class="address-line">{{ $address->address }}</div>
+                                                <div class="address-line">
+                                                    {{ $address->city }}, {{ $address->state }} - {{ $address->pincode }}
+                                                </div>
+                                                <div class="address-line address-muted">
+                                                    {{ $address->mobile }} · {{ $address->country ?? 'India' }}
+                                                </div>
+                                            </div>
+                                        </label>
+                                    @endforeach
+
+                                    <label class="address-card address-card-new" data-address-id="new">
+                                        <input type="radio" class="address-radio">
+                                        <div class="address-card-body">
+                                            <div class="address-card-head">
+                                                <span class="address-name">+ Add New Address</span>
+                                            </div>
+                                            <div class="address-line address-muted">
+                                                Add another delivery address
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        @endif
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul class="mb-0">
@@ -291,7 +357,11 @@
                                 <div class="order-button-payment">
                                     <input value="Place order" type="submit" id="placeOrderBtn">
                                 </div>
-                                <a href="{{ route('addresses.create') }}">Dont have addresss ? add from here</a>
+                                <div class="order-button-payment mt-2">
+                                    <a href="{{ route('addresses.create') }}" class="add-address-btn">
+                                        Add Address
+                                    </a>
+                                </div>
                                 <div class="checkout-loader text-center mt-3" id="checkoutLoader" style="display:none;">
                                     <div class="checkout-spinner"
                                         style="width:30px;height:30px;border:3px solid #ddd;border-top-color:#2878f0;border-radius:50%;animation:checkoutSpin .7s linear infinite;margin:auto;">
@@ -303,6 +373,99 @@
                     </div>
                 </div>
             </div>
+            <div class="different-address mt-30">
+    <div class="ship-different-title">
+        <h3>
+            <label for="ship-box">Ship to a different address?</label>
+            <input id="ship-box" type="checkbox" name="ship_to_different" value="1"
+                   {{ old('ship_to_different') ? 'checked' : '' }}>
+        </h3>
+    </div>
+
+    <div id="ship-box-info" class="row" style="{{ old('ship_to_different') ? '' : 'display:none;' }}">
+        <div class="col-md-12">
+            <div class="country-select clearfix">
+                <label>Country <span class="required">*</span></label>
+                <select class="nice-select wide" name="ship_country" id="shipCountry">
+                    <option value="India" {{ old('ship_country') == 'India' ? 'selected' : '' }}>India</option>
+                    <option value="UK" {{ old('ship_country') == 'UK' ? 'selected' : '' }}>UK</option>
+                    <option value="USA" {{ old('ship_country') == 'USA' ? 'selected' : '' }}>USA</option>
+                    <option value="Australia" {{ old('ship_country') == 'Australia' ? 'selected' : '' }}>Australia</option>
+                    <option value="Canada" {{ old('ship_country') == 'Canada' ? 'selected' : '' }}>Canada</option>
+                </select>
+                @error('ship_country')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="checkout-form-list">
+                <label>Full Name <span class="required">*</span></label>
+                <input type="text" name="ship_name" id="shipName"
+                       value="{{ old('ship_name') }}">
+                @error('ship_name')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="checkout-form-list">
+                <label>Mobile Number <span class="required">*</span></label>
+                <input type="text" name="ship_mobile" id="shipMobile"
+                       value="{{ old('ship_mobile') }}">
+                @error('ship_mobile')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="checkout-form-list">
+                <label>Address <span class="required">*</span></label>
+                <input type="text" name="ship_address" id="shipAddress"
+                       placeholder="Street address" value="{{ old('ship_address') }}">
+                @error('ship_address')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="checkout-form-list">
+                <label>City <span class="required">*</span></label>
+                <input type="text" name="ship_city" id="shipCity"
+                       value="{{ old('ship_city') }}">
+                @error('ship_city')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="checkout-form-list">
+                <label>State <span class="required">*</span></label>
+                <input type="text" name="ship_state" id="shipState"
+                       value="{{ old('ship_state') }}">
+                @error('ship_state')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="checkout-form-list">
+                <label>Pincode <span class="required">*</span></label>
+                <input type="text" name="ship_pincode" id="shipPincode"
+                       value="{{ old('ship_pincode') }}">
+                @error('ship_pincode')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+    </div>
+</div>
     </div>
         </form>
     </div>
@@ -575,6 +738,112 @@
         }
 
         updateAllTotalsLocally();
+       document.querySelectorAll('.address-radio').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+
+            const card = this.closest('.address-card');
+            if (!card) return;
+
+            const name    = document.getElementById('checkoutName');
+            const mobile  = document.getElementById('checkoutMobile');
+            const address = document.getElementById('checkoutAddress');
+            const city    = document.getElementById('checkoutCity');
+            const state   = document.getElementById('checkoutState');
+            const pincode = document.getElementById('checkoutPincode');
+            const country = document.getElementById('checkoutCountry');
+
+            const isNew = card.dataset.addressId === 'new';
+
+            // toggle read-only state
+            const manualFields = document.getElementById('manualAddressFields');
+            if (manualFields) {
+                manualFields.classList.toggle('fields-locked', !isNew);
+            }
+
+            if (isNew) {
+                if (name)    name.value    = '';
+                if (mobile)  mobile.value  = '';
+                if (address) address.value = '';
+                if (city)    city.value    = '';
+                if (state)   state.value   = '';
+                if (pincode) pincode.value = '';
+                if (country) {
+                    country.value = 'India';
+                    if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                        jQuery(country).niceSelect('update');
+                    }
+                }
+            } else {
+                if (name)    name.value    = card.dataset.name    || '';
+                if (mobile)  mobile.value  = card.dataset.mobile  || '';
+                if (address) address.value = card.dataset.address || '';
+                if (city)    city.value    = card.dataset.city    || '';
+                if (state)   state.value   = card.dataset.state   || '';
+                if (pincode) pincode.value = card.dataset.pincode || '';
+                if (country) {
+                    country.value = card.dataset.country || 'India';
+                    if (typeof jQuery !== 'undefined' && jQuery.fn.niceSelect) {
+                        jQuery(country).niceSelect('update');
+                    }
+                }
+            }
+
+            // highlight active card
+            document.querySelectorAll('.address-card').forEach(function (c) {
+                c.classList.remove('selected');
+            });
+            card.classList.add('selected');
+        });
     });
+
+    // fire change for the pre-selected radio so fields are populated on load
+    const selectedAddress = document.querySelector('.address-radio:checked');
+    if (selectedAddress) {
+        selectedAddress.dispatchEvent(new Event('change'));
+    }
+    /* ---------- SHIP TO A DIFFERENT ADDRESS ---------- */
+    const shipBox       = document.getElementById('ship-box');
+    const shipBoxInfo   = document.getElementById('ship-box-info');
+    const addressList   = document.querySelector('.address-list');
+    const savedAddressWrap = document.querySelector('.saved-addresses');
+
+    function toggleShipTo() {
+        if (!shipBox || !shipBoxInfo) return;
+
+        const on = shipBox.checked;
+        shipBoxInfo.style.display = on ? '' : 'none';
+
+        // When shipping to a different address, the saved-address picker
+        // is irrelevant, so grey it out and uncheck all radios.
+        if (on) {
+            if (savedAddressWrap) {
+                savedAddressWrap.classList.add('fields-locked');
+                savedAddressWrap.style.opacity = '0.5';
+                savedAddressWrap.style.pointerEvents = 'none';
+            }
+            document.querySelectorAll('.address-radio').forEach(r => r.checked = false);
+            document.querySelectorAll('.address-card').forEach(c => c.classList.remove('selected'));
+        } else {
+            if (savedAddressWrap) {
+                savedAddressWrap.classList.remove('fields-locked');
+                savedAddressWrap.style.opacity = '';
+                savedAddressWrap.style.pointerEvents = '';
+
+                // Re-select the default card so billing fields repopulate
+                const first = document.querySelector('.address-radio');
+                if (first && !document.querySelector('.address-radio:checked')) {
+                    first.checked = true;
+                    first.dispatchEvent(new Event('change'));
+                }
+            }
+        }
+    }
+
+    if (shipBox) {
+        shipBox.addEventListener('change', toggleShipTo);
+        toggleShipTo(); // in case old('ship_to_different') is set
+    }
+  });
+
 </script>
 @endsection

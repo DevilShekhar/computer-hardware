@@ -479,8 +479,14 @@
                         </li>
                         <li class="{{ request()->routeIs('addresses.*') ? 'active' : '' }}">
                             <a href="{{ route('addresses.index') }}" class="nav-link">
-                                <i data-feather="mail"></i>
+                                <i data-feather="settings"></i>
                                 <span>Address Setting</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('checkout.index.*') ? 'active' : '' }}">
+                            <a href="{{ route('checkout.index') }}" class="nav-link">
+                                <i data-feather="shopping-cart"></i>
+                                <span>Go To Checkout</span>
                             </a>
                         </li>
                         <li class="menu-header">Pages</li>

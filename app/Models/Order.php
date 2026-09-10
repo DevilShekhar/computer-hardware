@@ -25,6 +25,14 @@ class Order extends Model
         'payment_status',
         'status',
         'order_notes',
+        'ship_to_different',
+        'shipping_name',
+        'shipping_mobile',
+        'shipping_address',
+        'shipping_city',
+        'shipping_state',
+        'shipping_pincode',
+        'shipping_country',
     ];
 
     protected $casts = [
