@@ -177,7 +177,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 60px 70px;
+        padding: 20px 30px;
         background: #ffffff;
     }
     .login-heading {
@@ -471,6 +471,34 @@
         color: #ffffff;
         box-shadow: 0 7px 18px rgba(242, 13, 13, 0.20);
     }
+    .login-heading {
+        margin-bottom: 35px;
+        text-align: center;
+    }
+
+    .login-heading .register-logo {
+        display: block;
+        width: auto;
+        max-width: 190px;
+        height: auto;
+        margin: 0 auto 25px;
+        object-fit: contain;
+    }
+
+    .login-heading h2 {
+        margin-bottom: 9px;
+        color: #222222;
+        font-size: 31px;
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    .login-heading p {
+        color: #777777;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
     </style>
 </head>
 <body>
@@ -531,6 +559,13 @@
             </section>
             <section class="login-right">
                 <div class="login-heading">
+                  
+                    <img
+                        src="{{ asset('assets/frontend/assets/images/menu/logo/logo.png') }}"
+                        alt="{{ config('app.name', 'Metaverse') }}"
+                        class="register-logo"
+                    >
+                
                     <h2>Welcome Back  </h2>
                     <p>Sign in to continue to your account.</p>
                 </div>
