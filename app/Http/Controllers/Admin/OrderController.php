@@ -8,6 +8,8 @@ use App\Models\Coupon;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 class OrderController extends Controller
 {
     public function index()
@@ -153,6 +155,73 @@ class OrderController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error updating quantity: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+   public function verifyRazorpayPayment(Request $request)
+    {
+        $request->validate([
+            'razorpay_payment_id' => 'required|string',
+            'razorpay_order_id'   => 'required|string',
+            'razorpay_signature'  => 'required|string',
+        ]);
+
+        try {
+            $api = new \Razorpay\Api\Api(
+                config('services.razorpay.key'),
+                config('services.razorpay.secret')
+            );
+
+            $api->utility->verifyPaymentSignature([
+                'razorpay_order_id'   => $request->razorpay_order_id,
+                'razorpay_payment_id' => $request->razorpay_payment_id,
+                'razorpay_signature'  => $request->razorpay_signature,
+            ]);
+
+            $order = Order::where('razorpay_order_id', $request->razorpay_order_id)->first();
+
+            if (! $order) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order not found.',
+                ], 404);
+            }
+
+            $order->update([
+                'razorpay_payment_id' => $request->razorpay_payment_id,
+                'razorpay_signature'  => $request->razorpay_signature,
+                'payment_status'      => 'paid',
+                'status'              => 1,
+            ]);
+
+            if (session()->has('coupon_id')) {
+                Coupon::where('id', session('coupon_id'))->increment('used_count');
+                session()->forget(['coupon_id', 'coupon_code', 'coupon_discount']);
+            }
+
+            return response()->json([
+                'success'      => true,
+                'message'      => 'Payment successful.',
+                'redirect_url' => route('home'),
+            ]);
+
+        } catch (\Razorpay\Api\Errors\SignatureVerificationError $e) {
+            Log::error('Razorpay signature verification failed', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment verification failed.',
+            ], 400);
+        } catch (\Throwable $e) {
+            Log::error('Razorpay verification error', [
+                'message' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment verification failed.',
             ], 500);
         }
     }

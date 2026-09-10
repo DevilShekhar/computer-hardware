@@ -844,6 +844,7 @@
 
     <!-- ScrollUp JS -->
     <script src="{{ asset('assets/frontend/assets/js/scrollUp.min.js') }}"></script>
+    <script src="{{ asset('assets/bundles/sweetalert/sweetalert-11.js') }}"></script>
 
     <!-- Main/Activator JS -->
     <script src="{{ asset('assets/frontend/assets/js/main.js') }}"></script>
@@ -1231,9 +1232,9 @@
                     position:fixed;
                     top:80px;
                     right:20px;
-                    background:#fffdf3;
-                    color:#d89b00;
-                    border:1px solid #fed700;
+                    background:#fff5f5;
+                    color:#ea0505;
+                    border:1px solid #ea0505;
                     border-radius:5px;
                     padding:8px 12px;
                     min-width:200px;
@@ -1241,7 +1242,7 @@
                     align-items:center;
                     gap:10px;
                     z-index:9999;
-                    box-shadow:0 2px 8px rgba(0,0,0,.12);
+                    box-shadow:0 2px 8px rgba(234,5,5,.12);
                 `;
 
                 document.body.appendChild(toast);
@@ -1367,6 +1368,33 @@
             }
         });
     </script>
+    @if(session('success'))
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'success',
+            title: 'Order Placed!',
+            text: "{{ session('success') }}",
+            confirmButtonText: 'Continue',
+            confirmButtonColor: '#2878f0'
+        });
+    });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: "{{ session('error') }}",
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#2878f0'
+        });
+    });
+    </script>
+    @endif
     @stack('scripts')
 </body>
 </html>

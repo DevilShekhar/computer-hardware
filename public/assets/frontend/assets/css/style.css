@@ -7965,3 +7965,14 @@ span.required {
     background: #f9f9f9;
     color: #555;
 }
+.minicart-product-list {
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.minicart-product-list::-webkit-scrollbar {
+    display: none;
+}

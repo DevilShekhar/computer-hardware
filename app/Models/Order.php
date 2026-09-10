@@ -33,6 +33,9 @@ class Order extends Model
         'shipping_state',
         'shipping_pincode',
         'shipping_country',
+        'razorpay_order_id',
+        'razorpay_payment_id',
+        'razorpay_signature',
     ];
 
     protected $casts = [
