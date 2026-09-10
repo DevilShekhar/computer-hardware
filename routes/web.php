@@ -137,3 +137,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::post('/checkout/apply-coupon',[OrderController::class,'applyCoupon'])->name('checkout.apply-coupon');
 });
+Route::post('/checkout/update-quantity', [OrderController::class, 'updateQuantity'])->name('checkout.update-quantity');
