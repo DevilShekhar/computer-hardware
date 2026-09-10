@@ -414,6 +414,14 @@
                                         <li ><a href="blog-left-sidebar.html">Blog</a></li>
                                         <li><a href="{{ route('about-us') }}">About Us</a></li>
                                         <li><a href="{{ route('contact.index') }}">Contact</a></li>
+                                         @if(auth()->check())
+                                            <li>
+                                                <a href="{{ route('dashboard') }}">Dashboard</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('my-orders') }}">My Orders</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </nav>
                             </div>
