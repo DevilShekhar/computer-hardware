@@ -3,351 +3,232 @@
 @section('content')
 
 <section class="section">
+    <div class="section-body">
 
-```
-<div class="section-body">
-
-    {{-- ========================================================= --}}
-    {{-- ALERTS --}}
-    {{-- ========================================================= --}}
-
-    @if(session('success'))
-
+        @if(session('success'))
         <div class="alert alert-success">
             <i class="fas fa-check-circle"></i>
             {{ session('success') }}
         </div>
+        @endif
 
-    @endif
-
-
-    @if(session('error'))
-
+        @if(session('error'))
         <div class="alert alert-danger">
             <i class="fas fa-exclamation-circle"></i>
             {{ session('error') }}
         </div>
+        @endif
 
-    @endif
-
-
-    {{-- ========================================================= --}}
-    {{-- ORDER DETAILS --}}
-    {{-- ========================================================= --}}
-
-    <div class="row">
-
-        <div class="col-12">
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h4>
-                        Order Details
-                    </h4>
-
-                    <div class="card-header-action">
-
-                        <a href="{{ route('customer-orders.index') }}"
-                           class="btn btn-secondary">
-
-                            <i class="fas fa-arrow-left"></i>
-                            Back
-
-                        </a>
-
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Order Details
+                        </h4>
+                        <div class="card-header-action">
+                            <a href="{{ route('customer-orders.index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i>
+                                Back
+                            </a>
+                        </div>
                     </div>
 
-                </div>
+                    <div class="card-body">
+                        <div class="row">
 
+                            <div class="col-md-3">
+                                <strong>
+                                    Order Number
+                                </strong>
+                                <p>
+                                    {{ $order->order_number }}
+                                </p>
+                            </div>
 
-                <div class="card-body">
+                            <div class="col-md-3">
+                                <strong>
+                                    Order Date
+                                </strong>
+                                <p>
+                                    {{ $order->created_at ? $order->created_at->format('d-m-Y h:i A') : '-' }}
+                                </p>
+                            </div>
 
-                    <div class="row">
+                            <div class="col-md-3">
+                                <strong>
+                                    Payment Method
+                                </strong>
+                                <p>
+                                    {{ $order->payment_method ?? '-' }}
+                                </p>
+                            </div>
 
-
-                        {{-- Order Number --}}
-                        <div class="col-md-3">
-
-                            <strong>
-                                Order Number
-                            </strong>
-
-                            <p>
-                                {{ $order->order_number }}
-                            </p>
-
-                        </div>
-
-
-                        {{-- Order Date --}}
-                        <div class="col-md-3">
-
-                            <strong>
-                                Order Date
-                            </strong>
-
-                            <p>
-
-                                {{ $order->created_at
-                                    ? $order->created_at->format('d-m-Y h:i A')
-                                    : '-' }}
-
-                            </p>
-
-                        </div>
-
-
-                        {{-- Payment Method --}}
-                        <div class="col-md-3">
-
-                            <strong>
-                                Payment Method
-                            </strong>
-
-                            <p>
-                                {{ $order->payment_method ?? '-' }}
-                            </p>
-
-                        </div>
-
-
-                        {{-- Payment Status --}}
-                        <div class="col-md-3">
-
-                            <strong>
-                                Payment Status
-                            </strong>
-
-                            <p>
-
-                                @if($order->payment_status == 1)
-
+                            <div class="col-md-3">
+                                <strong>
+                                    Payment Status
+                                </strong>
+                                <p>
+                                    @if($order->payment_status == 1)
                                     <span class="badge badge-success">
                                         Paid
                                     </span>
-
-                                @else
-
+                                    @else
                                     <span class="badge badge-warning">
                                         Pending
                                     </span>
-
-                                @endif
-
-                            </p>
+                                    @endif
+                                </p>
+                            </div>
 
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Customer Details
+                        </h4>
                     </div>
 
-                </div>
+                    <div class="card-body">
+                        <div class="row">
 
+                            <div class="col-md-6">
+                                <strong>
+                                    Name
+                                </strong>
+                                <p>
+                                    {{ $order->customer_name ?? '-' }}
+                                </p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <strong>
+                                    Email
+                                </strong>
+                                <p>
+                                    {{ $order->email ?? '-' }}
+                                </p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <strong>
+                                    Mobile Number
+                                </strong>
+                                <p>
+                                    {{ $order->mobile_number ?? '-' }}
+                                </p>
+                            </div>
+
+                            <div class="col-md-6">
+                                <strong>
+                                    User ID
+                                </strong>
+                                <p>
+                                    {{ $order->user_id ?? '-' }}
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
-        </div>
-
-    </div>
-
-
-    {{-- ========================================================= --}}
-    {{-- CUSTOMER DETAILS --}}
-    {{-- ========================================================= --}}
-
-    <div class="row">
-
-
-        <div class="col-md-6">
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h4>
-                        Customer Details
-                    </h4>
-
-                </div>
-
-
-                <div class="card-body">
-
-                    <div class="row">
-
-                        <div class="col-md-6">
-
-                            <strong>
-                                Name
-                            </strong>
-
-                            <p>
-                                {{ $order->customer_name ?? '-' }}
-                            </p>
-
-                        </div>
-
-
-                        <div class="col-md-6">
-
-                            <strong>
-                                Email
-                            </strong>
-
-                            <p>
-                                {{ $order->email ?? '-' }}
-                            </p>
-
-                        </div>
-
-
-                        <div class="col-md-6">
-
-                            <strong>
-                                Mobile Number
-                            </strong>
-
-                            <p>
-                                {{ $order->mobile_number ?? '-' }}
-                            </p>
-
-                        </div>
-
-
-                        <div class="col-md-6">
-
-                            <strong>
-                                User ID
-                            </strong>
-
-                            <p>
-                                {{ $order->user_id ?? '-' }}
-                            </p>
-
-                        </div>
-
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Shipping Address
+                        </h4>
                     </div>
 
-                </div>
+                    <div class="card-body">
 
+                        <p class="mb-1">
+                            <strong>
+                                {{ $order->customer_name }}
+                            </strong>
+                        </p>
+
+                        <p class="mb-1">
+                            {{ $order->address }}
+                        </p>
+
+                        <p class="mb-1">
+                            {{ $order->city }},
+                            {{ $order->state }}
+                        </p>
+
+                        <p class="mb-1">
+                            {{ $order->pincode }}
+                        </p>
+
+                        <p class="mb-0">
+                            {{ $order->country }}
+                        </p>
+
+                    </div>
+                </div>
             </div>
 
         </div>
 
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
 
-        {{-- Shipping Address --}}
-        <div class="col-md-6">
+                    <div class="card-header">
+                        <h4>
+                            Order Items
+                        </h4>
+                    </div>
 
-            <div class="card">
+                    <div class="card-body">
 
-                <div class="card-header">
+                        <div class="table-responsive">
 
-                    <h4>
-                        Shipping Address
-                    </h4>
+                            <table class="table table-striped">
 
-                </div>
+                                <thead>
+                                    <tr>
 
+                                        <th class="text-center">
+                                            #
+                                        </th>
 
-                <div class="card-body">
+                                        <th>
+                                            Product
+                                        </th>
 
-                    <p class="mb-1">
+                                        <th>
+                                            SKU
+                                        </th>
 
-                        <strong>
-                            {{ $order->customer_name }}
-                        </strong>
+                                        <th>
+                                            Price
+                                        </th>
 
-                    </p>
+                                        <th>
+                                            Quantity
+                                        </th>
 
-                    <p class="mb-1">
-                        {{ $order->address }}
-                    </p>
+                                        <th>
+                                            Total
+                                        </th>
 
-                    <p class="mb-1">
+                                    </tr>
+                                </thead>
 
-                        {{ $order->city }},
-                        {{ $order->state }}
+                                <tbody>
 
-                    </p>
-
-                    <p class="mb-1">
-                        {{ $order->pincode }}
-                    </p>
-
-                    <p class="mb-0">
-                        {{ $order->country }}
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    {{-- ========================================================= --}}
-    {{-- ORDER ITEMS --}}
-    {{-- ========================================================= --}}
-
-    <div class="row">
-
-        <div class="col-12">
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h4>
-                        Order Items
-                    </h4>
-
-                </div>
-
-
-                <div class="card-body">
-
-                    <div class="table-responsive">
-
-                        <table class="table table-striped">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th class="text-center">
-                                        #
-                                    </th>
-
-                                    <th>
-                                        Product
-                                    </th>
-
-                                    <th>
-                                        SKU
-                                    </th>
-
-                                    <th>
-                                        Price
-                                    </th>
-
-                                    <th>
-                                        Quantity
-                                    </th>
-
-                                    <th>
-                                        Total
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody>
-
-                                @forelse($order->items as $item)
+                                    @forelse($order->items as $item)
 
                                     <tr>
 
@@ -355,197 +236,134 @@
                                             {{ $loop->iteration }}
                                         </td>
 
-
                                         <td>
-
                                             <strong>
                                                 {{ $item->product_name }}
                                             </strong>
-
                                         </td>
-
 
                                         <td>
                                             {{ $item->sku ?? '-' }}
                                         </td>
 
-
                                         <td>
                                             ₹{{ number_format($item->price, 2) }}
                                         </td>
-
 
                                         <td>
                                             {{ $item->quantity }}
                                         </td>
 
-
                                         <td>
-
                                             <strong>
                                                 ₹{{ number_format($item->total, 2) }}
                                             </strong>
-
                                         </td>
 
                                     </tr>
 
-
-                                @empty
+                                    @empty
 
                                     <tr>
-
-                                        <td colspan="6"
-                                            class="text-center">
-
+                                        <td colspan="6" class="text-center">
                                             No order items found.
-
                                         </td>
-
                                     </tr>
 
-                                @endforelse
+                                    @endforelse
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
+                            </table>
+
+                        </div>
 
                     </div>
 
                 </div>
+            </div>
+        </div>
 
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>
+                            Order Notes
+                        </h4>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="mb-0">
+                            {{ $order->order_notes ?? 'No order notes.' }}
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>
+                            Order Summary
+                        </h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>
+                                Subtotal
+                            </span>
+                            <strong>
+                                ₹{{ number_format($order->subtotal, 2) }}
+                            </strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>
+                                Shipping
+                            </span>
+                            <strong>
+                                ₹{{ number_format($order->shipping_amount, 2) }}
+                            </strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>
+                                Discount
+                            </span>
+                            <strong class="text-danger">
+                                - ₹{{ number_format($order->discount_amount, 2) }}
+                            </strong>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+
+                            <strong>
+                                Total Amount
+                            </strong>
+
+                            <strong class="text-primary">
+                                ₹{{ number_format($order->total_amount, 2) }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
 
         </div>
 
-    </div>
-
-
-    {{-- ========================================================= --}}
-    {{-- ORDER SUMMARY --}}
-    {{-- ========================================================= --}}
-
-    <div class="row">
-
-
-        <div class="col-md-6">
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h4>
-                        Order Notes
-                    </h4>
-
-                </div>
-
-
-                <div class="card-body">
-
-                    <p class="mb-0">
-
-                        {{ $order->order_notes ?? 'No order notes.' }}
-
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="col-md-6">
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h4>
-                        Order Summary
-                    </h4>
-
-                </div>
-
-
-                <div class="card-body">
-
-
-                    <div class="d-flex justify-content-between mb-2">
-
-                        <span>
-                            Subtotal
-                        </span>
-
-                        <strong>
-                            ₹{{ number_format($order->subtotal, 2) }}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mb-2">
-
-                        <span>
-                            Shipping
-                        </span>
-
-                        <strong>
-                            ₹{{ number_format($order->shipping_amount, 2) }}
-                        </strong>
-
-                    </div>
-
-
-                    <div class="d-flex justify-content-between mb-2">
-
-                        <span>
-                            Discount
-                        </span>
-
-                        <strong class="text-danger">
-
-                            - ₹{{ number_format($order->discount_amount, 2) }}
-
-                        </strong>
-
-                    </div>
-
-
-                    <hr>
-
-
-                    <div class="d-flex justify-content-between">
-
-                        <strong>
-                            Total Amount
-                        </strong>
-
-                        <strong class="text-primary">
-
-                            ₹{{ number_format($order->total_amount, 2) }}
-
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    {{-- ========================================================= --}}
-    {{-- ORDER STATUS --}}
-    {{-- ========================================================= --}}
-
-    @php
-
+        @php
         $statuses = [
             0 => 'Pending',
             1 => 'Confirmed',
@@ -555,73 +373,58 @@
         ];
 
         $currentStatus = (int) $order->status;
-
         $isCancelled = $currentStatus === 5;
         $isFailed = $currentStatus === 6;
         $isRefunded = $currentStatus === 7;
+        $isReturned = $currentStatus === 8;
+        $canRefund = $isReturned;
+        @endphp
 
-    @endphp
+        <div class="row">
 
+            <div class="col-12">
 
-    <div class="row">
+                <div class="card">
 
-        <div class="col-12">
+                    <div class="card-header">
+                        <h4>
+                            Order Status
+                        </h4>
+                    </div>
 
-            <div class="card">
+                    <div class="card-body">
 
-                <div class="card-header">
+                        <div class="row text-center">
 
-                    <h4>
-                        Order Status
-                    </h4>
-
-                </div>
-
-
-                <div class="card-body">
-
-
-                    {{-- ================================================= --}}
-                    {{-- NORMAL PROGRESS --}}
-                    {{-- ================================================= --}}
-
-                    <div class="row text-center">
-
-                        @foreach($statuses as $statusValue => $statusName)
+                            @foreach($statuses as $statusValue => $statusName)
 
                             <div class="col">
 
                                 <div class="mb-2">
 
-                                    @if(
-                                        !$isCancelled
-                                        && !$isFailed
-                                        && !$isRefunded
-                                        && $statusValue <= $currentStatus
-                                    )
+                                    @if(!$isCancelled && !$isFailed && !$isRefunded && !$isReturned && $statusValue <= $currentStatus)
 
-                                        <span
-                                            class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
-                                            style="width:45px;height:45px;">
+                                    <span
+                                        class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
+                                        style="width:45px;height:45px;">
 
-                                            <i class="fas fa-check"></i>
+                                        <i class="fas fa-check"></i>
 
-                                        </span>
+                                    </span>
 
                                     @else
 
-                                        <span
-                                            class="rounded-circle bg-light text-muted d-inline-flex align-items-center justify-content-center"
-                                            style="width:45px;height:45px;">
+                                    <span
+                                        class="rounded-circle bg-light text-muted d-inline-flex align-items-center justify-content-center"
+                                        style="width:45px;height:45px;">
 
-                                            <i class="fas fa-circle"></i>
+                                        <i class="fas fa-circle"></i>
 
-                                        </span>
+                                    </span>
 
                                     @endif
 
                                 </div>
-
 
                                 <strong>
                                     {{ $statusName }}
@@ -629,152 +432,118 @@
 
                             </div>
 
-                        @endforeach
+                            @endforeach
 
-                    </div>
+                        </div>
 
+                        <hr>
 
-                    <hr>
+                        <div class="text-center mb-4">
 
+                            <h5>
+                                Current Status
+                            </h5>
 
-                    {{-- ================================================= --}}
-                    {{-- CURRENT STATUS --}}
-                    {{-- ================================================= --}}
-
-                    <div class="text-center mb-4">
-
-                        <h5>
-                            Current Status
-                        </h5>
-
-
-                        @switch($currentStatus)
+                            @switch($currentStatus)
 
                             @case(0)
 
-                                <span class="badge badge-warning"
-                                      style="font-size:14px;">
+                            <span class="badge badge-warning" style="font-size:14px;">
+                                Pending
+                            </span>
 
-                                    Pending
-
-                                </span>
-
-                                @break
-
+                            @break
 
                             @case(1)
 
-                                <span class="badge badge-info"
-                                      style="font-size:14px;">
+                            <span class="badge badge-info" style="font-size:14px;">
+                                Confirmed
+                            </span>
 
-                                    Confirmed
-
-                                </span>
-
-                                @break
-
+                            @break
 
                             @case(2)
 
-                                <span class="badge badge-primary"
-                                      style="font-size:14px;">
+                            <span class="badge badge-primary" style="font-size:14px;">
+                                Processing
+                            </span>
 
-                                    Processing
-
-                                </span>
-
-                                @break
-
+                            @break
 
                             @case(3)
 
-                                <span class="badge badge-info"
-                                      style="font-size:14px;">
+                            <span class="badge badge-info" style="font-size:14px;">
+                                Shipped
+                            </span>
 
-                                    Shipped
-
-                                </span>
-
-                                @break
-
+                            @break
 
                             @case(4)
 
-                                <span class="badge badge-success"
-                                      style="font-size:14px;">
+                            <span class="badge badge-success" style="font-size:14px;">
+                                Delivered
+                            </span>
 
-                                    Delivered
-
-                                </span>
-
-                                @break
-
+                            @break
 
                             @case(5)
 
-                                <span class="badge badge-danger"
-                                      style="font-size:14px;">
+                            <span class="badge badge-danger" style="font-size:14px;">
 
-                                    <i class="fas fa-times-circle"></i>
+                                <i class="fas fa-times-circle"></i>
 
-                                    Cancelled
+                                Cancelled
 
-                                </span>
+                            </span>
 
-                                @break
-
+                            @break
 
                             @case(6)
 
-                                <span class="badge badge-danger"
-                                      style="font-size:14px;">
+                            <span class="badge badge-danger" style="font-size:14px;">
 
-                                    <i class="fas fa-exclamation-circle"></i>
+                                <i class="fas fa-exclamation-circle"></i>
 
-                                    Failed
+                                Failed
 
-                                </span>
+                            </span>
 
-                                @break
-
+                            @break
 
                             @case(7)
 
-                                <span class="badge badge-dark"
-                                      style="font-size:14px;">
+                            <span class="badge badge-dark" style="font-size:14px;">
 
-                                    <i class="fas fa-undo"></i>
+                                <i class="fas fa-undo"></i>
 
-                                    Refunded
+                                Refunded
 
-                                </span>
+                            </span>
 
-                                @break
+                            @break
 
-                        @endswitch
+                            @case(8)
 
-                    </div>
+                            <span class="badge badge-warning" style="font-size:14px;">
 
+                                <i class="fas fa-undo"></i>
 
-                    {{-- ================================================= --}}
-                    {{-- NEXT NORMAL STATUS --}}
-                    {{-- ================================================= --}}
+                                Returned
 
-                    @if(
-                        !$isCancelled
-                        && !$isFailed
-                        && !$isRefunded
-                        && $currentStatus < 4
-                    )
+                            </span>
+
+                            @break
+
+                            @endswitch
+
+                        </div>
+
+                        @if(!$isCancelled && !$isFailed && !$isRefunded && !$isReturned && $currentStatus < 4)
 
                         @php
-
-                            $nextStatus = $currentStatus + 1;
-
-                            $nextStatusName = $statuses[$nextStatus];
-
+                        $nextStatus = $currentStatus + 1;
+                        $nextStatusName = $statuses[$nextStatus];
                         @endphp
-
 
                         <div class="text-center mb-4">
 
@@ -786,13 +555,12 @@
 
                                 @csrf
 
-                                <input type="hidden"
-                                       name="status"
-                                       value="{{ $nextStatus }}">
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="{{ $nextStatus }}">
 
-
-                                <button type="submit"
-                                        class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary">
 
                                     <i class="fas fa-arrow-right"></i>
 
@@ -804,22 +572,11 @@
 
                         </div>
 
-                    @endif
+                        @endif
 
-
-                    {{-- ================================================= --}}
-                    {{-- CANCEL / FAILED --}}
-                    {{-- ================================================= --}}
-
-                    @if(
-                        !$isCancelled
-                        && !$isFailed
-                        && !$isRefunded
-                        && $currentStatus < 4
-                    )
+                        @if(!$isCancelled && !$isFailed && !$isRefunded && !$isReturned && $currentStatus < 4)
 
                         <hr>
-
 
                         <div class="text-center">
 
@@ -827,34 +584,6 @@
                                 Other Actions
                             </h6>
 
-
-                            {{-- CANCEL --}}
-                            <form
-                                action="{{ route('customer-orders.update-status', $order->id) }}"
-                                method="POST"
-                                class="status-update-form d-inline"
-                                data-status-name="Cancelled">
-
-                                @csrf
-
-                                <input type="hidden"
-                                       name="status"
-                                       value="5">
-
-
-                                <button type="submit"
-                                        class="btn btn-danger mr-2">
-
-                                    <i class="fas fa-times"></i>
-
-                                    Cancel Order
-
-                                </button>
-
-                            </form>
-
-
-                            {{-- FAILED --}}
                             <form
                                 action="{{ route('customer-orders.update-status', $order->id) }}"
                                 method="POST"
@@ -863,13 +592,12 @@
 
                                 @csrf
 
-                                <input type="hidden"
-                                       name="status"
-                                       value="6">
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="6">
 
-
-                                <button type="submit"
-                                        class="btn btn-warning">
+                                <button type="submit" class="btn btn-warning">
 
                                     <i class="fas fa-exclamation-triangle"></i>
 
@@ -881,33 +609,23 @@
 
                         </div>
 
-                    @endif
+                        @endif
 
-
-                    {{-- ================================================= --}}
-                    {{-- REFUND --}}
-                    {{-- ================================================= --}}
-
-                    @if($isCancelled)
+                        @if($canRefund && !$isRefunded)
 
                         <hr>
-
 
                         <div class="text-center">
 
                             <h6 class="mb-3">
                                 Refund
                             </h6>
-
 
                             <p class="text-muted">
-
-                                This order has been cancelled.
+                                This order has been returned.
                                 You can now process the refund.
-
                             </p>
 
-
                             <form
                                 action="{{ route('customer-orders.update-status', $order->id) }}"
                                 method="POST"
@@ -916,13 +634,12 @@
 
                                 @csrf
 
-                                <input type="hidden"
-                                       name="status"
-                                       value="7">
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="7">
 
-
-                                <button type="submit"
-                                        class="btn btn-dark">
+                                <button type="submit" class="btn btn-dark">
 
                                     <i class="fas fa-undo"></i>
 
@@ -934,64 +651,13 @@
 
                         </div>
 
-                    @endif
+                        @endif
 
-
-                    {{-- ================================================= --}}
-                    {{-- REFUND FOR DELIVERED --}}
-                    {{-- ================================================= --}}
-
-                    @if($currentStatus === 4)
-
-                        <hr>
-
+                        @if($isRefunded)
 
                         <div class="text-center">
 
-                            <h6 class="mb-3">
-                                Refund
-                            </h6>
-
-
-                            <form
-                                action="{{ route('customer-orders.update-status', $order->id) }}"
-                                method="POST"
-                                class="status-update-form d-inline"
-                                data-status-name="Refunded">
-
-                                @csrf
-
-                                <input type="hidden"
-                                       name="status"
-                                       value="7">
-
-
-                                <button type="submit"
-                                        class="btn btn-dark">
-
-                                    <i class="fas fa-undo"></i>
-
-                                    Refund Order
-
-                                </button>
-
-                            </form>
-
-                        </div>
-
-                    @endif
-
-
-                    {{-- ================================================= --}}
-                    {{-- ALREADY REFUNDED --}}
-                    {{-- ================================================= --}}
-
-                    @if($isRefunded)
-
-                        <div class="text-center">
-
-                            <span class="badge badge-dark"
-                                  style="font-size:15px;">
+                            <span class="badge badge-dark" style="font-size:15px;">
 
                                 <i class="fas fa-check-circle"></i>
 
@@ -1001,19 +667,29 @@
 
                         </div>
 
-                    @endif
+                        @endif
 
-
-                    {{-- ================================================= --}}
-                    {{-- FAILED --}}
-                    {{-- ================================================= --}}
-
-                    @if($isFailed)
+                        @if($isReturned)
 
                         <div class="text-center">
 
-                            <span class="badge badge-danger"
-                                  style="font-size:15px;">
+                            <span class="badge badge-warning" style="font-size:15px;">
+
+                                <i class="fas fa-undo"></i>
+
+                                Product Returned
+
+                            </span>
+
+                        </div>
+
+                        @endif
+
+                        @if($isFailed)
+
+                        <div class="text-center">
+
+                            <span class="badge badge-danger" style="font-size:15px;">
 
                                 <i class="fas fa-exclamation-circle"></i>
 
@@ -1023,7 +699,9 @@
 
                         </div>
 
-                    @endif
+                        @endif
+
+                    </div>
 
                 </div>
 
@@ -1031,65 +709,51 @@
 
         </div>
 
-    </div>
+        <div class="row">
 
+            <div class="col-12">
 
-    {{-- ========================================================= --}}
-    {{-- STATUS HISTORY --}}
-    {{-- ========================================================= --}}
+                <div class="card">
 
-    <div class="row">
+                    <div class="card-header">
+                        <h4>
+                            Status History
+                        </h4>
+                    </div>
 
-        <div class="col-12">
+                    <div class="card-body">
 
-            <div class="card">
+                        <div class="table-responsive">
 
-                <div class="card-header">
+                            <table class="table table-striped">
 
-                    <h4>
-                        Status History
-                    </h4>
+                                <thead>
 
-                </div>
+                                    <tr>
 
+                                        <th>
+                                            #
+                                        </th>
 
-                <div class="card-body">
+                                        <th>
+                                            Status
+                                        </th>
 
-                    <div class="table-responsive">
+                                        <th>
+                                            Updated By
+                                        </th>
 
-                        <table class="table table-striped">
+                                        <th>
+                                            Date & Time
+                                        </th>
 
-                            <thead>
+                                    </tr>
 
-                                <tr>
+                                </thead>
 
-                                    <th>
-                                        #
-                                    </th>
+                                <tbody>
 
-                                    <th>
-                                        Status
-                                    </th>
-
-                                    <th>
-                                        Updated By
-                                    </th>
-
-                                    <th>
-                                        Date & Time
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody>
-
-                                @forelse(
-                                    $order->statusHistories->sortByDesc('created_at')
-                                    as $history
-                                )
+                                    @forelse($order->statusHistories->sortByDesc('created_at') as $history)
 
                                     <tr>
 
@@ -1097,122 +761,113 @@
                                             {{ $loop->iteration }}
                                         </td>
 
-
                                         <td>
 
                                             @switch((int) $history->status)
 
-                                                @case(0)
+                                            @case(0)
 
-                                                    <span class="badge badge-warning">
-                                                        Pending
-                                                    </span>
+                                            <span class="badge badge-warning">
+                                                Pending
+                                            </span>
 
-                                                    @break
+                                            @break
 
+                                            @case(1)
 
-                                                @case(1)
+                                            <span class="badge badge-info">
+                                                Confirmed
+                                            </span>
 
-                                                    <span class="badge badge-info">
-                                                        Confirmed
-                                                    </span>
+                                            @break
 
-                                                    @break
+                                            @case(2)
 
+                                            <span class="badge badge-primary">
+                                                Processing
+                                            </span>
 
-                                                @case(2)
+                                            @break
 
-                                                    <span class="badge badge-primary">
-                                                        Processing
-                                                    </span>
+                                            @case(3)
 
-                                                    @break
+                                            <span class="badge badge-info">
+                                                Shipped
+                                            </span>
 
+                                            @break
 
-                                                @case(3)
+                                            @case(4)
 
-                                                    <span class="badge badge-info">
-                                                        Shipped
-                                                    </span>
+                                            <span class="badge badge-success">
+                                                Delivered
+                                            </span>
 
-                                                    @break
+                                            @break
 
+                                            @case(5)
 
-                                                @case(4)
+                                            <span class="badge badge-danger">
+                                                Cancelled
+                                            </span>
 
-                                                    <span class="badge badge-success">
-                                                        Delivered
-                                                    </span>
+                                            @break
 
-                                                    @break
+                                            @case(6)
 
+                                            <span class="badge badge-danger">
+                                                Failed
+                                            </span>
 
-                                                @case(5)
+                                            @break
 
-                                                    <span class="badge badge-danger">
-                                                        Cancelled
-                                                    </span>
+                                            @case(7)
 
-                                                    @break
+                                            <span class="badge badge-dark">
+                                                Refunded
+                                            </span>
 
+                                            @break
 
-                                                @case(6)
+                                            @case(8)
 
-                                                    <span class="badge badge-danger">
-                                                        Failed
-                                                    </span>
+                                            <span class="badge badge-warning">
+                                                Returned
+                                            </span>
 
-                                                    @break
-
-
-                                                @case(7)
-
-                                                    <span class="badge badge-dark">
-                                                        Refunded
-                                                    </span>
-
-                                                    @break
+                                            @break
 
                                             @endswitch
 
                                         </td>
 
-
                                         <td>
-
                                             {{ $history->updatedBy->name ?? 'System' }}
-
                                         </td>
 
-
                                         <td>
-
-                                            {{ $history->created_at
-                                                ? $history->created_at->format('d-m-Y h:i A')
-                                                : '-' }}
-
+                                            {{ $history->created_at ? $history->created_at->format('d-m-Y h:i A') : '-' }}
                                         </td>
 
                                     </tr>
 
-                                @empty
+                                    @empty
 
                                     <tr>
 
-                                        <td colspan="4"
-                                            class="text-center">
-
+                                        <td colspan="4" class="text-center">
                                             No status history found.
-
                                         </td>
 
                                     </tr>
 
-                                @endforelse
+                                    @endforelse
 
-                            </tbody>
+                                </tbody>
 
-                        </table>
+                            </table>
+
+                        </div>
 
                     </div>
 
@@ -1223,10 +878,6 @@
         </div>
 
     </div>
-
-</div>
-```
-
 </section>
 
 @endsection
@@ -1235,73 +886,61 @@
 
 <script>
 
-    $(document).ready(function() {
+$(document).ready(function() {
 
-        $('.status-update-form').on('submit', function(e) {
+    $('.status-update-form').on('submit', function(e) {
 
-            e.preventDefault();
+        e.preventDefault();
 
-            let form = this;
+        let form = this;
+        let statusName = $(form).data('status-name');
+        let message = '';
 
-            let statusName = $(form).data('status-name');
+        if (statusName === 'Refunded') {
 
+            message = 'This order will be marked as refunded. Are you sure you want to continue?';
 
-            let message = '';
+        } else if (statusName === 'Failed') {
 
-            if (statusName === 'Cancelled') {
+            message = 'This order will be marked as failed.';
 
-                message =
-                    'This order will be cancelled. You can refund it after cancellation.';
+        } else {
 
-            } else if (statusName === 'Refunded') {
+            message = 'The order status will be changed to ' + statusName + '.';
 
-                message =
-                    'This order will be marked as refunded. Are you sure you want to continue?';
+        }
 
-            } else if (statusName === 'Failed') {
+        Swal.fire({
 
-                message =
-                    'This order will be marked as failed.';
+            title: 'Are you sure?',
 
-            } else {
+            text: message,
 
-                message =
-                    'The order status will be changed to ' + statusName + '.';
+            icon: 'warning',
+
+            showCancelButton: true,
+
+            confirmButtonColor: '#6777ef',
+
+            cancelButtonColor: '#fc544b',
+
+            confirmButtonText: 'Yes, continue',
+
+            cancelButtonText: 'Cancel'
+
+        }).then(function(result) {
+
+            if (result.isConfirmed) {
+
+                form.submit();
 
             }
-
-
-            Swal.fire({
-
-                title: 'Are you sure?',
-
-                text: message,
-
-                icon: 'warning',
-
-                showCancelButton: true,
-
-                confirmButtonColor: '#6777ef',
-
-                cancelButtonColor: '#fc544b',
-
-                confirmButtonText: 'Yes, continue',
-
-                cancelButtonText: 'Cancel'
-
-            }).then(function(result) {
-
-                if (result.isConfirmed) {
-
-                    form.submit();
-
-                }
-
-            });
 
         });
 
     });
+
+});
 
 </script>
 

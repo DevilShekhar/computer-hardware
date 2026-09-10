@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\GstController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\OrderManagementController;
+use App\Http\Controllers\Admin\MyOrderController;
 use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -88,6 +89,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/customer-orders', [OrderManagementController::class, 'index'])->name('customer-orders.index');
     Route::get('/customer-orders/{order}', [OrderManagementController::class, 'show'])->name('customer-orders.show');
     Route::post('/customer-orders/{order}/status', [OrderManagementController::class, 'updateStatus'])->name('customer-orders.update-status');
+    Route::get('/my-orders', [MyOrderController::class, 'index'])->name('my-orders');
+    Route::get('/my-orders/{order}', [MyOrderController::class, 'show'])->name('my-orders.show');
+    Route::put('/my-orders/{order}/cancel', [MyOrderController::class, 'cancel'])->name('my-orders.cancel');
+    Route::put('/my-orders/{id}/return', [MyOrderController::class, 'returnOrder'])->name('my-orders.return');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
