@@ -353,61 +353,81 @@
                             </table>
                         </div>
                         <div class="payment-method">
-    <h4 class="payment-title">Payment Method</h4>
+                            <h4 class="payment-title">Payment Method</h4>
 
-    <div class="payment-options">
+                            <div class="payment-options">
 
-        <label class="payment-option {{ old('payment_method', 'cod') == 'cod' ? 'selected' : '' }}">
-            <input type="radio"
-                   name="payment_method"
-                   value="cod"
-                   class="payment-radio"
-                   {{ old('payment_method', 'cod') == 'cod' ? 'checked' : '' }}>
+                                <label class="payment-option {{ old('payment_method', 'cod') == 'cod' ? 'selected' : '' }}">
+                                    <input type="radio"
+                                        name="payment_method"
+                                        value="cod"
+                                        class="payment-radio"
+                                        {{ old('payment_method', 'cod') == 'cod' ? 'checked' : '' }}>
 
-            <span class="payment-radio-mark"></span>
+                                    <span class="payment-radio-mark"></span>
 
-            <div class="payment-option-body">
-                <div class="payment-option-head">
-                    <span class="payment-option-title">Cash on Delivery</span>
-                </div>
-                <p class="payment-option-desc">Pay when your order is delivered.</p>
-            </div>
-        </label>
+                                    <div class="payment-option-body">
+                                        <div class="payment-option-head">
+                                            <span class="payment-option-title">Cash on Delivery</span>
+                                        </div>
+                                        <p class="payment-option-desc">Pay when your order is delivered.</p>
+                                    </div>
+                                </label>
 
-        <label class="payment-option {{ old('payment_method') == 'razorpay' ? 'selected' : '' }}">
-            <input type="radio"
-                   name="payment_method"
-                   value="razorpay"
-                   class="payment-radio"
-                   {{ old('payment_method') == 'razorpay' ? 'checked' : '' }}>
+                                <label class="payment-option {{ old('payment_method') == 'razorpay' ? 'selected' : '' }}">
+                                    <input type="radio"
+                                        name="payment_method"
+                                        value="razorpay"
+                                        class="payment-radio"
+                                        {{ old('payment_method') == 'razorpay' ? 'checked' : '' }}>
 
-            <span class="payment-radio-mark"></span>
+                                    <span class="payment-radio-mark"></span>
 
-            <div class="payment-option-body">
-                <div class="payment-option-head">
-                    <span class="payment-option-title">Online Payment (Razorpay)</span>
-                </div>
-                <p class="payment-option-desc">Pay securely using UPI, Card, Netbanking, Wallet.</p>
-            </div>
-        </label>
+                                    <div class="payment-option-body">
+                                        <div class="payment-option-head">
+                                            <span class="payment-option-title">Online Payment (Razorpay)</span>
+                                        </div>
+                                        <p class="payment-option-desc">Pay securely using UPI, Card, Netbanking, Wallet.</p>
+                                    </div>
+                                </label>
 
-    </div>
+                                <label class="payment-option payment-option-disabled">
+                                    <input type="radio"
+                                        name="payment_method"
+                                        value="snapmint_emi"
+                                        class="payment-radio"
+                                        disabled>
 
-    @error('payment_method')
-        <div class="text-danger mt-2">{{ $message }}</div>
-    @enderror
+                                    <span class="payment-radio-mark"></span>
 
-    <div class="order-button-payment">
-        <input value="Place order" type="submit" id="placeOrderBtn">
-    </div>
+                                    <div class="payment-option-body">
+                                        <div class="payment-option-head">
+                                            <span class="payment-option-title">
+                                                Snapmint EMI
+                                                <span class="payment-option-badge">Coming Soon</span>
+                                            </span>
+                                        </div>
+                                        <p class="payment-option-desc">This payment method will be available in the future. Stay tuned!</p>
+                                    </div>
+                                </label>
 
-    <div class="checkout-loader text-center mt-3" id="checkoutLoader" style="display:none;">
-        <div class="checkout-spinner"
-            style="width:30px;height:30px;border:3px solid #ddd;border-top-color:#2878f0;border-radius:50%;animation:checkoutSpin .7s linear infinite;margin:auto;">
-        </div>
-        <p class="mt-2 text-muted">Processing your order...</p>
-    </div>
-</div>
+                            </div>
+
+                            @error('payment_method')
+                                <div class="text-danger mt-2">{{ $message }}</div>
+                            @enderror
+
+                            <div class="order-button-payment">
+                                <input value="Place order" type="submit" id="placeOrderBtn">
+                            </div>
+
+                            <div class="checkout-loader text-center mt-3" id="checkoutLoader" style="display:none;">
+                                <div class="checkout-spinner"
+                                    style="width:30px;height:30px;border:3px solid #ddd;border-top-color:#2878f0;border-radius:50%;animation:checkoutSpin .7s linear infinite;margin:auto;">
+                                </div>
+                                <p class="mt-2 text-muted">Processing your order...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -506,116 +526,7 @@
         </form>
     </div>
 </div>
-<style>
-.payment-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #222;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
 
-.payment-options {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 18px;
-}
-
-.payment-option {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background: #fff;
-    cursor: pointer;
-    transition: border-color .15s, background .15s, box-shadow .15s;
-    margin-bottom: 0;
-    position: relative;
-}
-
-.payment-option:hover {
-    border-color: #2878f0;
-    background: #f9fbff;
-}
-
-.payment-option.selected {
-    border-color: #2878f0;
-    background: #f0f7ff;
-    box-shadow: 0 0 0 3px rgba(40, 120, 240, 0.08);
-}
-
-.payment-radio {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    width: 0;
-    height: 0;
-}
-
-.payment-radio-mark {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid #b5b5b5;
-    background: #fff;
-    display: inline-block;
-    position: relative;
-    margin-top: 1px;
-    transition: border-color .15s;
-}
-
-.payment-radio-mark::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #2878f0;
-    transition: transform .15s;
-}
-
-.payment-option.selected .payment-radio-mark {
-    border-color: #2878f0;
-}
-
-.payment-option.selected .payment-radio-mark::after {
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.payment-option-body {
-    flex: 1;
-    min-width: 0;
-}
-
-.payment-option-head {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-}
-
-.payment-option-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #222;
-    line-height: 1.3;
-}
-
-.payment-option-desc {
-    font-size: 13px;
-    color: #666;
-    margin: 0;
-    line-height: 1.45;
-}
-</style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -932,7 +843,7 @@
                     key: data.razorpay_key,
                     amount: data.amount,
                     currency: data.currency || 'INR',
-                    name: 'Aethelweave',
+                    name: '{{ config('app.name') }}',
                     description: 'Order Payment',
                     order_id: data.razorpay_order_id,
                     prefill: {
