@@ -551,7 +551,7 @@
             if (typeof window.showToast === 'function') {
                 window.showToast(message, type);
             } else {
-                alert(message);
+                Swal.fire({ icon: type, text: message });
             }
         }
 

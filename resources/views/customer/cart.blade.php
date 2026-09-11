@@ -184,7 +184,7 @@
                     window.showToast(message, type);
                     return;
                 }
-                alert(message);
+                Swal.fire({ icon: type, text: message });
             }
 
             function formatPrice(amount) {

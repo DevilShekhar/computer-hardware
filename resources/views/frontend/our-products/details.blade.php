@@ -338,60 +338,48 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="single-add-to-cart">
-                            <form action="{{ url('/cart/add/' . $product->id) }}" method="POST" class="cart-quantity">
-                                @csrf
-                                <div class="quantity">
-                                    <label>Quantity</label>
-                                    <div class="cart-plus-minus">
-                                        <input class="cart-plus-minus-box" name="quantity" value="1" type="text" min="1"
-                                            max="{{ $product->stock_quantity }}">
-                                        <div class="dec qtybutton">
-                                            <i class="fa fa-angle-down"></i>
-                                        </div>
-                                        <div class="inc qtybutton">
-                                            <i class="fa fa-angle-up"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                @php
-                                    $primaryImage = $product->images->where('is_primary', true)->first();
+                        <div class="d-flex align-items-center">
+                            <div class="single-add-to-cart">
+                                <form action="{{ url('/cart/add/' . $product->id) }}" method="POST" class="cart-quantity">
+                                    @csrf
+                                    @php
+                                        $primaryImage = $product->images->where('is_primary', true)->first();
+                                        if (!$primaryImage) {
+                                            $primaryImage = $product->images->first();
+                                        }
+                                    @endphp
+                                    <button class="add-to-cart add-cart active cart-btn {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}"
+                                        type="button"
+                                        data-product-id="{{ $product->id }}"
+                                        data-product-name="{{ $product->name }}"
+                                        data-product-slug="{{ $product->slug }}"
+                                        data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                        data-product-image="{{ $primaryImage && $primaryImage->image
+                                            ? asset('storage/' . $primaryImage->image)
+                                            : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
+                                         {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}>
 
-                                    if (!$primaryImage) {
-                                        $primaryImage = $product->images->first();
-                                    }
-                                @endphp
-                                <button class="add-to-cart add-cart active cart-btn {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}"
-                                    type="button"
-                                    data-product-id="{{ $product->id }}"
-                                    data-product-name="{{ $product->name }}"
-                                    data-product-slug="{{ $product->slug }}"
-                                    data-product-price="{{ $product->sale_price ?? $product->price }}"
-                                    data-product-image="{{ $primaryImage && $primaryImage->image
-                                        ? asset('storage/' . $primaryImage->image)
-                                        : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}"
-                                    {{ $product->stock_quantity <= 0 ? 'disabled' : '' }}>
-
-                                    <a href="javascript:void(0);">
-                                        {{ $product->stock_quantity > 0 ? 'Add to cart' : 'Out of stock' }}
-                                    </a>
-                                </button>
-                            </form>
-                        </div>
-                        <div class="product-additional-info pt-25">
+                                        <a href="javascript:void(0);">
+                                            {{ $product->stock_quantity > 0 ? 'Add to cart' : 'Out of stock' }}
+                                        </a>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="product-additional-info">
                             <a class="wishlist-btn"
-                            href="javascript:void(0);"
-                            data-product-id="{{ $product->id }}"
-                            data-product-name="{{ $product->name }}"
-                            data-product-slug="{{ $product->slug }}"
-                            data-product-price="{{ $product->sale_price ?? $product->price }}"
-                            data-product-image="{{ $primaryImage && $primaryImage->image
+                                href="javascript:void(0);"
+                                title="Add to Wishlist"
+                                data-product-id="{{ $product->id }}"
+                                data-product-name="{{ $product->name }}"
+                                data-product-slug="{{ $product->slug }}"
+                                data-product-price="{{ $product->sale_price ?? $product->price }}"
+                                data-product-image="{{ $primaryImage && $primaryImage->image
                                     ? asset('storage/' . $primaryImage->image)
                                     : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
 
-                                <i class="fa fa-heart-o"></i>
-                                <span class="wishlist-text">Add to wishlist</span>
+                                <i class="fa fa-heart-o" style="font-size: 30px;margin-top: 26px;"></i>
                             </a>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -742,11 +730,11 @@
                                                             </label>
                                                             <span>
                                                                 <select class="star-rating" name="rating" required>
-                                                                    <option value="5">5</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="2">2</option>
                                                                     <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="5">5</option>
                                                                 </select>
                                                             </span>
                                                         </p>
@@ -899,7 +887,17 @@
                                                     <a href="javascript:void(0);">Add to cart</a>
                                                 </li>
                                                 <li>
-                                                    <a class="links-details" href="#">
+                                                    <a class="links-details wishlist-btn"
+                                                    href="javascript:void(0);"
+                                                    title="Add to Wishlist"
+                                                    data-product-id="{{ $relatedProduct->id }}"
+                                                    data-product-name="{{ $relatedProduct->name }}"
+                                                    data-product-slug="{{ $relatedProduct->slug }}"
+                                                    data-product-price="{{ $relatedProduct->sale_price ?? $relatedProduct->price }}"
+                                                    data-product-image="{{ $relatedProduct->images->first() && $relatedProduct->images->first()->image
+                                                        ? asset('storage/' . $relatedProduct->images->first()->image)
+                                                        : asset('assets/frontend/assets/images/product/large-size/1.jpg') }}">
+
                                                         <i class="fa fa-heart-o"></i>
                                                     </a>
                                                 </li>
