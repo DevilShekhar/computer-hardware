@@ -1,3 +1,4 @@
+@can('product-category-show')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -113,3 +114,8 @@
     </div>
 </section>
 @endsection
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

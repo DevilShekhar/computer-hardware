@@ -1,3 +1,4 @@
+@can('product-review-index')
 @extends('admin.layouts.app')
 @section('content')
 
@@ -98,29 +99,36 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                @if($review->status == 0)
-                                                <form action="{{ route('product-review.approve', $review->id) }}"
-                                                    method="POST"
-                                                    class="approve-review-form mr-1">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="btn btn-success btn-sm"
-                                                        title="Approve">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                </form>
-                                                @else
-                                                <form action="{{ route('product-review.reject', $review->id) }}"
-                                                    method="POST"
-                                                    class="reject-review-form">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="btn btn-danger btn-sm"
-                                                        title="Reject">
-                                                        <i class="fas fa-ban"></i>
-                                                    </button>
-                                                </form>
-                                                @endif
+                                                @can('product-review-approve')
+                                                    @if($review->status == 0)
+                                                        <form action="{{ route('product-review.approve', $review->id) }}"
+                                                            method="POST"
+                                                            class="approve-review-form mr-1">
+                                                            @csrf
+
+                                                            <button type="submit"
+                                                                    class="btn btn-success btn-sm"
+                                                                    title="Approve">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                @endcan
+                                                @can('product-review-reject')
+                                                    @if($review->status == 1)
+                                                        <form action="{{ route('product-review.reject', $review->id) }}"
+                                                            method="POST"
+                                                            class="reject-review-form">
+                                                            @csrf
+
+                                                            <button type="submit"
+                                                                    class="btn btn-danger btn-sm"
+                                                                    title="Reject">
+                                                                <i class="fas fa-ban"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -222,3 +230,8 @@
 
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

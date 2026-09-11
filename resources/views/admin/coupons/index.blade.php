@@ -1,4 +1,4 @@
-{{-- @can('coupons-index') --}}
+@can('coupon-index')
 @extends('admin.layouts.app')
 
 @section('title', 'Coupon Management')
@@ -102,13 +102,12 @@
                                                 </td>
                                                 <td>
                                                     <div class="d-flex align-items-center justify-content-center">
-                                                        {{-- Edit --}}
-                                                        <a href="{{ route('coupons.edit', $coupon->id) }}"
-                                                            class="btn btn-primary btn-sm mr-1" title="Edit">
+                                                        @can('coupon-edit')
+                                                        <a href="{{ route('coupons.edit', $coupon->id) }}" class="btn btn-primary btn-sm mr-1" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-
-                                                        {{-- Delete --}}
+                                                        @endcan
+                                                        @can('coupon-destroy')
                                                         <form action="{{ route('coupons.destroy', $coupon->id) }}" method="POST"
                                                             class="d-inline delete-coupon-form">
                                                             @csrf
@@ -118,6 +117,7 @@
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
+                                                        @endcan
                                                     </div>
                                                 </td>
                                             </tr>
@@ -202,9 +202,8 @@
         @endif
     </script>
 @endpush
-
-{{-- @else
-@php
-abort(403);
-@endphp
-@endcan --}}
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

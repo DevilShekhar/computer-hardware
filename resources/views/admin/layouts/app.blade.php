@@ -263,7 +263,7 @@
                                 <span>Dashboard</span>
                             </a>
                         </li>
-
+                        @can('user-manage')
                         <li class="dropdown {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="users"></i>
@@ -282,6 +282,8 @@
                                 </li>
                             </ul>
                         </li>
+                        @endcan
+                        @can('roles-manage')
                         <li class="dropdown {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="shield"></i>
@@ -300,6 +302,8 @@
                                 </li>
                             </ul>
                         </li>
+                        @endcan
+                        @can('order-management')
                         <li class="dropdown {{ request()->routeIs('customer-orders.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="shopping-bag"></i>
@@ -361,106 +365,148 @@
                                 </li>
                             </ul>
                         </li>
+                        @endcan
+                        @can('my-order-manage')
                         <li class="{{ request()->routeIs('my-orders*') ? 'active' : '' }}">
                             <a href="{{ route('my-orders') }}" class="nav-link">
                                 <i data-feather="shopping-bag"></i>
                                 <span>My Orders</span>
                             </a>
                         </li>
-                        <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="package"></i>
-                                <span>Products</span>
-                            </a>
-
-                            <ul class="dropdown-menu">
-
-                                <li class="{{ request()->routeIs('product-brands.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('product-brands.index') }}">
-                                        Brands
-                                    </a>
-                                </li>
-
-                                <li class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('categories.index') }}">
-                                        Categories
-                                    </a>
-                                </li>
-
-                                <li class="{{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('sub-categories.index') }}">
-                                        Sub Categories
-                                    </a>
-                                </li>
-
-                                <li class="{{ request()->routeIs('products.index', 'products.create', 'products.edit', 'products.show') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.index') }}">
-                                        Products
-                                    </a>
-                                </li>
-
-                                <li class="{{ request()->routeIs('products.stock') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.stock') }}">
-                                        Stock Management
-                                    </a>
-                                </li>
-
-                                <li class="{{ request()->routeIs('products.inventory-history', 'products.inventory-history.data') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('products.inventory-history') }}">
-                                        Inventory History
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li>
-
-                       <li class="{{ request()->routeIs('builder-types.*', 'builder-products.*') ? 'active' : '' }}">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="cpu"></i>
-                                <span>PC Builder</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="{{ request()->routeIs('builder-types.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('builder-types.index') }}">
-                                        PC Builder Type
-                                    </a>
-                                </li>
-                                <li class="{{ request()->routeIs('builder-products.*') ? 'active' : '' }}">
-                                    <a class="nav-link" href="{{ route('builder-products.index') }}">
-                                        PC Builder Product
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
+                        @endcan
+                        @can('promotional-banner-manage')
+                            <li class="{{ request()->routeIs('promotional-banners.*') ? 'active' : '' }}">
+                                <a href="{{ route('promotional-banners.index') }}" class="nav-link">
+                                    <i data-feather="image"></i>
+                                    <span>Promotional Banners</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('gst-manage')
+                            <li class="{{ request()->routeIs('gsts.*') ? 'active' : '' }}">
+                                <a href="{{ route('gsts.index') }}" class="nav-link">
+                                    <i data-feather="percent"></i>
+                                    <span>GST</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('product-manage')
+                            <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
+                                <a href="#" class="menu-toggle nav-link has-dropdown">
+                                    <i data-feather="package"></i>
+                                    <span>Products</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @can('product-brand-manage')
+                                        <li class="{{ request()->routeIs('product-brands.*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('product-brands.index') }}">
+                                                Brands
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('product-category-manage')
+                                        <li class="{{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('categories.index') }}">
+                                                Categories
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('product-sub-category-manage')
+                                        <li class="{{ request()->routeIs('sub-categories.*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('sub-categories.index') }}">
+                                                Sub Categories
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('product-manage')
+                                        <li class="{{ request()->routeIs('products.index', 'products.create', 'products.edit', 'products.show') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('products.index') }}">
+                                                Products
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('product-manage')
+                                        <li class="{{ request()->routeIs('products.stock') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('products.stock') }}">
+                                                Stock Management
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('product-inventory-history-manage')
+                                        <li class="{{ request()->routeIs('products.inventory-history', 'products.inventory-history.data') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('products.inventory-history') }}">
+                                                Inventory History
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('pc-builder-manage')
+                            <li class="{{ request()->routeIs('builder-types.*', 'builder-products.*') ? 'active' : '' }}">
+                                <a href="#" class="menu-toggle nav-link has-dropdown">
+                                    <i data-feather="cpu"></i>
+                                    <span>PC Builder</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @can('pc-builder-type-manage')
+                                        <li class="{{ request()->routeIs('builder-types.*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('builder-types.index') }}">
+                                                PC Builder Type
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('pc-builder-product-manage')
+                                        <li class="{{ request()->routeIs('builder-products.*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('builder-products.index') }}">
+                                                PC Builder Product
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('product-review-manage')
                         <li class="{{ request()->routeIs('product-review.*') ? 'active' : '' }}">
                             <a href="{{ route('product-review.index') }}" class="nav-link">
                                 <i data-feather="star"></i>
                                 <span>Product Reviews</span>
                             </a>
                         </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="tag"></i>
-                                <span>Coupons</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="{{ route('coupons.index') }}">Coupon List</a></li>
-                            </ul>
-                        </li>
+                        @endcan
+                        @can('coupon-manage')
+                            <li class="dropdown">
+                                <a href="#" class="menu-toggle nav-link has-dropdown">
+                                    <i data-feather="tag"></i>
+                                    <span>Coupons</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    @can('coupon-index')
+                                        <li class="{{ request()->routeIs('coupons.index') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('coupons.index') }}">
+                                                Coupon List
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('contact-manage')
                         <li class="{{ request()->routeIs('admin.contact-submissions.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.contact-submissions.index') }}" class="nav-link">
                                 <i data-feather="mail"></i>
                                 <span>Contact Submissions</span>
                             </a>
                         </li>
+                        @endcan
+                        @can('address-manage')
                         <li class="{{ request()->routeIs('addresses.*') ? 'active' : '' }}">
                             <a href="{{ route('addresses.index') }}" class="nav-link">
                                 <i data-feather="settings"></i>
                                 <span>Address Setting</span>
                             </a>
                         </li>
+                        @endcan
                         <li class="{{ request()->routeIs('checkout.index.*') ? 'active' : '' }}">
                             <a href="{{ route('checkout.index') }}" class="nav-link">
                                 <i data-feather="shopping-cart"></i>
@@ -472,72 +518,6 @@
                                 <i data-feather="shopping-cart"></i>
                                 <span>Explore More</span>
                             </a>
-                        </li>
-                        <li class="menu-header">Pages</li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="user-check"></i>
-                                <span>Auth</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="auth-login.html">Login</a></li>
-                                <li><a href="auth-register.html">Register</a></li>
-                                <li><a href="auth-forgot-password.html">Forgot Password</a></li>
-                                <li><a href="auth-reset-password.html">Reset Password</a></li>
-                                <li><a href="subscribe.html">Subscribe</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="alert-triangle"></i>
-                                <span>Errors</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="errors-503.html">503</a></li>
-                                <li><a class="nav-link" href="errors-403.html">403</a></li>
-                                <li><a class="nav-link" href="errors-404.html">404</a></li>
-                                <li><a class="nav-link" href="errors-500.html">500</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="anchor"></i>
-                                <span>Other Pages</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="create-post.html">Create Post</a></li>
-                                <li><a class="nav-link" href="posts.html">Posts</a></li>
-                                <li><a class="nav-link" href="profile.html">Profile</a></li>
-                                <li><a class="nav-link" href="contact.html">Contact</a></li>
-                                <li><a class="nav-link" href="invoice.html">Invoice</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="dropdown">
-                            <a href="#" class="menu-toggle nav-link has-dropdown">
-                                <i data-feather="chevrons-down"></i>
-                                <span>Multilevel</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Menu 1</a></li>
-                                <li class="dropdown">
-                                    <a href="#" class="has-dropdown">Menu 2</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Child Menu 1</a></li>
-                                        <li class="dropdown">
-                                            <a href="#" class="has-dropdown">Child Menu 2</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Child Menu 1</a></li>
-                                                <li><a href="#">Child Menu 2</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Child Menu 3</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                 </aside>

@@ -1,3 +1,4 @@
+@can('coupon-create')
 @extends('admin.layouts.app')
 @section('title', 'Create Coupon')
 
@@ -264,3 +265,8 @@
 </section>
 
 @endsection
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

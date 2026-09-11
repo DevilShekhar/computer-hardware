@@ -1,3 +1,4 @@
+@can('roles-assign-permission')
 @extends('admin.layouts.app')
 
 @section('title', 'Manage Permissions - ' . $role->name)
@@ -268,4 +269,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
-
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

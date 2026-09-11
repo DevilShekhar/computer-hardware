@@ -1,3 +1,4 @@
+@can('gst-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -56,12 +57,16 @@
                                         <td> {{ $gst->updated_at ? $gst->updated_at->format('d-m-Y') : '-' }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
+                                                @can('gst-show')
                                                 <a href="{{ route('gsts.show', $gst->id) }}" class="btn btn-info btn-sm mr-1" title="View">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @endcan
+                                                @can('gst-edit')
                                                 <a href="{{ route('gsts.edit', $gst->id) }}" class="btn btn-primary btn-sm"  title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -122,3 +127,8 @@
 </script>
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

@@ -1,4 +1,4 @@
-{{-- @can('roles-index') --}}
+@can('roles-index')
 @extends('admin.layouts.app')
 
 @section('title', 'Role Management')
@@ -177,8 +177,8 @@
     @endif
 </script>
 @endpush
-{{-- @else
+@else
     @php
         abort(403);
     @endphp
-@endcan --}}
+@endcan

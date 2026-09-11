@@ -1,3 +1,4 @@
+@can('pc-builder-product-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -240,12 +241,17 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex align-items-center">
+                                                    @can('pc-builder-product-show')
                                                     <a href="{{ route('builder-products.show',$builderProduct->id) }}" class="btn btn-info btn-sm mr-1" title="View">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    @endcan
+                                                    @can('pc-builder-product-edit')
                                                     <a href="{{ route('builder-products.edit',$builderProduct->id) }}" class="btn btn-primary btn-sm mr-1" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    @endcan
+                                                    @can('pc-builder-product-destroy')
                                                     @if($builderProduct->status)
                                                         <form action="{{ route('builder-products.destroy',$builderProduct->id) }}" method="POST" class="delete-builder-product-form">
                                                             @csrf
@@ -268,6 +274,7 @@
                                                             </button>
                                                         </form>
                                                     @endif
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>
@@ -374,3 +381,8 @@
 </script>
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

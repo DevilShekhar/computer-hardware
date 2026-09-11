@@ -1,3 +1,4 @@
+@can('product-create')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -540,3 +541,8 @@ $(document).ready(function() {
 });
 </script>
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

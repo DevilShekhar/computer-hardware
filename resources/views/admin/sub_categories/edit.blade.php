@@ -1,3 +1,4 @@
+@can('product-sub-category-edit')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -180,3 +181,8 @@
     });
 </script>
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

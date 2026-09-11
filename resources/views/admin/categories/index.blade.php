@@ -1,3 +1,4 @@
+@can('product-category-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -74,16 +75,17 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <a href="{{ route('categories.show', $category->id) }}"
-                                                    class="btn btn-info btn-sm mr-1"
-                                                    title="View">
+                                                @can('product-category-show')
+                                                <a href="{{ route('categories.show', $category->id) }}"class="btn btn-info btn-sm mr-1" title="View">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('categories.edit', $category->id) }}"
-                                                    class="btn btn-primary btn-sm mr-1"
-                                                    title="Edit">
+                                                @endcan
+                                                @can('product-category-edit')
+                                                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-primary btn-sm mr-1"  title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
+                                                @can('product-category-destroy')
                                                 @if($category->status)
                                                 <form action="{{ route('categories.destroy', $category->id) }}"
                                                     method="POST"
@@ -103,6 +105,7 @@
                                                     <i class="fas fa-check"></i>
                                                 </a>
                                                 @endif
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>
@@ -178,3 +181,8 @@
 </script>
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

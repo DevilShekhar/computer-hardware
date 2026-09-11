@@ -1,3 +1,4 @@
+@can('promotional-banner-index')
 @extends('admin.layouts.app')
 
 @section('content')
@@ -65,29 +66,36 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
+                                                @can('promotional-banner-show')
                                                 <a href="{{ route('promotional-banners.show', $banner->id) }}" class="btn btn-info btn-sm mr-1" title="View">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @endcan
+                                                @can('promotional-banner-edit')
                                                 <a href="{{ route('promotional-banners.edit', $banner->id) }}" class="btn btn-primary btn-sm mr-1" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-
+                                                @endcan
                                                 @if($banner->status)
-                                                    <form action="{{ route('promotional-banners.destroy', $banner->id) }}" method="POST" class="delete-banner-form">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm" title="Deactivate">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
+                                                    @can('promotional-banner-destroy')
+                                                        <form action="{{ route('promotional-banners.destroy', $banner->id) }}" method="POST" class="delete-banner-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm" title="Deactivate">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endcan
                                                 @else
-                                                    <form action="{{ route('promotional-banners.activate', $banner->id) }}" method="POST" class="activate-banner-form">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="btn btn-success btn-sm" title="Activate">
-                                                            <i class="fas fa-check"></i>
-                                                        </button>
-                                                    </form>
+                                                    @can('promotional-banner-edit')
+                                                        <form action="{{ route('promotional-banners.activate', $banner->id) }}" method="POST" class="activate-banner-form">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="btn btn-success btn-sm" title="Activate">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endcan
                                                 @endif
                                             </div>
                                         </td>
@@ -180,3 +188,8 @@ Swal.fire({
 @endif
 </script>
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan
