@@ -519,6 +519,12 @@
                                 <span>Explore More</span>
                             </a>
                         </li>
+                        <li class="{{ request()->routeIs('refunded-orders.*') ? 'active' : '' }}">
+                            <a href="refunded-orders" class="nav-link">
+                                <i data-feather="shopping-cart"></i>
+                                <span>Refunded Orders</span>
+                            </a>
+                        </li>
                     </ul>
                 </aside>
             </div>

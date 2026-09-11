@@ -61,13 +61,33 @@ class MyOrderController extends Controller
     }
     public function returnOrder(Request $request, $id)
     {
-        $request->validate([ 'return_reason' => 'required|string|max:255', ]);
         $order = Order::where('id', $id) ->where('user_id', auth()->id()) ->firstOrFail();
         if ((int) $order->status !== 4)
             { return redirect() ->back() ->with('error', 'Only delivered orders can be returned.');
         }
+        $rules = [
+            'return_reason' => 'required|string|max:255',
+        ];
+        if ($order->payment_method === 'cod') {
+            $rules['customer_upi_id'] = 'required|string|max:100';
+        }
+        $validated = $request->validate($rules);
         $order->status = 8;
-        $order->return_reason = $request->return_reason;
+        $order->return_reason = $validated['return_reason'];
+        if ($order->payment_method === 'cod') {
+            $order->customer_upi_id = $validated['customer_upi_id'];
+        }
         $order->save();
          return redirect()->back() ->with('success', 'Return request submitted successfully.'); }
+
+    public function refundedOrders()
+    {
+        $orders = Order::where('user_id', auth()->id())
+            ->where('status', 7)
+            ->with(['user', 'items.product'])
+            ->latest('refunded_at')
+            ->get();
+
+        return view('admin.myorders.refund', compact('orders'));
+    }
 }
