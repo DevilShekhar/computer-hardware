@@ -24,6 +24,9 @@ class Order extends Model
         'payment_method',
         'payment_status',
         'status',
+        'cancel_reason',
+        'cancel_remark',
+        'cancelled_at',
         'order_notes',
         'ship_to_different',
         'shipping_name',
@@ -44,6 +47,7 @@ class Order extends Model
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'status' => 'integer',
+        'cancelled_at' => 'datetime',
     ];
 
     public function user()

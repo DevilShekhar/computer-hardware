@@ -387,15 +387,17 @@
                                 </span>
                             @endswitch
                         </div>
-                        @if($currentStatus === 0)
+                        @if(in_array($currentStatus, [0, 1]) && $order->created_at->diffInHours(now()) < 24)
                             <hr>
                             <div class="text-center">
                                 <h6 class="mb-3">
                                     Order Actions
                                 </h6>
-                                <form  action="{{ route('my-orders.cancel', $order->id) }}" method="POST" id="cancel-order-form">
+                                <form action="{{ route('my-orders.cancel', $order->id) }}" method="POST" id="cancel-order-form">
                                     @csrf
                                     @method('PUT')
+                                    <input type="hidden" name="cancel_reason" id="cancel_reason">
+                                    <input type="hidden" name="cancel_remark" id="cancel_remark">
                                     <button type="button" class="btn btn-danger" id="cancel-order-btn">
                                         <i class="fas fa-times"></i>
                                         Cancel Order
@@ -427,6 +429,40 @@
                                     <i class="fas fa-times-circle"></i>
                                     Order Cancelled
                                 </span>
+                            </div>
+                            <div class="mt-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>
+                                            Cancellation Reason
+                                        </strong>
+                                        <p class="mt-1 mb-0">
+                                            {{ $order->cancel_reason ?? '-' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <strong>
+                                            Cancellation Remark
+                                        </strong>
+                                        <p class="mt-1 mb-0">
+                                            {{ $order->cancel_remark ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                @if($order->cancelled_at)
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <strong>
+                                                Cancelled At
+                                            </strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $order->cancelled_at->format('d-m-Y h:i A') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         @endif
                         @if($isReturned)
@@ -468,6 +504,64 @@
     $(document).ready(function() {
         $('#cancel-order-btn').on('click', function() {
             Swal.fire({
+                title: 'Cancel Order',
+                html: `
+                    <select id="swal-cancel-reason" class="swal2-select" style="width:100%;margin:10px 0;">
+                        <option value="">Select cancellation reason</option>
+                        <option value="Changed my mind">Changed my mind</option>
+                        <option value="Ordered by mistake">Ordered by mistake</option>
+                        <option value="Found a better price">Found a better price</option>
+                        <option value="Product is no longer required">Product is no longer required</option>
+                        <option value="Want to change the product">Want to change the product</option>
+                        <option value="Delivery is taking too long">Delivery is taking too long</option>
+                        <option value="Payment issue">Payment issue</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <textarea id="swal-cancel-remark" class="swal2-textarea" placeholder="Enter remark (optional)" style="width:100%;margin:10px 0;"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#fc544b',
+                cancelButtonColor: '#6777ef',
+                confirmButtonText: 'Continue',
+                cancelButtonText: 'Cancel',
+                preConfirm: function() {
+                    const reason = $('#swal-cancel-reason').val();
+                    const remark = $('#swal-cancel-remark').val().trim();
+
+                    if (!reason) {
+                        Swal.showValidationMessage('Please select a cancellation reason.');
+                        return false;
+                    }
+
+                    return {
+                        reason: reason,
+                        remark: remark
+                    };
+                }
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $('#cancel_reason').val(result.value.reason);
+                    $('#cancel_remark').val(result.value.remark);
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'Do you really want to cancel this order?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#fc544b',
+                        cancelButtonColor: '#6777ef',
+                        confirmButtonText: 'Yes, Cancel Order',
+                        cancelButtonText: 'No'
+                    }).then(function(confirmResult) {
+                        if (confirmResult.isConfirmed) {
+                            $('#cancel-order-form').submit();
+                        }
+                    });
+                }
+            });
+        });
+        function confirmCancelOrder() {
+            Swal.fire({
                 title: 'Are you sure?',
                 text: 'Do you really want to cancel this order?',
                 icon: 'warning',
@@ -481,7 +575,7 @@
                     $('#cancel-order-form').submit();
                 }
             });
-        });
+        }
         $('#return-product-btn').on('click', function() {
             Swal.fire({
                 title: 'Return Product',
