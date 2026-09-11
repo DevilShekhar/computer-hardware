@@ -467,6 +467,12 @@
                                 <span>Go To Checkout</span>
                             </a>
                         </li>
+                        <li class="{{ request()->routeIs('checkout.index.*') ? 'active' : '' }}">
+                            <a href="/" class="nav-link">
+                                <i data-feather="shopping-cart"></i>
+                                <span>Explore More</span>
+                            </a>
+                        </li>
                         <li class="menu-header">Pages</li>
 
                         <li class="dropdown">

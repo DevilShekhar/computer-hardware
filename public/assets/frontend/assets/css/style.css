@@ -7976,3 +7976,111 @@ span.required {
 .minicart-product-list::-webkit-scrollbar {
     display: none;
 }
+.payment-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+    margin-bottom: 0;
+    position: relative;
+}
+
+.payment-option:hover {
+    border-color: #ea0505;
+    background: #fff8f8;
+}
+
+.payment-option.selected {
+    border-color: #ea0505;
+    background: #fff8f8;
+    box-shadow: 0 0 0 2px rgba(234, 5, 5, 0.12);
+}
+
+.payment-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+.payment-radio-mark {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #b5b5b5;
+    background: #fff;
+    display: inline-block;
+    position: relative;
+    margin-top: 1px;
+    transition: border-color .15s;
+}
+
+.payment-radio-mark::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ea0505;
+    transition: transform .15s;
+}
+
+.payment-option.selected .payment-radio-mark {
+    border-color: #ea0505;
+}
+
+.payment-option.selected .payment-radio-mark::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.payment-option-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.payment-option-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.payment-option-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+    line-height: 1.3;
+}
+
+.payment-option-desc {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.45;
+}
