@@ -489,7 +489,7 @@ class OrderController extends Controller
                 'total_amount'        => $pending['total_amount'],
                 'payment_method'      => 'razorpay',
                 'payment_status'      => 'paid',
-                'status'              => 1,
+                'status'              => 0,
                 'order_notes'         => $validated['order_notes'] ?? null,
                 'razorpay_order_id'   => $request->razorpay_order_id,
                 'razorpay_payment_id' => $request->razorpay_payment_id,

@@ -490,11 +490,8 @@
                             @case(5)
 
                             <span class="badge badge-danger" style="font-size:14px;">
-
                                 <i class="fas fa-times-circle"></i>
-
                                 Cancelled
-
                             </span>
 
                             @break
@@ -502,11 +499,8 @@
                             @case(6)
 
                             <span class="badge badge-danger" style="font-size:14px;">
-
                                 <i class="fas fa-exclamation-circle"></i>
-
                                 Failed
-
                             </span>
 
                             @break
@@ -514,11 +508,8 @@
                             @case(7)
 
                             <span class="badge badge-dark" style="font-size:14px;">
-
                                 <i class="fas fa-undo"></i>
-
                                 Refunded
-
                             </span>
 
                             @break
@@ -526,11 +517,8 @@
                             @case(8)
 
                             <span class="badge badge-warning" style="font-size:14px;">
-
                                 <i class="fas fa-undo"></i>
-
                                 Returned
-
                             </span>
 
                             @break
@@ -539,6 +527,38 @@
 
                         </div>
 
+                        @if($isCancelled)
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <strong>
+                                        Cancellation Reason
+                                    </strong>
+                                    <p class="mt-1 mb-0">
+                                        {{ $order->cancel_reason ?? '-' }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>
+                                        Cancellation Remark
+                                    </strong>
+                                    <p class="mt-1 mb-0">
+                                        {{ $order->cancel_remark ?? '-' }}
+                                    </p>
+                                </div>
+                            </div>
+                            @if($order->cancelled_at)
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <strong>
+                                            Cancelled At
+                                        </strong>
+                                        <p class="mt-1 mb-0">
+                                            {{ $order->cancelled_at->format('d-m-Y h:i A') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
                         @if(!$isCancelled && !$isFailed && !$isRefunded && !$isReturned && $currentStatus < 4)
 
                         @php
