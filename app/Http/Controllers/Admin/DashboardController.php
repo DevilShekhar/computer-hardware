@@ -61,9 +61,45 @@ class DashboardController extends Controller
                 ->where('status', 'cancelled')
                 ->count();
             $latestOrders = Order::with('user')
-            ->latest()
-            ->take(5)
-            ->get();
+                ->latest()
+                ->take(5)
+                ->get();
+            $latestPendingReviews = Review::with(['product.images', 'user'])
+                ->where('status', 0)
+                ->latest('created_at')
+                ->take(10)
+                ->get();
+            $monthlyOrdersData = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->whereYear('created_at', now()->year)
+                ->groupBy('month')
+                ->orderBy('month')
+                ->pluck('total', 'month');
+
+            $monthlySalesData = Order::selectRaw('MONTH(created_at) as month, SUM(total_amount) as total')
+                ->whereYear('created_at', now()->year)
+                ->where('status', '!=', 5)
+                ->groupBy('month')
+                ->orderBy('month')
+                ->pluck('total', 'month');
+
+            $monthlyOrders = collect(range(1, 12))->map(function ($month) use ($monthlyOrdersData) {
+                return [
+                    'month' => $month,
+                    'total' => (int) ($monthlyOrdersData[$month] ?? 0),
+                ];
+            });
+
+            $monthlySales = collect(range(1, 12))->map(function ($month) use ($monthlySalesData) {
+                return [
+                    'month' => $month,
+                    'total' => (float) ($monthlySalesData[$month] ?? 0),
+                ];
+            });
+
+            $orderStatus = Order::selectRaw('status, COUNT(*) as total')
+                ->groupBy('status')
+                ->orderBy('status')
+                ->get();
         }
 
         return view('admin.dashboard', compact(
@@ -82,7 +118,11 @@ class DashboardController extends Controller
             'shippedOrderCount',
             'deliveredOrderCount',
             'cancelledOrderCount',
-            'latestOrders'
+            'latestOrders',
+            'latestPendingReviews',
+            'monthlyOrders',
+            'monthlySales',
+            'orderStatus'
         ));
     }
 }

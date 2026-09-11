@@ -435,129 +435,40 @@
             </div>
             @endcan
         </div>
+         @can('dashboard-chart')
         <div class="row">
-            <div class="col-12 col-sm-12 col-lg-12">
-                <div class="card ">
+            <div class="col-12 col-sm-12 col-lg-4">
+                <div class="card dashboard-chart-card">
                     <div class="card-header">
-                        <h4>Revenue chart</h4>
-                        <div class="card-header-action">
-                            <div class="dropdown">
-                                <a href="#" data-toggle="dropdown" class="btn btn-warning dropdown-toggle">Options</a>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item has-icon"><i class="fas fa-eye"></i> View</a>
-                                    <a href="#" class="dropdown-item has-icon"><i class="far fa-edit"></i> Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="#" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>Delete</a>
-                                </div>
-                            </div>
-                            <a href="#" class="btn btn-primary">View All</a>
-                        </div>
+                        <h4>Order Status</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-9">
-                                <div id="chart1"></div>
-                                <div class="row mb-0">
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <div class="list-inline text-center">
-                                            <div class="list-inline-item p-r-30"><i data-feather="arrow-up-circle"  class="col-green"></i>
-                                                <h5 class="m-b-0">$675</h5>
-                                                <p class="text-muted font-14 m-b-0">Weekly Earnings</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <div class="list-inline text-center">
-                                            <div class="list-inline-item p-r-30"><i data-feather="arrow-down-circle"
-                                                    class="col-orange"></i>
-                                                <h5 class="m-b-0">$1,587</h5>
-                                                <p class="text-muted font-14 m-b-0">Monthly Earnings</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <div class="list-inline text-center">
-                                            <div class="list-inline-item p-r-30"><i data-feather="arrow-up-circle"
-                                                    class="col-green"></i>
-                                                <h5 class="mb-0 m-b-0">$45,965</h5>
-                                                <p class="text-muted font-14 m-b-0">Yearly Earnings</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="row mt-5">
-                                    <div class="col-7 col-xl-7 mb-3">Total customers</div>
-                                    <div class="col-5 col-xl-5 mb-3">
-                                        <span class="text-big">8,257</span>
-                                        <sup class="col-green">+09%</sup>
-                                    </div>
-                                    <div class="col-7 col-xl-7 mb-3">Total Income</div>
-                                    <div class="col-5 col-xl-5 mb-3">
-                                        <span class="text-big">$9,857</span>
-                                        <sup class="text-danger">-18%</sup>
-                                    </div>
-                                    <div class="col-7 col-xl-7 mb-3">Project completed</div>
-                                    <div class="col-5 col-xl-5 mb-3">
-                                        <span class="text-big">28</span>
-                                        <sup class="col-green">+16%</sup>
-                                    </div>
-                                    <div class="col-7 col-xl-7 mb-3">Total expense</div>
-                                    <div class="col-5 col-xl-5 mb-3">
-                                        <span class="text-big">$6,287</span>
-                                        <sup class="col-green">+09%</sup>
-                                    </div>
-                                    <div class="col-7 col-xl-7 mb-3">New Customers</div>
-                                    <div class="col-5 col-xl-5 mb-3">
-                                        <span class="text-big">684</span>
-                                        <sup class="col-green">+22%</sup>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div id="chart4" class="dashboard-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-4">
+                <div class="card dashboard-chart-card">
+                    <div class="card-header">
+                        <h4>Monthly Orders</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="chart3" class="dashboard-chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-lg-4">
+                <div class="card dashboard-chart-card">
+                    <div class="card-header">
+                        <h4>Monthly Sales</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="chart2" class="dashboard-chart"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12 col-sm-12 col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Chart</h4>
-                    </div>
-                    <div class="card-body">
-                        <div id="chart4" class="chartsh"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Chart</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="summary">
-                            <div class="summary-chart active" data-tab-group="summary-tab" id="summary-chart">
-                                <div id="chart3" class="chartsh"></div>
-                            </div>
-                            <div data-tab-group="summary-tab" id="summary-text">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Chart</h4>
-                    </div>
-                    <div class="card-body">
-                        <div id="chart2" class="chartsh"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @endcan
         @can('dashboard-latest-order')
         <div class="row">
             <div class="col-12">
@@ -692,155 +603,471 @@
             </div>
         </div>
         @endcan
-        <div class="row">
-            <div class="col-md-6 col-lg-12 col-xl-6">
-                <!-- Support tickets -->
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Support Ticket</h4>
-                        <form class="card-header-form">
-                            <input type="text" name="search" class="form-control" placeholder="Search">
-                        </form>
-                    </div>
-                    <div class="card-body">
-                        <div class="support-ticket media pb-1 mb-3">
-                            <img src="assets/img/users/user-1.png" class="user-img mr-2" alt="">
-                            <div class="media-body ml-3">
-                                <div class="badge badge-pill badge-success mb-1 float-right">Feature</div>
-                                <span class="font-weight-bold">#89754</span>
-                                <a href="javascript:void(0)">Please add advance table</a>
-                                <p class="my-1">Hi, can you please add new table for advan...</p>
-                                <small class="text-muted">Created by <span class="font-weight-bold font-13">John
-                                        Deo</span>
-                                    &nbsp;&nbsp; - 1 day ago</small>
+        @can('dashboard-latest-review')
+            <div class="row">
+                <div class="col-md-12 col-lg-12 col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Pending Product Reviews</h4>
+                            <div class="card-header-action">
+                                <a href="{{ route('product-review.index') }}" class="btn btn-primary">View All</a>
                             </div>
                         </div>
-                        <div class="support-ticket media pb-1 mb-3">
-                            <img src="assets/img/users/user-2.png" class="user-img mr-2" alt="">
-                            <div class="media-body ml-3">
-                                <div class="badge badge-pill badge-warning mb-1 float-right">Bug</div>
-                                <span class="font-weight-bold">#57854</span>
-                                <a href="javascript:void(0)">Select item not working</a>
-                                <p class="my-1">please check select item in advance form not work...</p>
-                                <small class="text-muted">Created by <span class="font-weight-bold font-13">Sarah
-                                        Smith</span>
-                                    &nbsp;&nbsp; - 2 day ago</small>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product</th>
+                                            <th>Customer</th>
+                                            <th>Rating</th>
+                                            <th>Review</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($latestPendingReviews as $review)
+                                            @php
+                                                $primaryImage = $review->product?->images?->where('is_primary', true)->first();
+                                                if (!$primaryImage) {
+                                                    $primaryImage = $review->product?->images?->first();
+                                                }
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        @if($primaryImage && $primaryImage->image)
+                                                            <img src="{{ asset('storage/' . $primaryImage->image) }}" alt="{{ $review->product->name ?? 'Product' }}" width="45" height="45" class="rounded mr-2" style="object-fit: cover;">
+                                                        @else
+                                                            <img src="{{ asset('assets/img/default.png') }}" alt="Product Image" width="45" height="45" class="rounded mr-2" style="object-fit: cover;">
+                                                        @endif
+                                                        <span>{{ $review->product->name ?? '-' }}</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <strong>{{ $review->user->name ?? '-' }}</strong>
+                                                    @if($review->user?->email)
+                                                        <small class="d-block text-muted">{{ $review->user->email }}</small>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div class="text-warning">
+                                                        @for($i = 1; $i <= 5; $i++)
+                                                            @if($i <= $review->rating)
+                                                                <i class="fas fa-star"></i>
+                                                            @else
+                                                                <i class="far fa-star"></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span title="{{ $review->comment }}">
+                                                        {{ \Illuminate\Support\Str::limit($review->comment, 50) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <small>{{ $review->created_at?->format('d-m-Y') }}</small>
+                                                    <span class="badge badge-warning d-block mt-1">Pending</span>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center py-4">No pending reviews.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="support-ticket media pb-1 mb-3">
-                            <img src="assets/img/users/user-3.png" class="user-img mr-2" alt="">
-                            <div class="media-body ml-3">
-                                <div class="badge badge-pill badge-primary mb-1 float-right">Query</div>
-                                <span class="font-weight-bold">#85784</span>
-                                <a href="javascript:void(0)">Are you provide template in Angular?</a>
-                                <p class="my-1">can you provide template in latest angular 8.</p>
-                                <small class="text-muted">Created by <span class="font-weight-bold font-13">Ashton
-                                        Cox</span>
-                                    &nbsp;&nbsp; -2 day ago</small>
-                            </div>
-                        </div>
-                        <div class="support-ticket media pb-1 mb-3">
-                            <img src="assets/img/users/user-6.png" class="user-img mr-2" alt="">
-                            <div class="media-body ml-3">
-                                <div class="badge badge-pill badge-info mb-1 float-right">Enhancement</div>
-                                <span class="font-weight-bold">#25874</span>
-                                <a href="javascript:void(0)">About template page load speed</a>
-                                <p class="my-1">Hi, John, can you work on increase page speed of template...</p>
-                                <small class="text-muted">Created by <span class="font-weight-bold font-13">Hasan
-                                        Basri</span>
-                                    &nbsp;&nbsp; -3 day ago</small>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="javascript:void(0)" class="card-footer card-link text-center small ">View
-                        All</a>
-                </div>
-                <!-- Support tickets -->
-            </div>
-            <div class="col-md-6 col-lg-12 col-xl-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Projects Payments</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Client Name</th>
-                                        <th>Date</th>
-                                        <th>Payment Method</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>John Doe </td>
-                                        <td>11-08-2018</td>
-                                        <td>NEFT</td>
-                                        <td>$258</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Cara Stevens
-                                        </td>
-                                        <td>15-07-2018</td>
-                                        <td>PayPal</td>
-                                        <td>$125</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>
-                                            Airi Satou
-                                        </td>
-                                        <td>25-08-2018</td>
-                                        <td>RTGS</td>
-                                        <td>$287</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>
-                                            Angelica Ramos
-                                        </td>
-                                        <td>01-05-2018</td>
-                                        <td>CASH</td>
-                                        <td>$170</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>
-                                            Ashton Cox
-                                        </td>
-                                        <td>18-04-2018</td>
-                                        <td>NEFT</td>
-                                        <td>$970</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>
-                                            John Deo
-                                        </td>
-                                        <td>22-11-2018</td>
-                                        <td>PayPal</td>
-                                        <td>$854</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7</td>
-                                        <td>
-                                            Hasan Basri
-                                        </td>
-                                        <td>07-09-2018</td>
-                                        <td>Cash</td>
-                                        <td>$128</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <a href="{{ route('product-review.index') }}" class="card-footer card-link text-center small">View All Reviews</a>
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
     </section>
 @endsection
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof ApexCharts === 'undefined') {
+        console.error('ApexCharts is not loaded.');
+        return;
+    }
+
+    var monthlyOrders = @json($monthlyOrders);
+    var monthlySales = @json($monthlySales);
+    var orderStatus = @json($orderStatus);
+
+    var monthNames = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    var statusNames = {
+        0: 'Pending',
+        1: 'Confirmed',
+        2: 'Processing',
+        3: 'Shipped',
+        4: 'Delivered',
+        5: 'Cancelled',
+        6: 'Failed',
+        7: 'Refunded'
+    };
+
+    var statusOrder = [
+        'Pending',
+        'Confirmed',
+        'Processing',
+        'Shipped',
+        'Delivered',
+        'Cancelled',
+        'Failed',
+        'Refunded'
+    ];
+
+    var normalizedStatuses = {};
+
+    orderStatus.forEach(function (item) {
+        var statusValue = item.status;
+        var statusName = null;
+
+        if (statusValue !== null && statusValue !== undefined) {
+            if (statusNames[statusValue] !== undefined) {
+                statusName = statusNames[statusValue];
+            } else {
+                var textStatus = String(statusValue).trim().toLowerCase();
+
+                var textStatusMap = {
+                    'pending': 'Pending',
+                    'confirm': 'Confirmed',
+                    'confirmed': 'Confirmed',
+                    'processing': 'Processing',
+                    'shipped': 'Shipped',
+                    'delivered': 'Delivered',
+                    'cancel': 'Cancelled',
+                    'cancelled': 'Cancelled',
+                    'failed': 'Failed',
+                    'refunded': 'Refunded',
+                    'refund': 'Refunded'
+                };
+
+                if (textStatusMap[textStatus] !== undefined) {
+                    statusName = textStatusMap[textStatus];
+                }
+            }
+        }
+
+        if (statusName) {
+            if (!normalizedStatuses[statusName]) {
+                normalizedStatuses[statusName] = 0;
+            }
+
+            normalizedStatuses[statusName] += parseInt(item.total) || 0;
+        }
+    });
+
+    var statusLabels = [];
+    var statusTotals = [];
+
+    statusOrder.forEach(function (statusName) {
+        if (normalizedStatuses[statusName] > 0) {
+            statusLabels.push(statusName);
+            statusTotals.push(normalizedStatuses[statusName]);
+        }
+    });
+
+    var totalOrders = statusTotals.reduce(function (total, value) {
+        return total + value;
+    }, 0);
+
+    var orderMonths = monthlyOrders.map(function (item) {
+        return monthNames[parseInt(item.month) - 1];
+    });
+
+    var orderTotals = monthlyOrders.map(function (item) {
+        return parseInt(item.total) || 0;
+    });
+
+    var salesMonths = monthlySales.map(function (item) {
+        return monthNames[parseInt(item.month) - 1];
+    });
+
+    var salesTotals = monthlySales.map(function (item) {
+        return parseFloat(item.total) || 0;
+    });
+
+    var chart4 = document.querySelector('#chart4');
+
+    if (chart4 && statusTotals.length > 0) {
+        new ApexCharts(chart4, {
+            chart: {
+                type: 'donut',
+                toolbar: {
+                    show: false
+                }
+            },
+            series: statusTotals,
+            labels: statusLabels,
+            legend: {
+                show: true,
+                position: 'bottom',
+                horizontalAlign: 'center',
+                fontSize: '13px',
+                fontWeight: 500,
+                markers: {
+                    width: 9,
+                    height: 9,
+                    radius: 50
+                },
+                itemMargin: {
+                    horizontal: 7,
+                    vertical: 5
+                }
+            },
+            plotOptions: {
+                pie: {
+                    expandOnClick: true,
+                    donut: {
+                        size: '70%',
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: '13px',
+                                fontWeight: 500
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '22px',
+                                fontWeight: 600,
+                                offsetY: 5,
+                                formatter: function (value) {
+                                    return value;
+                                }
+                            },
+                            total: {
+                                show: true,
+                                showAlways: true,
+                                label: 'Total Orders',
+                                fontSize: '13px',
+                                fontWeight: 500,
+                                formatter: function () {
+                                    return totalOrders;
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (value) {
+                    return value.toFixed(1) + '%';
+                },
+                style: {
+                    fontSize: '12px',
+                    fontWeight: 600
+                },
+                dropShadow: {
+                    enabled: false
+                }
+            },
+            stroke: {
+                width: 2
+            },
+            tooltip: {
+                y: {
+                    formatter: function (value) {
+                        return value + ' Orders';
+                    }
+                }
+            },
+            responsive: [
+                {
+                    breakpoint: 1200,
+                    options: {
+                        chart: {
+                            height: 320
+                        },
+                        legend: {
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                {
+                    breakpoint: 576,
+                    options: {
+                        chart: {
+                            height: 350
+                        },
+                        legend: {
+                            fontSize: '12px',
+                            itemMargin: {
+                                horizontal: 5,
+                                vertical: 4
+                            }
+                        }
+                    }
+                }
+            ]
+        }).render();
+    }
+
+    var chart3 = document.querySelector('#chart3');
+
+    if (chart3) {
+        new ApexCharts(chart3, {
+            chart: {
+                type: 'line',
+                height: 330,
+                toolbar: {
+                    show: false
+                },
+                zoom: {
+                    enabled: false
+                }
+            },
+            series: [
+                {
+                    name: 'Orders',
+                    data: orderTotals
+                }
+            ],
+            xaxis: {
+                categories: orderMonths,
+                axisBorder: {
+                    show: true
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            yaxis: {
+                min: 0,
+                forceNiceScale: true,
+                labels: {
+                    formatter: function (value) {
+                        return Math.round(value);
+                    },
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 3
+            },
+            markers: {
+                size: 4,
+                strokeWidth: 2,
+                hover: {
+                    size: 7
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            grid: {
+                borderColor: '#e9ecef',
+                strokeDashArray: 4,
+                padding: {
+                    left: 10,
+                    right: 10
+                }
+            },
+            tooltip: {
+                shared: true,
+                intersect: false,
+                y: {
+                    formatter: function (value) {
+                        return value + ' Orders';
+                    }
+                }
+            }
+        }).render();
+    }
+
+    var chart2 = document.querySelector('#chart2');
+
+    if (chart2) {
+        new ApexCharts(chart2, {
+            chart: {
+                type: 'bar',
+                height: 330,
+                toolbar: {
+                    show: false
+                }
+            },
+            series: [
+                {
+                    name: 'Sales',
+                    data: salesTotals
+                }
+            ],
+            xaxis: {
+                categories: salesMonths,
+                axisBorder: {
+                    show: true
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            yaxis: {
+                min: 0,
+                forceNiceScale: true,
+                labels: {
+                    formatter: function (value) {
+                        return '₹' + Math.round(value).toLocaleString('en-IN');
+                    },
+                    style: {
+                        fontSize: '12px'
+                    }
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    columnWidth: '50%'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            grid: {
+                borderColor: '#e9ecef',
+                strokeDashArray: 4,
+                padding: {
+                    left: 10,
+                    right: 10
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function (value) {
+                        return '₹' + value.toLocaleString('en-IN', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                    }
+                }
+            }
+        }).render();
+    }
+});
+</script>
+@endpush

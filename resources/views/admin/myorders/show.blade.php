@@ -1,4 +1,4 @@
-@can('gst-create')
+@can('my-order-show')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">

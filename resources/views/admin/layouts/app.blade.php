@@ -543,7 +543,7 @@
     <script src="{{ asset('assets/js/scripts.js') }}"></script>
     <script src="{{ asset('assets/js/custom.js') }}"></script>
     <script src="{{ asset('assets/bundles/sweetalert/sweetalert-11.js') }}"></script>
-
+    <script src="{{ asset('assets/bundles/apexcharts/apexcharts.min.js') }}"></script>
     @stack('scripts')
 
 </body>
