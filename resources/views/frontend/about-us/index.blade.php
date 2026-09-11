@@ -33,7 +33,7 @@
             </div>
             <div class="col-lg-5 col-md-10">
                 <div class="about-image-wrap">
-                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/13.jpg') }}"
+                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/aboutcompany.png') }}"
                         alt="About Our Company">
                 </div>
             </div>
@@ -115,7 +115,7 @@
             </div>
             <div class="col-lg-5 offset-lg-1 col-md-10">
                 <div class="about-image-wrap">
-                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/13.jpg') }}"
+                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/vision.png') }}"
                         alt="Our Vision">
                 </div>
             </div>
@@ -128,7 +128,7 @@
         <div class="row align-items-center">
             <div class="col-lg-5 col-md-10 mb-30 mb-lg-0">
                 <div class="about-image-wrap">
-                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/13.jpg') }}"
+                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/mission.png') }}"
                         alt="Our Mission">
                 </div>
             </div>
@@ -221,7 +221,7 @@
             </div>
             <div class="col-lg-5 offset-lg-1 col-md-10">
                 <div class="about-image-wrap">
-                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/13.jpg') }}"
+                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/assurance.png') }}"
                         alt="Quality Assurance">
                 </div>
             </div>
@@ -285,7 +285,7 @@
         <div class="row align-items-center">
             <div class="col-lg-5 col-md-10 mb-30 mb-lg-0">
                 <div class="about-image-wrap">
-                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/13.jpg') }}"
+                    <img class="img-full" src="{{ asset('assets/frontend/assets/images/product/large-size/build.png') }}"
                         alt="PC Builder">
                 </div>
             </div>

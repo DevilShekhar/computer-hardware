@@ -15,14 +15,12 @@
                     <div class="slider-progress"></div>
 
                     <div class="slider-content">
-                        @if($banner->short_description)
-                            <h5>{{ $banner->short_description }}</h5>
-                        @endif
-
                         @if($banner->title)
                             <h2>{{ $banner->title }}</h2>
                         @endif
-
+                        @if($banner->short_description)
+                            <h5>{{ $banner->short_description }}</h5>
+                        @endif
                         @if($banner->button_text)
                             <div class="default-btn slide-btn">
                                 <a class="links" href="{{ $banner->button_url ?: '#' }}">

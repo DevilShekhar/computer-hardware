@@ -339,7 +339,6 @@ a.review-links {
     background: #ea0505 none repeat scroll 0 0;
     color: #fff;
     display: inline-block;
-    font-family: Montserrat;
     font-size: 14px;
     font-weight: 700;
     height: 50px;
@@ -2231,20 +2230,23 @@ textarea:focus {
 }
 .slider-content > h5 {
     font-weight: 400;
-    line-height: 18px;
+    line-height: 25px;
     text-transform: capitalize;
-    max-width: 280px;
+    max-width: 500px;
     margin-bottom: 10px;
+    color: #fff;
+    font-size: 16px;
 }
 .slider-content > h5 > span {
     color: #e80f0f;
 }
 .slider-content > h2 {
-    font-size: 35px;
+    font-size: 40px;
     font-weight: 400;
     text-transform: capitalize;
-    max-width: 310px;
+    max-width: 400px;
     margin-bottom: 20px;
+    color: #fff;
 }
 .slider-content > h3 {
     font-size: 18px;
