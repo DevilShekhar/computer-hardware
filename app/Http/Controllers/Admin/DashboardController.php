@@ -60,6 +60,10 @@ class DashboardController extends Controller
             $cancelledOrderCount = Order::where('user_id', $userId)
                 ->where('status', 'cancelled')
                 ->count();
+            $latestOrders = Order::with('user')
+            ->latest()
+            ->take(5)
+            ->get();
         }
 
         return view('admin.dashboard', compact(
@@ -72,12 +76,13 @@ class DashboardController extends Controller
             'approvedReviewCount',
             'activeCouponCount',
             'expiredCouponCount',
-           'myOrderCount',
+            'myOrderCount',
             'pendingOrderCount',
             'confirmedOrderCount',
             'shippedOrderCount',
             'deliveredOrderCount',
-            'cancelledOrderCount'
+            'cancelledOrderCount',
+            'latestOrders'
         ));
     }
 }
