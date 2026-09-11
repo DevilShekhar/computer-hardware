@@ -1,3 +1,4 @@
+@can('product-brand-show')
 @extends('admin.layouts.app')
 
 @section('content')
@@ -141,3 +142,8 @@
 </section>
 
 @endsection
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

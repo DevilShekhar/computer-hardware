@@ -1,3 +1,4 @@
+@can('order-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -233,3 +234,8 @@ Swal.fire({
 </script>
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

@@ -1,3 +1,4 @@
+@can('pc-builder-product-create')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -217,3 +218,8 @@
 </script>
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

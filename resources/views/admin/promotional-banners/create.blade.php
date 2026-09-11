@@ -1,5 +1,5 @@
+@can('promotional-banner-create')
 @extends('admin.layouts.app')
-
 @section('content')
 <section class="section">
     <div class="section-body">
@@ -88,3 +88,8 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

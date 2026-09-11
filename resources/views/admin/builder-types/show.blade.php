@@ -1,3 +1,4 @@
+@can('pc-builder-type-show')
 @extends('admin.layouts.app')
 @section('content')
 
@@ -165,3 +166,8 @@
     </div>
 </section>
 @endsection
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

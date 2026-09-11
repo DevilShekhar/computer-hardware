@@ -1,3 +1,5 @@
+@can('product-inventory-history')
+
 @extends('admin.layouts.app')
 
 @section('title', 'Inventory History')
@@ -272,3 +274,8 @@
         });
     </script>
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

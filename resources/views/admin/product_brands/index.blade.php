@@ -1,3 +1,4 @@
+@can('product-brand-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -76,34 +77,36 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <a href="{{ route('product-brands.show', $productBrand->id) }}"
-                                                    class="btn btn-info btn-sm mr-1"
-                                                    title="View">
+                                                @can('product-brand-show')
+                                                <a href="{{ route('product-brands.show', $productBrand->id) }}" class="btn btn-info btn-sm mr-1" title="View">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('product-brands.edit', $productBrand->id) }}"
-                                                    class="btn btn-primary btn-sm mr-1"
-                                                    title="Edit">
+                                                @endcan
+                                                @can('product-brand-edit')
+                                                <a href="{{ route('product-brands.edit', $productBrand->id) }}" class="btn btn-primary btn-sm mr-1" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
                                                 @if($productBrand->status)
-                                                <form action="{{ route('product-brands.destroy', $productBrand->id) }}"
-                                                    method="POST"
-                                                    class="delete-product-brand-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-danger btn-sm"
-                                                        title="Deactivate">
-                                                        <i class="fas fa-ban"></i>
-                                                    </button>
-                                                </form>
+                                                    @can('product-brand-destroy')
+                                                        <form action="{{ route('product-brands.destroy', $productBrand->id) }}"
+                                                            method="POST"
+                                                            class="delete-product-brand-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-danger btn-sm"
+                                                                title="Deactivate">
+                                                                <i class="fas fa-ban"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endcan
                                                 @else
-                                                <a href="{{ route('product-brands.edit', $productBrand->id) }}"
-                                                    class="btn btn-success btn-sm"
-                                                    title="Activate">
-                                                    <i class="fas fa-check"></i>
-                                                </a>
+                                                    @can('product-brand-edit')
+                                                        <a href="{{ route('product-brands.edit', $productBrand->id) }}" class="btn btn-success btn-sm" title="Activate">
+                                                            <i class="fas fa-check"></i>
+                                                        </a>
+                                                    @endcan
                                                 @endif
                                             </div>
                                         </td>
@@ -177,3 +180,8 @@
 </script>
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

@@ -1,3 +1,4 @@
+@can('pc-builder-type-create')
 @extends('admin.layouts.app')
 
 @section('content')
@@ -154,3 +155,8 @@
 </section>
 
 @endsection
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan
