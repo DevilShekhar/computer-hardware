@@ -48,14 +48,14 @@ public function getCurrentCart(): Cart
             ->where('product_id', $product->id)
             ->first();
 
-        if ($item) {
-            $item->quantity += $quantity;
+        if ($item) { 
+            $item->quantity = 1;
             $item->price = $this->getProductPrice($product);
             $item->save();
         } else {
             $cart->items()->create([
                 'product_id' => $product->id,
-                'quantity' => $quantity,
+                'quantity' => 1,
                 'price' => $this->getProductPrice($product),
             ]);
         }

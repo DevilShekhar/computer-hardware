@@ -1335,9 +1335,7 @@ function listProduct(product) {
                     compareProducts.length >= 2
                 ) {
 
-                    alert(
-                        'You can compare only 2 products at a time.'
-                    );
+                   Swal.fire({ icon: 'warning', text: 'You can compare only 2 products at a time.' });
 
                     return;
                 }
@@ -1357,9 +1355,16 @@ function listProduct(product) {
                     compareProducts.length === 1
                 ) {
 
-                    alert(
-                        'Product added for comparison. Please select one more product.'
-                    );
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Product Added',
+                        text: 'Please select one more product.',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true
+                    });
 
                     return;
                 }
@@ -1814,46 +1819,6 @@ function listProduct(product) {
 
     }
 
-});
-document.addEventListener('click', function(e) {
-    const cartBtn = e.target.closest('.cart-btn');
-
-    if (cartBtn) {
-        e.preventDefault();
-
-        const productId = cartBtn.dataset.productId;
-
-        fetch("{{ route('cart.add') }}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({
-                product_id: productId,
-                quantity: 1
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                throw new Error(data.message || 'Unable to add product.');
-            }
-
-            if (typeof window.loadMiniCart === 'function') {
-                window.loadMiniCart();
-            }
-
-            setTimeout(function() {
-                window.location.reload();
-            }, 500);
-        })
-        .catch(error => {
-            console.error(error);
-            showCartToast(error.message);
-        });
-    }
 });
 </script>
 

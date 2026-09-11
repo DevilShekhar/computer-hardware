@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 @section('title', $meta_title) 
-@section('meta_keyword', $meta_keyword) 
+@section('meta_keyword', $meta_keyword)
 @section('meta_description', $meta_description)
 @section('content')
 
@@ -1132,9 +1132,7 @@ $(document).ready(function() {
         });
 
         if (!Object.keys(selectedProducts).length) {
-            alert(
-                'Please select at least one product.'
-            );
+            Swal.fire({ icon: 'warning', text: 'Please select at least one product.' });
 
             return;
         }

@@ -1381,7 +1381,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         Swal.fire({
             icon: 'success',
-            title: 'Order Placed!',
+            title: 'Success!',
             text: "{{ session('success') }}",
             confirmButtonText: 'Continue',
             confirmButtonColor: '#2878f0'
