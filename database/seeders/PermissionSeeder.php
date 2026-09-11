@@ -136,6 +136,7 @@ class PermissionSeeder extends Seeder
             'dashboard-approved-review-count',
             'dashboard-active-coupon-count',
             'dashboard-expired-coupon-count',
+            'dashboard-latest-order'
 
         ];
         /*
