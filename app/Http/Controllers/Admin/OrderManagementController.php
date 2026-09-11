@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderManagementController extends Controller
 {
@@ -116,6 +117,120 @@ class OrderManagementController extends Controller
             'Order status changed to '
             . $statusNames[$newStatus]
             . ' successfully.'
+        );
+    }
+   public function refund(Request $request, Order $order)
+    {
+        if ((int) $order->status !== 8) {
+            return back()->with(
+                'error',
+                'Only returned orders can be refunded.'
+            );
+        }
+
+        if (!empty($order->razorpay_refund_id)) {
+            return back()->with(
+                'error',
+                'Refund has already been processed.'
+            );
+        }
+
+        if ($order->payment_method === 'razorpay') {
+
+            if (empty($order->razorpay_payment_id)) {
+                return back()->with(
+                    'error',
+                    'Razorpay payment ID is missing.'
+                );
+            }
+
+            try {
+                $api = new \Razorpay\Api\Api(
+                    config('services.razorpay.key'),
+                    config('services.razorpay.secret')
+                );
+
+                $refund = $api->payment
+                    ->fetch($order->razorpay_payment_id)
+                    ->refund([
+                        'amount' => (int) round($order->total_amount * 100),
+                    ]);
+
+                DB::transaction(function () use ($order, $refund) {
+
+                    $order->update([
+                        'razorpay_refund_id' => $refund['id'],
+                        'refund_status' => 'processed',
+                        'refund_method' => 'razorpay',
+                        'refund_amount' => $order->total_amount,
+                        'refunded_at' => now(),
+                        'payment_status' => 'refunded',
+                        'status' => 7,
+                    ]);
+
+                    OrderStatusHistory::create([
+                        'order_id' => $order->id,
+                        'updated_by' => auth()->id(),
+                        'status' => 7,
+                    ]);
+                });
+
+                return back()->with(
+                    'success',
+                    'Razorpay refund processed successfully.'
+                );
+
+            } catch (\Throwable $e) {
+
+                Log::error('Razorpay refund failed', [
+                    'order_id' => $order->id,
+                    'razorpay_payment_id' => $order->razorpay_payment_id,
+                    'message' => $e->getMessage(),
+                ]);
+
+                return back()->with(
+                    'error',
+                    'Razorpay refund failed. Please try again.'
+                );
+            }
+        }
+
+        if ($order->payment_method === 'cod') {
+
+            if (empty($order->customer_upi_id)) {
+                return back()->with(
+                    'error',
+                    'Customer UPI ID is missing for COD refund.'
+                );
+            }
+
+            DB::transaction(function () use ($order) {
+
+                $order->update([
+                    'refund_status' => 'processed',
+                    'refund_method' => 'manual',
+                    'refund_amount' => $order->total_amount,
+                    'refunded_at' => now(),
+                    'payment_status' => 'refunded',
+                    'status' => 7,
+                ]);
+
+                OrderStatusHistory::create([
+                    'order_id' => $order->id,
+                    'updated_by' => auth()->id(),
+                    'status' => 7,
+                ]);
+            });
+
+            return back()->with(
+                'success',
+                'COD refund marked successfully. Refund customer through the provided UPI ID.'
+            );
+        }
+
+        return back()->with(
+            'error',
+            'Invalid payment method.'
         );
     }
 }

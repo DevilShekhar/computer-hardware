@@ -407,22 +407,53 @@
                             </div>
                         @endif
                         @if($currentStatus === 4)
-                            <hr>
-                            <div class="text-center">
-                                <h6 class="mb-3">
-                                    Order Actions
-                                </h6>
-                                <button type="button"  class="btn btn-warning" id="return-product-btn">
-                                    <i class="fas fa-undo"></i>
-                                    Return Product
-                                </button>
-                                <form action="{{ route('my-orders.return', $order->id) }}" method="POST" id="return-product-form">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="hidden" name="return_reason" id="return_reason">
-                                </form>
+                        <form action="{{ route('my-orders.return', $order->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="form-group">
+                            <label>Return Reason <span class="text-danger">*</span></label>
+                            <textarea name="return_reason" class="form-control" rows="4" required></textarea>
+                        </div>
+
+                        @if($order->payment_method === 'cod')
+                            <div class="form-group">
+                                <label>
+                                    Customer UPI ID
+                                    <span class="text-danger">*</span>
+
+                                    <span
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Required only for COD orders. Your UPI ID is required to process the refund."
+                                        style="cursor: pointer;"
+                                    >
+                                        <i class="fas fa-info-circle text-info"></i>
+                                    </span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="customer_upi_id"
+                                    class="form-control"
+                                    placeholder="Enter your UPI ID"
+                                    required
+                                >
+
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i>
+                                    Required for refund when the payment method is <strong>COD</strong>.
+                                </small>
                             </div>
                         @endif
+
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa fa-undo"></i> Return Product
+                            </button>
+                        </div>
+                    </form>
+                    @endif
                         @if($isCancelled)
                             <hr>
                             <div class="text-center">
@@ -490,6 +521,12 @@
                                 <span class="badge badge-dark" style="font-size:15px;">
                                     <i class="fas fa-undo"></i>
                                     Order Refunded
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Return Reason:</strong>
+                                <span class="text-muted">
+                                    {{ $order->return_reason ?? 'No return reason provided.' }}
                                 </span>
                             </div>
                         @endif
@@ -652,6 +689,6 @@
 @endpush
 @else
     @php
-        abort(404);
+        abort(403);
     @endphp
 @endcan

@@ -39,6 +39,15 @@ class Order extends Model
         'razorpay_order_id',
         'razorpay_payment_id',
         'razorpay_signature',
+        'customer_upi_id',
+        'return_reason',
+        'refund_status',
+        'refund_method',
+        'refund_amount',
+        'refund_reason',
+        'refund_remark',
+        'refunded_at',
+        'razorpay_refund_id',
     ];
 
     protected $casts = [
@@ -48,6 +57,7 @@ class Order extends Model
         'total_amount' => 'decimal:2',
         'status' => 'integer',
         'cancelled_at' => 'datetime',
+        'refunded_at' => 'datetime',
     ];
 
     public function user()

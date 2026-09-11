@@ -145,6 +145,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/apply-coupon',[OrderController::class,'applyCoupon'])->name('checkout.apply-coupon');
     Route::resource('addresses', AddressController::class);
     Route::post('/razorpay/verify', [OrderController::class, 'verifyRazorpayPayment'])->name('razorpay.verify');
+    Route::put('/customer-orders/{order}/refund', [OrderManagementController::class, 'refund'])->name('customer-orders.refund');
+    Route::get('/refunded-orders', [MyOrderController::class, 'refundedOrders'])->name('refunded-orders.index');
 });
 Route::post('/checkout/update-quantity', [OrderController::class, 'updateQuantity'])->name('checkout.update-quantity');
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');
