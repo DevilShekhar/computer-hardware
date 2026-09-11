@@ -1,3 +1,4 @@
+@can('address-edit')
 @extends('admin.layouts.app')
 
 @section('content')
@@ -229,3 +230,8 @@ Swal.fire({
 @endif
 
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

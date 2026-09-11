@@ -1,3 +1,4 @@
+@can('promotional-banner-edit')
 @extends('admin.layouts.app')
 
 @section('content')
@@ -108,3 +109,8 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

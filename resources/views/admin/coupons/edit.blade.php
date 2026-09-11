@@ -1,3 +1,4 @@
+@can('coupon-edit')
 @extends('admin.layouts.app')
 @section('title', 'Edit Coupon')
 
@@ -269,3 +270,8 @@
 </section>
 
 @endsection
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

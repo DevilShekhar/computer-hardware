@@ -1,3 +1,4 @@
+@can('address-index')
 @extends('admin.layouts.app')
 
 @section('content')
@@ -112,32 +113,27 @@
 
                                         <td>
                                             <div class="d-flex align-items-center">
+                                                @can('address-edit')
+                                                    <a href="{{ route('addresses.edit', $address->id) }}"
+                                                        class="btn btn-primary btn-sm mr-1"
+                                                        title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                @endcan     
+                                                @can('address-destroy')
+                                                    <form action="{{ route('addresses.destroy', $address->id) }}"
+                                                        method="POST"
+                                                        class="delete-address-form">
+                                                        @csrf
+                                                        @method('DELETE')
 
-                                                <a href="{{ route('addresses.show', $address->id) }}"
-                                                    class="btn btn-info btn-sm mr-1"
-                                                    title="View">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-
-                                                <a href="{{ route('addresses.edit', $address->id) }}"
-                                                    class="btn btn-primary btn-sm mr-1"
-                                                    title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-
-                                                <form action="{{ route('addresses.destroy', $address->id) }}"
-                                                    method="POST"
-                                                    class="delete-address-form">
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button type="submit"
-                                                        class="btn btn-danger btn-sm"
-                                                        title="Delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-
+                                                        <button type="submit"
+                                                            class="btn btn-danger btn-sm"
+                                                            title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endcan
                                             </div>
                                         </td>
 
@@ -234,3 +230,8 @@ Swal.fire({
 @endif
 
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

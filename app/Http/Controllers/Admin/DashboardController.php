@@ -11,6 +11,7 @@ use App\Models\SubCategory;
 use App\Models\User;
 use App\Models\Review;
 use App\Models\Coupon;
+use App\Models\Order;
 
 class DashboardController extends Controller
 {
@@ -34,6 +35,32 @@ class DashboardController extends Controller
 
         $expiredCouponCount = Coupon::whereDate('end_date', '<', now()->toDateString())
             ->count();
+        // My Orders Count - Logged In User Only
+        $myOrderCount = 0;
+        $pendingOrderCount = 0;
+        $confirmedOrderCount = 0;
+        $shippedOrderCount = 0;
+        $deliveredOrderCount = 0;
+        $cancelledOrderCount = 0;
+        if (auth()->check()) {
+            $userId = auth()->id();
+            $myOrderCount = Order::where('user_id', $userId)->count();
+            $pendingOrderCount = Order::where('user_id', $userId)
+                ->where('status', 'pending')
+                ->count();
+            $confirmedOrderCount = Order::where('user_id', $userId)
+                ->where('status', 'confirmed')
+                ->count();
+            $shippedOrderCount = Order::where('user_id', $userId)
+                ->where('status', 'shipped')
+                ->count();
+            $deliveredOrderCount = Order::where('user_id', $userId)
+                ->where('status', 'delivered')
+                ->count();
+            $cancelledOrderCount = Order::where('user_id', $userId)
+                ->where('status', 'cancelled')
+                ->count();
+        }
 
         return view('admin.dashboard', compact(
             'productCount',
@@ -44,7 +71,13 @@ class DashboardController extends Controller
             'reviewCount',
             'approvedReviewCount',
             'activeCouponCount',
-            'expiredCouponCount'
+            'expiredCouponCount',
+           'myOrderCount',
+            'pendingOrderCount',
+            'confirmedOrderCount',
+            'shippedOrderCount',
+            'deliveredOrderCount',
+            'cancelledOrderCount'
         ));
     }
 }

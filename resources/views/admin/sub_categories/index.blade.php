@@ -1,3 +1,4 @@
+@can('product-sub-category-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -84,17 +85,18 @@
                                         </td>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <a href="{{ route('sub-categories.show', $subCategory->id) }}"
-                                                    class="btn btn-info btn-sm mr-1"
-                                                    title="View">
+                                                @can('product-sub-category-show')
+                                                <a href="{{ route('sub-categories.show', $subCategory->id) }}" class="btn btn-info btn-sm mr-1" title="View">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('sub-categories.edit', $subCategory->id) }}"
-                                                    class="btn btn-primary btn-sm mr-1"
-                                                    title="Edit">
+                                                @endcan
+                                                @can('product-sub-category-edit')
+                                                <a href="{{ route('sub-categories.edit', $subCategory->id) }}" class="btn btn-primary btn-sm mr-1"  title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                @endcan
                                                 @if($subCategory->status)
+                                                @can('product-sub-category-destroy')
                                                 <form action="{{ route('sub-categories.destroy', $subCategory->id) }}"
                                                     method="POST"
                                                     class="delete-sub-category-form">
@@ -106,12 +108,13 @@
                                                         <i class="fas fa-ban"></i>
                                                     </button>
                                                 </form>
+                                                @endcan
                                                 @else
-                                                <a href="{{ route('sub-categories.edit', $subCategory->id) }}"
-                                                    class="btn btn-success btn-sm"
-                                                    title="Activate">
+                                                @can('product-sub-category-edit')
+                                                <a href="{{ route('sub-categories.edit', $subCategory->id) }}"class="btn btn-success btn-sm" title="Activate">
                                                     <i class="fas fa-check"></i>
                                                 </a>
+                                                @endcan
                                                 @endif
                                             </div>
                                         </td>
@@ -188,3 +191,8 @@
 </script>
 @endif
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan

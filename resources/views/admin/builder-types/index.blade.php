@@ -1,3 +1,4 @@
+@can('pc-builder-type-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -85,18 +86,21 @@
 
                                             <td>
                                                 <div class="d-flex align-items-center">
+                                                    @can('pc-builder-type-show')
                                                     <a href="{{ route('builder-types.show', $type->id) }}"
                                                         class="btn btn-info btn-sm mr-1"
                                                         title="View">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
-
+                                                    @endcan
+                                                    @can('pc-builder-type-edit')
                                                     <a href="{{ route('builder-types.edit', $type->id) }}"
                                                         class="btn btn-primary btn-sm mr-1"
                                                         title="Edit">
                                                         <i class="fas fa-edit"></i>
-                                                    </a>
-
+                                                    </a>    
+                                                    @endcan
+                                                    @can('pc-builder-type-destroy')
                                                     @if($type->status)
                                                         <form action="{{ route('builder-types.destroy', $type->id) }}"
                                                             method="POST"
@@ -127,6 +131,7 @@
                                                             </button>
                                                         </form>
                                                     @endif
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>
@@ -234,3 +239,8 @@
 @endif
 
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan
