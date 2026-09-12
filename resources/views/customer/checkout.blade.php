@@ -91,18 +91,6 @@
                                             </div>
                                         </label>
                                     @endforeach
-
-                                    <label class="address-card address-card-new" data-address-id="new">
-                                        <input type="radio" class="address-radio">
-                                        <div class="address-card-body">
-                                            <div class="address-card-head">
-                                                <span class="address-name">+ Add New Address</span>
-                                            </div>
-                                            <div class="address-line address-muted">
-                                                Add another delivery address
-                                            </div>
-                                        </div>
-                                    </label>
                                 </div>
                             </div>
                         @endif
@@ -439,90 +427,106 @@
                         {{ old('ship_to_different') ? 'checked' : '' }}>
                 </h3>
             </div>
-                    <div id="ship-box-info" class="row" style="{{ old('ship_to_different') ? '' : 'display:none;' }}">
-                        <div class="col-md-12">
-                            <div class="country-select clearfix">
-                                <label>Country <span class="required">*</span></label>
-                                <select class="nice-select wide" name="ship_country" id="shipCountry">
-                                    <option value="India" {{ old('ship_country') == 'India' ? 'selected' : '' }}>India</option>
-                                    <option value="UK" {{ old('ship_country') == 'UK' ? 'selected' : '' }}>UK</option>
-                                    <option value="USA" {{ old('ship_country') == 'USA' ? 'selected' : '' }}>USA</option>
-                                    <option value="Australia" {{ old('ship_country') == 'Australia' ? 'selected' : '' }}>Australia</option>
-                                    <option value="Canada" {{ old('ship_country') == 'Canada' ? 'selected' : '' }}>Canada</option>
-                                </select>
-                                @error('ship_country')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+            <div class="different-address mt-30">
 
-                        <div class="col-md-6">
-                            <div class="checkout-form-list">
-                                <label>Full Name <span class="required">*</span></label>
-                                <input type="text" name="ship_name" id="shipName"
-                                    value="{{ old('ship_name') }}">
-                                @error('ship_name')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
+                <div id="ship-box-info" style="display: none;">
+                    <div class="checkbox-form">
+                        <h3>Shipping Details</h3>
 
-                        <div class="col-md-6">
-                            <div class="checkout-form-list">
-                                <label>Mobile Number <span class="required">*</span></label>
-                                <input type="text" name="ship_mobile" id="shipMobile"
-                                    value="{{ old('ship_mobile') }}">
-                                @error('ship_mobile')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                        <div class="row">
+                            {{-- Country --}}
+                            <div class="col-md-12">
+                                <div class="country-select clearfix">
+                                    <label>Country <span class="required">*</span></label>
+                                    <select class="nice-select wide" name="ship_country" id="shipCountry">
+                                        <option value="India"     {{ old('ship_country', 'India') == 'India'     ? 'selected' : '' }}>India</option>
+                                        <option value="UK"        {{ old('ship_country') == 'UK'        ? 'selected' : '' }}>UK</option>
+                                        <option value="USA"       {{ old('ship_country') == 'USA'       ? 'selected' : '' }}>USA</option>
+                                        <option value="Australia" {{ old('ship_country') == 'Australia' ? 'selected' : '' }}>Australia</option>
+                                        <option value="Canada"    {{ old('ship_country') == 'Canada'    ? 'selected' : '' }}>Canada</option>
+                                    </select>
+                                    @error('ship_country')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-12">
-                            <div class="checkout-form-list">
-                                <label>Address <span class="required">*</span></label>
-                                <input type="text" name="ship_address" id="shipAddress"
-                                    placeholder="Street address" value="{{ old('ship_address') }}">
-                                @error('ship_address')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                            {{-- Full Name --}}
+                            <div class="col-md-6">
+                                <div class="checkout-form-list">
+                                    <label>Full Name <span class="required">*</span></label>
+                                    <input type="text" name="ship_name" id="shipName"
+                                        value="{{ old('ship_name') }}">
+                                    @error('ship_name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="checkout-form-list">
-                                <label>City <span class="required">*</span></label>
-                                <input type="text" name="ship_city" id="shipCity"
-                                    value="{{ old('ship_city') }}">
-                                @error('ship_city')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                            {{-- Mobile --}}
+                            <div class="col-md-6">
+                                <div class="checkout-form-list">
+                                    <label>Mobile Number <span class="required">*</span></label>
+                                    <input type="text" name="ship_mobile" id="shipMobile"
+                                        value="{{ old('ship_mobile') }}">
+                                    @error('ship_mobile')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="checkout-form-list">
-                                <label>State <span class="required">*</span></label>
-                                <input type="text" name="ship_state" id="shipState"
-                                    value="{{ old('ship_state') }}">
-                                @error('ship_state')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                            {{-- Address --}}
+                            <div class="col-md-12">
+                                <div class="checkout-form-list">
+                                    <label>Address <span class="required">*</span></label>
+                                    <input type="text" name="ship_address" id="shipAddress"
+                                        placeholder="Street address" value="{{ old('ship_address') }}">
+                                    @error('ship_address')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="checkout-form-list">
-                                <label>Pincode <span class="required">*</span></label>
-                                <input type="text" name="ship_pincode" id="shipPincode"
-                                    value="{{ old('ship_pincode') }}">
-                                @error('ship_pincode')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                            {{-- City --}}
+                            <div class="col-md-6">
+                                <div class="checkout-form-list">
+                                    <label>City <span class="required">*</span></label>
+                                    <input type="text" name="ship_city" id="shipCity"
+                                        value="{{ old('ship_city') }}">
+                                    @error('ship_city')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- State --}}
+                            <div class="col-md-6">
+                                <div class="checkout-form-list">
+                                    <label>State <span class="required">*</span></label>
+                                    <input type="text" name="ship_state" id="shipState"
+                                        value="{{ old('ship_state') }}">
+                                    @error('ship_state')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Pincode --}}
+                            <div class="col-md-6">
+                                <div class="checkout-form-list">
+                                    <label>Pincode <span class="required">*</span></label>
+                                    <input type="text" name="ship_pincode" id="shipPincode"
+                                        value="{{ old('ship_pincode') }}">
+                                    @error('ship_pincode')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
         </form>
     </div>
 </div>
@@ -648,10 +652,13 @@
         }
 
         if (showCoupon && couponContent) {
-            couponContent.style.display = 'none';
-            showCoupon.addEventListener('click', function () {
-                couponContent.style.display = (couponContent.style.display === 'none') ? 'block' : 'none';
+            const $coupon = jQuery(couponContent);
+
+            jQuery(showCoupon).off('click').on('click', function (e) {
+                e.preventDefault();
+                $coupon.stop(true, true).slideToggle(300);
             });
+            $coupon.hide();
         }
 
         function updateCart(productId, quantity, row) {
@@ -1039,11 +1046,19 @@
         const shipBoxInfo      = document.getElementById('ship-box-info');
         const savedAddressWrap = document.querySelector('.saved-addresses');
 
-        function toggleShipTo() {
+        function toggleShipTo(animate) {
             if (!shipBox || !shipBoxInfo) return;
 
             const on = shipBox.checked;
-            shipBoxInfo.style.display = on ? '' : 'none';
+
+            // Let jQuery own visibility
+            const $info = jQuery(shipBoxInfo);
+            $info.stop(true, true);
+            if (animate) {
+                on ? $info.slideDown(300) : $info.slideUp(300);
+            } else {
+                on ? $info.show() : $info.hide();
+            }
 
             if (on) {
                 if (savedAddressWrap) {
@@ -1067,11 +1082,18 @@
                 }
             }
         }
-
         if (shipBox) {
-            shipBox.addEventListener('change', toggleShipTo);
-            toggleShipTo();
-        }
+    // Remove theme's handler + any previous one
+    jQuery(shipBox).off('click change');
+
+    // Bind your own
+    jQuery(shipBox).on('change', function () {
+        toggleShipTo(true);   // animate on user interaction
+    });
+
+    // Prime jQuery's state on load — THIS fixes the first click
+    toggleShipTo(false);      // no animation on initial render
+}
     });
 </script>
 @endsection

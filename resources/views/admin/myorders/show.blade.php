@@ -76,6 +76,109 @@
                 </div>
             </div>
         </div>
+        @if($order->payment_method === 'razorpay')
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>
+                                Razorpay Payment Details
+                            </h4>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Order ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_order_id ?? '-' }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Payment ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_payment_id ?? '-' }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Refund ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_refund_id ?? '-' }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Payment Status
+                                    </strong>
+                                    <p>
+                                        @if($order->payment_status == 1)
+                                            <span class="badge badge-success">
+                                                Paid
+                                            </span>
+                                        @elseif($order->payment_status === 'refunded')
+                                            <span class="badge badge-dark">
+                                                Refunded
+                                            </span>
+                                        @else
+                                            <span class="badge badge-warning">
+                                                Pending
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refund Status
+                                    </strong>
+                                    <p>
+                                        {{ ucfirst($order->refund_status ?? '-') }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refund Method
+                                    </strong>
+                                    <p>
+                                        {{ ucfirst($order->refund_method ?? '-') }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refund Amount
+                                    </strong>
+                                    <p>
+                                        ₹{{ number_format($order->refund_amount ?? 0, 2) }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refunded At
+                                    </strong>
+                                    <p>
+                                        {{ $order->refunded_at ? $order->refunded_at->format('d-m-Y h:i A') : '-' }}
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
@@ -407,50 +510,45 @@
                             </div>
                         @endif
                         @if($currentStatus === 4)
-                        <form action="{{ route('my-orders.return', $order->id) }}" method="POST">
+                        <form action="{{ route('my-orders.return', $order->id) }}" method="POST" class="refund-form">
                         @csrf
                         @method('PUT')
-
-                        <div class="form-group">
-                            <label>Return Reason <span class="text-danger">*</span></label>
-                            <textarea name="return_reason" class="form-control" rows="4" required></textarea>
-                        </div>
-
-                        @if($order->payment_method === 'cod')
-                            <div class="form-group">
-                                <label>
-                                    Customer UPI ID
-                                    <span class="text-danger">*</span>
-
-                                    <span
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Required only for COD orders. Your UPI ID is required to process the refund."
-                                        style="cursor: pointer;"
-                                    >
-                                        <i class="fas fa-info-circle text-info"></i>
-                                    </span>
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="customer_upi_id"
-                                    class="form-control"
-                                    placeholder="Enter your UPI ID"
-                                    required
-                                >
-
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle"></i>
-                                    Required for refund when the payment method is <strong>COD</strong>.
-                                </small>
-                            </div>
-                        @endif
-
+                        <input type="checkbox" id="refund-toggle-{{ $order->id }}" class="refund-toggle" hidden>
                         <div class="form-group text-right">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fa fa-undo"></i> Return Product
-                            </button>
+                            <label for="refund-toggle-{{ $order->id }}" class="btn btn-danger refund-trigger">
+                                <i class="fa fa-undo"></i> Refund Order
+                            </label>
+                        </div>
+                        <div class="refund-panel">
+                            <div class="form-group">
+                                <label>Return Reason <span class="text-danger">*</span></label>
+                                <textarea name="return_reason" class="form-control" rows="4" required></textarea>
+                            </div>
+
+                            @if($order->payment_method === 'cod')
+                                <div class="form-group">
+                                    <label>
+                                        Customer UPI ID <span class="text-danger">*</span>
+                                        <span data-toggle="tooltip" data-placement="top"
+                                            title="Required only for COD orders. Your UPI ID is required to process the refund."
+                                            style="cursor: pointer;">
+                                            <i class="fas fa-info-circle text-info"></i>
+                                        </span>
+                                    </label>
+                                    <input type="text" name="customer_upi_id" class="form-control"
+                                        placeholder="Enter your UPI ID" required>
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle"></i>
+                                        Required for refund when the payment method is <strong>COD</strong>.
+                                    </small>
+                                </div>
+                            @endif
+
+                            <div class="form-group text-right">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-undo"></i> Submit Return
+                                </button>
+                            </div>
                         </div>
                     </form>
                     @endif
@@ -499,10 +597,13 @@
                         @endif
                         @if($isReturned)
                             <hr>
-                            <div class="text-center">
+                            <div class="text-center" data-toggle="tooltip" data-placement="top"
+                                title="Your product was returned successfully. Your refund will be processed soon."
+                                style="cursor: pointer;">
                                 <span class="badge badge-warning" style="font-size:15px;">
                                     <i class="fas fa-undo"></i>
                                     Product Returned
+                                    <i class="fas fa-info-circle ml-1"></i>
                                 </span>
                             </div>
                         @endif
@@ -533,6 +634,179 @@
                     </div>
                 </div>
             </div>
+        </div>
+         <div class="row">
+
+            <div class="col-12">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>
+                            Status History
+                        </h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            #
+                                        </th>
+
+                                        <th>
+                                            Status
+                                        </th>
+
+                                        <th>
+                                            Date & Time
+                                        </th>
+
+                                        <th>
+                                            Return Reason
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @forelse($order->statusHistories->sortByDesc('created_at') as $history)
+
+                                    <tr>
+
+                                        <td>
+                                            {{ $loop->iteration }}
+                                        </td>
+
+                                        <td>
+
+                                            @switch((int) $history->status)
+
+                                            @case(0)
+
+                                            <span class="badge badge-warning">
+                                                Pending
+                                            </span>
+
+                                            @break
+
+                                            @case(1)
+
+                                            <span class="badge badge-info">
+                                                Confirmed
+                                            </span>
+
+                                            @break
+
+                                            @case(2)
+
+                                            <span class="badge badge-primary">
+                                                Processing
+                                            </span>
+
+                                            @break
+
+                                            @case(3)
+
+                                            <span class="badge badge-info">
+                                                Shipped
+                                            </span>
+
+                                            @break
+
+                                            @case(4)
+
+                                            <span class="badge badge-success">
+                                                Delivered
+                                            </span>
+
+                                            @break
+
+                                            @case(5)
+
+                                            <span class="badge badge-danger">
+                                                Cancelled
+                                            </span>
+
+                                            @break
+
+                                            @case(6)
+
+                                            <span class="badge badge-danger">
+                                                Failed
+                                            </span>
+
+                                            @break
+
+                                            @case(7)
+
+                                            <span class="badge badge-dark">
+                                                Refunded
+                                            </span>
+
+                                            @break
+
+                                            @case(8)
+
+                                            <span class="badge badge-warning">
+                                                Returned
+                                            </span>
+
+                                            @break
+
+                                            @endswitch
+
+                                        </td>
+
+                                        <td>
+                                            {{ $history->created_at ? $history->created_at->format('d-m-Y h:i A') : '-' }}
+                                        </td>
+
+                                        <td>
+
+                                            @if((int) $history->status === 8)
+                                                {{ $order->return_reason ?? '-' }}
+                                            @else
+                                                -
+                                            @endif
+
+                                        </td>
+
+                                    </tr>
+
+                                    @empty
+
+                                    <tr>
+
+                                        <td colspan="5" class="text-center">
+                                            No status history found.
+                                        </td>
+
+                                    </tr>
+
+                                    @endforelse
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
     </div>
 </section>

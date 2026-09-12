@@ -121,10 +121,10 @@ class OrderManagementController extends Controller
     }
    public function refund(Request $request, Order $order)
     {
-        if ((int) $order->status !== 8) {
+        if (!in_array((int) $order->status, [5, 8], true)) {
             return back()->with(
                 'error',
-                'Only returned orders can be refunded.'
+                'Only returned and cancelled orders can be refunded.'
             );
         }
 

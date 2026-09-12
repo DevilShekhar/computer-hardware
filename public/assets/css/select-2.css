@@ -686,3 +686,7 @@
 .select2-container--classic.select2-container--open .select2-dropdown {
     border-color: #5897fb
 }
+
+.refund-panel { display: none; }
+.refund-toggle:checked ~ .refund-panel { display: block; }
+.refund-toggle:checked ~ .form-group .refund-trigger { display: none; }
