@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\CartItem;
 use App\Models\Coupon;
+use App\Models\CouponUsage;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -58,6 +59,24 @@ class OrderController extends Controller
             ],422);
         }
 
+        if(!auth()->check()){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Please login to use a coupon.'
+            ],401);
+        }
+
+        $alreadyUsed=CouponUsage::where('coupon_id',$coupon->id)
+            ->where('user_id',auth()->id())
+            ->exists();
+
+        if($alreadyUsed){
+            return response()->json([
+                'success'=>false,
+                'message'=>'You have already used this coupon.'
+            ],422);
+        }
+
         $now=now();
 
         if($now->lt($coupon->start_date)){
@@ -93,8 +112,6 @@ class OrderController extends Controller
                 'message'=>'This coupon usage limit has been reached.'
             ],422);
         }
-
-
 
         if($coupon->discount_type==='percentage'){
             $discount=($subtotal*$coupon->discount_value)/100;
@@ -409,7 +426,19 @@ class OrderController extends Controller
             $cart->items()->delete();
 
             if (session()->has('coupon_id')) {
-                \App\Models\Coupon::where('id', session('coupon_id'))->increment('used_count');
+                CouponUsage::create([
+                    'coupon_id' => session('coupon_id'),
+                    'user_id'   => Auth::id(),
+                    'order_id'  => $order->id,
+                ]);
+
+                Coupon::where('id', session('coupon_id'))->increment('used_count');
+
+                session()->forget(['coupon_id', 'coupon_code', 'coupon_discount']);
+            }
+
+            if (session()->has('coupon_id')) {
+                Coupon::where('id', session('coupon_id'))->increment('used_count');
                 session()->forget(['coupon_id', 'coupon_code', 'coupon_discount']);
             }
 

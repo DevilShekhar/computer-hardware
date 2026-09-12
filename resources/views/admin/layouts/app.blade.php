@@ -515,13 +515,13 @@
                         </li>
                         <li class="{{ request()->routeIs('checkout.index.*') ? 'active' : '' }}">
                             <a href="/" class="nav-link">
-                                <i data-feather="shopping-cart"></i>
+                                <i data-feather="compass"></i>
                                 <span>Explore More</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('refunded-orders.*') ? 'active' : '' }}">
-                            <a href="refunded-orders" class="nav-link">
-                                <i data-feather="shopping-cart"></i>
+                            <a href="{{ route('refunded-orders.index') }}" class="nav-link">
+                                <i data-feather="rotate-ccw"></i>
                                 <span>Refunded Orders</span>
                             </a>
                         </li>

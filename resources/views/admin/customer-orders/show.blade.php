@@ -95,6 +95,110 @@
             </div>
         </div>
 
+        @if($order->payment_method === 'razorpay')
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>
+                                Razorpay Payment Details
+                            </h4>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Order ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_order_id ?? '-' }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Payment ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_payment_id ?? '-' }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Refund ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_refund_id ?? '-' }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Payment Status
+                                    </strong>
+                                    <p>
+                                        @if($order->payment_status == 1)
+                                            <span class="badge badge-success">
+                                                Paid
+                                            </span>
+                                        @elseif($order->payment_status === 'refunded')
+                                            <span class="badge badge-dark">
+                                                Refunded
+                                            </span>
+                                        @else
+                                            <span class="badge badge-warning">
+                                                Pending
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refund Status
+                                    </strong>
+                                    <p>
+                                        {{ ucfirst($order->refund_status ?? '-') }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refund Method
+                                    </strong>
+                                    <p>
+                                        {{ ucfirst($order->refund_method ?? '-') }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refund Amount
+                                    </strong>
+                                    <p>
+                                        ₹{{ number_format($order->refund_amount ?? 0, 2) }}
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>
+                                        Refunded At
+                                    </strong>
+                                    <p>
+                                        {{ $order->refunded_at ? $order->refunded_at->format('d-m-Y h:i A') : '-' }}
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="row">
 
             <div class="col-md-6">
@@ -385,7 +489,7 @@
         $isFailed = $currentStatus === 6;
         $isRefunded = $currentStatus === 7;
         $isReturned = $currentStatus === 8;
-        $canRefund = $isReturned;
+        $canRefund = $isReturned || $isCancelled;
         @endphp
 
         <div class="row">
@@ -503,6 +607,40 @@
                                 Cancelled
 
                             </span>
+                            <div class="mt-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>
+                                            Cancellation Reason
+                                        </strong>
+                                        <p class="mt-1 mb-0">
+                                            {{ $order->cancel_reason ?? '-' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <strong>
+                                            Cancellation Remark
+                                        </strong>
+                                        <p class="mt-1 mb-0">
+                                            {{ $order->cancel_remark ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                @if($order->cancelled_at)
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <strong>
+                                                Cancelled At
+                                            </strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $order->cancelled_at->format('d-m-Y h:i A') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
 
                             @break
 
@@ -624,16 +762,21 @@
                             </h6>
 
                             <p class="text-muted">
-                                This order has been returned.
-                                You can now process the refund.
+                                @if($isReturned)
+                                    Customer returned the product. You can now process the refund.
+                                @elseif($isCancelled)
+                                    Customer cancelled the order. You can now process the refund.
+                                @endif
                             </p>
 
-                            <div class="mb-3">
-                                <strong>Return Reason:</strong>
-                                <span class="text-muted">
-                                    {{ $order->return_reason ?? 'No return reason provided.' }}
-                                </span>
-                            </div>
+                            @if($isReturned)
+                                <div class="mb-3">
+                                    <strong>Return Reason:</strong>
+                                    <span class="text-muted">
+                                        {{ $order->return_reason ?? 'No return reason provided.' }}
+                                    </span>
+                                </div>
+                            @endif
                             <div class="mb-3">
                                 <strong>Refund Amount:</strong>
                                 <span>
@@ -651,7 +794,7 @@
 
                                 @method('PUT')
 
-                                <button type="submit"  class="btn btn-dark mb-2" data-toggle="tooltip" data-placement="top" title="Customer returned the product. Click here to refund the customer.">
+                                <button type="submit"  class="btn btn-dark mb-2" data-toggle="tooltip" data-placement="top" title="{{ $isReturned ? 'Customer returned the product. Click here to refund the customer.' : 'Customer cancelled the order. Click here to refund the customer.' }}">
                                         <i class="fas fa-undo"></i>
                                         Refund Order
                                         <i class="fas fa-info-circle ml-1"></i>
