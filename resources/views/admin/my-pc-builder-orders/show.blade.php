@@ -1,4 +1,4 @@
-@can('my-order-show')
+@can('my-pc-builder-order-show')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -243,106 +243,186 @@
                     </div>
                     <div class="card-body">
                         @php
+                            $currentStatus = (int) ($pcBuilder->status ?? 0);
                             $statuses = [
-                                'pending' => 'Pending',
-                                'confirmed' => 'Confirmed',
-                                'processing' => 'Processing',
-                                'shipped' => 'Shipped',
-                                'delivered' => 'Delivered'
+                                0 => 'Pending',
+                                1 => 'Confirmed',
+                                2 => 'Processing',
+                                3 => 'Shipped',
+                                4 => 'Delivered',
+                                5 => 'Cancelled',
+                                6 => 'Failed',
+                                7 => 'Refunded',
+                                8 => 'Returned',
                             ];
-                            $currentStatus = strtolower((string) $pcBuilder->status);
-                            $isCancelled = in_array($currentStatus, ['cancelled', 'canceled']);
-                            $isFailed = $currentStatus === 'failed';
-                            $isRefunded = $currentStatus === 'refunded';
-                            $isReturned = in_array($currentStatus, ['returned', 'return_requested']);
+                            $isCancelled = $currentStatus === 5;
+                            $isFailed = $currentStatus === 6;
+                            $isRefunded = $currentStatus === 7;
+                            $isReturned = $currentStatus === 8;
                         @endphp
-                        @if(!$isCancelled && !$isFailed && !$isRefunded && !$isReturned)
+
                         <div class="row text-center">
                             @foreach($statuses as $statusValue => $statusName)
-                            @php
-                                $statusKeys = array_keys($statuses);
-                                $currentIndex = array_search($currentStatus, $statusKeys);
-                                $statusIndex = array_search($statusValue, $statusKeys);
-                            @endphp
                             <div class="col">
                                 <div class="mb-2">
-                                    @if($currentIndex !== false && $statusIndex !== false && $statusIndex <= $currentIndex)
-                                    <span class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center" style="width:45px;height:45px;">
-                                        <i class="fas fa-check"></i>
-                                    </span>
+                                    @if(!$isCancelled && !$isFailed && !$isRefunded && !$isReturned && $statusValue <= $currentStatus)
+                                        <span class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center" style="width:45px;height:45px;">
+                                            <i class="fas fa-check"></i>
+                                        </span>
                                     @else
-                                    <span class="rounded-circle bg-light text-muted d-inline-flex align-items-center justify-content-center" style="width:45px;height:45px;">
-                                        <i class="fas fa-circle"></i>
-                                    </span>
+                                        <span class="rounded-circle bg-light text-muted d-inline-flex align-items-center justify-content-center" style="width:45px;height:45px;">
+                                            <i class="fas fa-circle"></i>
+                                        </span>
                                     @endif
                                 </div>
                                 <strong>{{ $statusName }}</strong>
                             </div>
                             @endforeach
                         </div>
+
                         <hr>
-                        @endif
+
                         <div class="text-center">
                             <h5>Current Status</h5>
+
                             @switch($currentStatus)
-                                @case('pending')
-                                <span class="badge badge-warning" style="font-size:14px;">
-                                    <i class="fas fa-clock"></i> Pending
-                                </span>
-                                @break
-                                @case('confirmed')
-                                <span class="badge badge-info" style="font-size:14px;">
-                                    <i class="fas fa-check"></i> Confirmed
-                                </span>
-                                @break
-                                @case('processing')
-                                <span class="badge badge-primary" style="font-size:14px;">
-                                    <i class="fas fa-cog"></i> Processing
-                                </span>
-                                @break
-                                @case('shipped')
-                                <span class="badge badge-info" style="font-size:14px;">
-                                    <i class="fas fa-truck"></i> Shipped
-                                </span>
-                                @break
-                                @case('delivered')
-                                <span class="badge badge-success" style="font-size:14px;">
-                                    <i class="fas fa-check-circle"></i> Delivered
-                                </span>
-                                @break
-                                @case('cancelled')
-                                @case('canceled')
-                                <span class="badge badge-danger" style="font-size:14px;">
-                                    <i class="fas fa-times-circle"></i> Cancelled
-                                </span>
-                                @break
-                                @case('failed')
-                                <span class="badge badge-danger" style="font-size:14px;">
-                                    <i class="fas fa-exclamation-circle"></i> Failed
-                                </span>
-                                @break
-                                @case('refunded')
-                                <span class="badge badge-dark" style="font-size:14px;">
-                                    <i class="fas fa-undo"></i> Refunded
-                                </span>
-                                @break
-                                @case('returned')
-                                <span class="badge badge-warning" style="font-size:14px;">
-                                    <i class="fas fa-undo"></i> Returned
-                                </span>
-                                @break
-                                @case('return_requested')
-                                <span class="badge badge-warning" style="font-size:14px;">
-                                    <i class="fas fa-undo"></i> Return Requested
-                                </span>
-                                @break
+                                @case(0)
+                                    <span class="badge badge-warning" style="font-size:14px;">
+                                        <i class="fas fa-clock"></i> Pending
+                                    </span>
+                                    @break
+                                @case(1)
+                                    <span class="badge badge-info" style="font-size:14px;">
+                                        <i class="fas fa-check"></i> Confirmed
+                                    </span>
+                                    @break
+                                @case(2)
+                                    <span class="badge badge-primary" style="font-size:14px;">
+                                        <i class="fas fa-cog"></i> Processing
+                                    </span>
+                                    @break
+                                @case(3)
+                                    <span class="badge badge-info" style="font-size:14px;">
+                                        <i class="fas fa-truck"></i> Shipped
+                                    </span>
+                                    @break
+                                @case(4)
+                                    <span class="badge badge-success" style="font-size:14px;">
+                                        <i class="fas fa-check-circle"></i> Delivered
+                                    </span>
+                                    @break
+                                @case(5)
+                                    <span class="badge badge-danger" style="font-size:14px;">
+                                        <i class="fas fa-times-circle"></i> Cancelled
+                                    </span>
+                                    @break
+                                @case(6)
+                                    <span class="badge badge-danger" style="font-size:14px;">
+                                        <i class="fas fa-exclamation-circle"></i> Failed
+                                    </span>
+                                    @break
+                                @case(7)
+                                    <span class="badge badge-dark" style="font-size:14px;">
+                                        <i class="fas fa-undo"></i> Refunded
+                                    </span>
+                                    @break
+                                @case(8)
+                                    <span class="badge badge-warning" style="font-size:14px;">
+                                        <i class="fas fa-undo"></i> Returned
+                                    </span>
+                                    @break
                                 @default
-                                <span class="badge badge-secondary" style="font-size:14px;">
-                                    Unknown
-                                </span>
+                                    <span class="badge badge-secondary" style="font-size:14px;">
+                                        Unknown
+                                    </span>
                             @endswitch
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Status History</h4>
+                </div>
+                <div class="card-body">
+                    @php
+                        $statusNames = [
+                            0 => 'Pending',
+                            1 => 'Confirmed',
+                            2 => 'Processing',
+                            3 => 'Shipped',
+                            4 => 'Delivered',
+                            5 => 'Cancelled',
+                            6 => 'Failed',
+                            7 => 'Refunded',
+                            8 => 'Returned',
+                        ];
+                    @endphp
+
+                    @if($pcBuilder->statusHistories->count())
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Status</th>
+                                        <th>Updated By</th>
+                                        <th>Date & Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($pcBuilder->statusHistories as $history)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            @switch((int) $history->status)
+                                                @case(0)
+                                                    <span class="badge badge-warning">Pending</span>
+                                                    @break
+                                                @case(1)
+                                                    <span class="badge badge-info">Confirmed</span>
+                                                    @break
+                                                @case(2)
+                                                    <span class="badge badge-primary">Processing</span>
+                                                    @break
+                                                @case(3)
+                                                    <span class="badge badge-info">Shipped</span>
+                                                    @break
+                                                @case(4)
+                                                    <span class="badge badge-success">Delivered</span>
+                                                    @break
+                                                @case(5)
+                                                    <span class="badge badge-danger">Cancelled</span>
+                                                    @break
+                                                @case(6)
+                                                    <span class="badge badge-danger">Failed</span>
+                                                    @break
+                                                @case(7)
+                                                    <span class="badge badge-dark">Refunded</span>
+                                                    @break
+                                                @case(8)
+                                                    <span class="badge badge-warning">Returned</span>
+                                                    @break
+                                                @default
+                                                    <span class="badge badge-secondary">Unknown</span>
+                                            @endswitch
+                                        </td>
+                                        <td>{{ $history->updatedBy->name ?? 'Admin' }}</td>
+                                        <td>{{ $history->created_at->format('d M Y, h:i A') }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="text-center text-muted py-3">
+                            No status history available.
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

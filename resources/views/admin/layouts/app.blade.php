@@ -366,6 +366,46 @@
                             </ul>
                         </li>
                         @endcan
+                        @can('my-pc-builder-order-index')
+                        <li class="dropdown {{ request()->routeIs('pc-builder-orders.*') ? 'active' : '' }}">
+                            <a href="#" class="menu-toggle nav-link has-dropdown">
+                                <i data-feather="shopping-bag"></i>
+                                <span>PC Builder Orders</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && request('status') === null ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index') }}">All Orders</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 0 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 0]) }}">Pending</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 1 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 1]) }}">Confirmed</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 2 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 2]) }}">Processing</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 3 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 3]) }}">Shipped</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 4 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 4]) }}">Delivered</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 5 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 5]) }}">Cancelled</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 6 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 6]) }}">Failed</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 7 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 7]) }}">Refunded</a>
+                                </li>
+                                <li class="{{ request()->routeIs('pc-builder-orders.index') && (int) request('status') === 8 ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('pc-builder-orders.index', ['status' => 8]) }}">Returned</a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endcan
                         @can('my-order-manage')
                         <li class="{{ request()->routeIs('my-orders*') ? 'active' : '' }}">
                             <a href="{{ route('my-orders') }}" class="nav-link">

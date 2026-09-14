@@ -20,7 +20,7 @@ class MyPcBuilderOrderController extends Controller
     public function show(Request $request, PcBuilder $pcBuilder)
     {
         abort_unless($pcBuilder->user_id === $request->user()->id, 403);
-
+        $pcBuilder->load('statusHistories.updatedBy');
         return view('admin.my-pc-builder-orders.show', compact('pcBuilder'));
     }
 }
