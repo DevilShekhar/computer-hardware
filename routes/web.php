@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\MyOrderController;
 use App\Http\Controllers\Admin\MyPcBuilderOrderController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Admin\InvoiceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -139,6 +140,7 @@ Route::get('/contact-us', [ContactController::class, 'index'])->name('contact.in
 Route::post('/contact-us', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/contact-us/thank-you', [ContactController::class, 'thankYou'])->name('contact.thank-you');
 Route::get('/product-search', [OurProductController::class, 'search'])->name('frontend.product.search');
+Route::get('/admin/orders/{order}/invoice',[InvoiceController::class, 'download'])->name('admin.orders.invoice');
 //CartControllerfr
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
