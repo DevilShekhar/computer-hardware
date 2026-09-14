@@ -365,6 +365,12 @@
                                 </li>
                             </ul>
                         </li>
+                        <li class="{{ request()->routeIs('pc-builder-orders.*') ? 'active' : '' }}">
+                            <a href="{{ route('pc-builder-orders.index') }}" class="nav-link">
+                                <i data-feather="cpu"></i>
+                                <span>PC Builder Orders</span>
+                            </a>
+                        </li>
                         @endcan
                         @can('my-pc-builder-order-index')
                         <li class="dropdown {{ request()->routeIs('pc-builder-orders.*') ? 'active' : '' }}">

@@ -122,6 +122,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/pc-builder/verify-payment', [PcBuilderController::class, 'verifyPayment'])->name('pc-builder.verify-payment');
     Route::get('/my-pc-builder-orders', [MyPcBuilderOrderController::class, 'index'])->name('my-pc-builder-orders');
     Route::get('/my-pc-builder-orders/{pcBuilder}', [MyPcBuilderOrderController::class, 'show'])->name('my-pc-builder-orders.show');
+    Route::get('/my-pc-builder-orders/{pcBuilder}/invoice',[MyPcBuilderOrderController::class, 'downloadInvoice'])->name('my-pc-builder-orders.invoice');
     Route::get('/pc-builder-orders', [PcBuilderOrderManagementController::class, 'index'])->name('pc-builder-orders.index');
     Route::get('/pc-builder-orders/{pcBuilder}', [PcBuilderOrderManagementController::class, 'show'])->name('pc-builder-orders.show');
     Route::post('/pc-builder-orders/{pcBuilder}/update-status', [PcBuilderOrderManagementController::class, 'updateStatus'])->name('pc-builder-orders.update-status');
