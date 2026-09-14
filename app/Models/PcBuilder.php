@@ -31,6 +31,12 @@ class PcBuilder extends Model
         'pincode',
         'country',
         'order_notes',
+        'cancel_reason',
+        'cancel_remark',
+        'cancelled_at',
+        'return_reason',
+        'return_remark',
+        'returned_at',
     ];
 
     protected $casts = [
@@ -40,6 +46,8 @@ class PcBuilder extends Model
         'shipping_amount' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
+        'cancelled_at' => 'datetime',
+        'returned_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

@@ -229,7 +229,7 @@
                         <hr>
                         <div class="d-flex justify-content-between">
                             <strong>Total Amount</strong>
-                            <strong class="text-primary">₹{{ number_format($pcBuilder->total_amount, 2) }}</strong>
+                            <strong class="text-success">₹{{ number_format($pcBuilder->total_amount, 2) }}</strong>
                         </div>
                     </div>
                 </div>
@@ -336,6 +336,130 @@
                                         Unknown
                                     </span>
                             @endswitch
+                            @if(in_array($currentStatus, [0, 1]) && $pcBuilder->created_at->diffInHours(now()) < 24)
+                                <hr>
+                                <div class="text-center">
+                                    <h6 class="mb-3">
+                                        Order Actions
+                                    </h6>
+                                    <form action="{{ route('my-pc-builder-orders.cancel', $pcBuilder->id) }}" method="POST" id="cancel-pc-builder-form">
+                                        @csrf
+                                        @method('PUT')
+                                        <input type="hidden" name="cancel_reason" id="cancel_reason">
+                                        <input type="hidden" name="cancel_remark" id="cancel_remark">
+
+                                        <button type="button" class="btn btn-danger" id="cancel-pc-builder-btn">
+                                            <i class="fas fa-times"></i>
+                                            Cancel Order
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+
+                            @if($isCancelled)
+                                <hr>
+                                <div class="text-center">
+                                    <span class="badge badge-danger" style="font-size:15px;">
+                                        <i class="fas fa-times-circle"></i>
+                                        Order Cancelled
+                                    </span>
+                                </div>
+
+                                <div class="mt-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>
+                                                Cancellation Reason
+                                            </strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->cancel_reason ?? '-' }}
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <strong>
+                                                Cancellation Remark
+                                            </strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->cancel_remark ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    @if($pcBuilder->cancelled_at)
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <strong>
+                                                    Cancelled At
+                                                </strong>
+                                                <p class="mt-1 mb-0">
+                                                    {{ $pcBuilder->cancelled_at->format('d-m-Y h:i A') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+
+                            @if($currentStatus === 4)
+                                <hr>
+                                <div class="text-center">
+                                    <h6 class="mb-3">
+                                        Order Actions
+                                    </h6>
+
+                                    <form action="{{ route('my-pc-builder-orders.return', $pcBuilder->id) }}" method="POST" id="return-pc-builder-form">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <input type="hidden" name="return_reason" id="return_reason">
+                                        <input type="hidden" name="return_remark" id="return_remark">
+
+                                        <button type="button" class="btn btn-danger" id="return-pc-builder-btn">
+                                            <i class="fas fa-undo"></i>
+                                            Return Order
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
+
+                            @if($isReturned)
+                                <hr>
+
+                                <div class="text-center">
+                                    <span class="badge badge-warning" style="font-size:15px;">
+                                        <i class="fas fa-undo"></i>
+                                        Product Returned
+                                    </span>
+                                </div>
+
+                                <div class="mt-4">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Return Reason</strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->return_reason ?? '-' }}
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <strong>Return Remark</strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->return_remark ?? '-' }}
+                                            </p>
+                                        </div>
+
+                                        @if($pcBuilder->returned_at)
+                                            <div class="col-md-4">
+                                                <strong>Returned At</strong>
+                                                <p class="mt-1 mb-0">
+                                                    {{ $pcBuilder->returned_at->format('d-m-Y h:i A') }}
+                                                </p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -429,6 +553,139 @@
     </div>
 </section>
 @endsection
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cancelBtn = document.getElementById('cancel-pc-builder-btn');
+    const cancelForm = document.getElementById('cancel-pc-builder-form');
+
+    if (!cancelBtn || !cancelForm) {
+        return;
+    }
+
+    cancelBtn.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Cancel Order',
+            html: `
+                <select id="swal-cancel-reason" class="swal2-select" style="width:100%;margin:10px 0;">
+                    <option value="">Select cancellation reason</option>
+                    <option value="Changed my mind">Changed my mind</option>
+                    <option value="Ordered by mistake">Ordered by mistake</option>
+                    <option value="Found a better price">Found a better price</option>
+                    <option value="Product is no longer required">Product is no longer required</option>
+                    <option value="Want to change the product">Want to change the product</option>
+                    <option value="Delivery is taking too long">Delivery is taking too long</option>
+                    <option value="Payment issue">Payment issue</option>
+                    <option value="Other">Other</option>
+                </select>
+                <textarea id="swal-cancel-remark" class="swal2-textarea" placeholder="Enter remark (optional)" style="width:100%;margin:10px 0;"></textarea>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: '#fc544b',
+            cancelButtonColor: '#2878f0',
+            confirmButtonText: 'Continue',
+            cancelButtonText: 'Cancel',
+            preConfirm: function() {
+                const reason = document.getElementById('swal-cancel-reason').value;
+                const remark = document.getElementById('swal-cancel-remark').value.trim();
+
+                if (!reason) {
+                    Swal.showValidationMessage('Please select a cancellation reason.');
+                    return false;
+                }
+
+                return {
+                    reason: reason,
+                    remark: remark
+                };
+            }
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                document.getElementById('cancel_reason').value = result.value.reason;
+                document.getElementById('cancel_remark').value = result.value.remark;
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you really want to cancel this order?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#fc544b',
+                    cancelButtonColor: '#2878f0',
+                    confirmButtonText: 'Yes, Cancel Order',
+                    cancelButtonText: 'No'
+                }).then(function(confirmResult) {
+                    if (confirmResult.isConfirmed) {
+                        cancelForm.submit();
+                    }
+                });
+            }
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const returnBtn = document.getElementById('return-pc-builder-btn');
+    const returnForm = document.getElementById('return-pc-builder-form');
+
+    if (!returnBtn || !returnForm) return;
+
+    returnBtn.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Return Order',
+            html: `
+                <select id="swal-return-reason" class="swal2-select" style="width:100%;margin:10px 0;">
+                    <option value="">Select return reason</option>
+                    <option value="Product damaged">Product damaged</option>
+                    <option value="Wrong product received">Wrong product received</option>
+                    <option value="Product not as described">Product not as described</option>
+                    <option value="Quality issue">Quality issue</option>
+                    <option value="Performance issue">Performance issue</option>
+                    <option value="Missing component">Missing component</option>
+                    <option value="Other">Other</option>
+                </select>
+                <textarea id="swal-return-remark" class="swal2-textarea" placeholder="Enter return remark (optional)" style="width:100%;margin:10px 0;"></textarea>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: '#2878f0',
+            cancelButtonColor: '#fc544b',
+            confirmButtonText: 'Continue',
+            cancelButtonText: 'Cancel',
+            preConfirm: function() {
+                const reason = document.getElementById('swal-return-reason').value;
+                const remark = document.getElementById('swal-return-remark').value.trim();
+
+                if (!reason) {
+                    Swal.showValidationMessage('Please select a return reason.');
+                    return false;
+                }
+
+                return {
+                    reason: reason,
+                    remark: remark
+                };
+            }
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                document.getElementById('return_reason').value = result.value.reason;
+                document.getElementById('return_remark').value = result.value.remark;
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you really want to return this order?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#2878f0',
+                    cancelButtonColor: '#fc544b',
+                    confirmButtonText: 'Yes, Return Order',
+                    cancelButtonText: 'No'
+                }).then(function(confirmResult) {
+                    if (confirmResult.isConfirmed) {
+                        returnForm.submit();
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
 @push('scripts')
 @if(session('success'))
 <script>

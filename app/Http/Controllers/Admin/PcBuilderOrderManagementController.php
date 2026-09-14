@@ -223,4 +223,72 @@ class PcBuilderOrderManagementController extends Controller
             'Invalid payment method.'
         );
     }
+
+    public function cancel(Request $request, PcBuilder $pcBuilder)
+    {
+        abort_unless($pcBuilder->user_id === $request->user()->id, 403);
+
+        $request->validate([
+            'cancel_reason' => 'required|string|max:255',
+            'cancel_remark' => 'nullable|string|max:1000',
+        ]);
+
+        $currentStatus = (int) $pcBuilder->status;
+
+        if (! in_array($currentStatus, [0, 1], true)) {
+            return back()->with('error', 'This order cannot be cancelled at this stage.');
+        }
+
+        if ($pcBuilder->created_at->diffInHours(now()) >= 24) {
+            return back()->with('error', 'Order cancellation is available only within 24 hours of placing the order.');
+        }
+
+        DB::transaction(function () use ($pcBuilder, $request) {
+            $pcBuilder->update([
+                'status' => 5,
+                'cancel_reason' => $request->cancel_reason,
+                'cancel_remark' => $request->cancel_remark,
+                'cancelled_at' => now(),
+            ]);
+
+            PcBuilderStatusHistory::create([
+                'pc_builder_id' => $pcBuilder->id,
+                'status' => 5,
+                'updated_by' => auth()->id(),
+            ]);
+        });
+
+        return back()->with('success', 'PC Builder order cancelled successfully.');
+    }
+
+    public function returnOrder(Request $request, PcBuilder $pcBuilder)
+    {
+        abort_unless($pcBuilder->user_id === $request->user()->id, 403);
+
+        $request->validate([
+            'return_reason' => 'required|string|max:1000',
+            'return_remark' => 'nullable|string|max:1000',
+        ]);
+
+        if ((int) $pcBuilder->status !== 4) {
+            return back()->with('error', 'Only delivered orders can be returned.');
+        }
+
+        DB::transaction(function () use ($pcBuilder, $request) {
+            $pcBuilder->update([
+                'status' => 8,
+                'return_reason' => $request->return_reason,
+                'return_remark' => $request->return_remark,
+                'returned_at' => now(),
+            ]);
+
+            PcBuilderStatusHistory::create([
+                'pc_builder_id' => $pcBuilder->id,
+                'status' => 8,
+                'updated_by' => auth()->id(),
+            ]);
+        });
+
+        return back()->with('success', 'Return request submitted successfully.');
+    }
 }
