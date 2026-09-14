@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class MyOrderController extends Controller
@@ -89,5 +90,76 @@ class MyOrderController extends Controller
             ->get();
 
         return view('admin.myorders.refund', compact('orders'));
+    }
+    
+    public function downloadInvoice(Request $request, Order $order)
+    {
+        abort_unless(
+            $order->user_id === $request->user()->id,
+            403
+        );
+
+        $order->load([
+            'user',
+            'items.product.gst',
+        ]);
+
+        $subtotal = 0;
+        $totalGst = 0;
+
+        foreach ($order->items as $item) {
+            $itemSubtotal = (float) $item->price * (int) $item->quantity;
+
+            $hasGst = $item->product &&
+                strtolower(trim((string) $item->product->gst_type)) === 'yes';
+
+            $gstRate = 0;
+
+            if ($hasGst && $item->product->gst) {
+                $gstRate = (float) $item->product->gst->gst_amount;
+            }
+
+            $itemGst = 0;
+
+            if ($hasGst && $gstRate > 0) {
+                $itemGst = round(
+                    ($itemSubtotal * $gstRate) / 100,
+                    2
+                );
+            }
+
+            $subtotal += $itemSubtotal;
+            $totalGst += $itemGst;
+        }
+
+        $discount = (float) ($order->discount_amount ?? 0);
+        $shipping = (float) ($order->shipping_amount ?? 0);
+
+        $taxableAmount = $subtotal - $discount;
+
+        if ($taxableAmount < 0) {
+            $taxableAmount = 0;
+        }
+
+        $grandTotal = round(
+            $taxableAmount + $shipping + $totalGst,
+            2
+        );
+
+        $pdf = Pdf::loadView('admin.invoices.my-order-invoice', [
+            'order' => $order,
+            'subtotal' => round($subtotal, 2),
+            'discount' => $discount,
+            'shipping' => $shipping,
+            'taxableAmount' => round($taxableAmount, 2),
+            'totalGst' => round($totalGst, 2),
+            'grandTotal' => $grandTotal,
+        ]);
+
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download(
+            'invoice-' . $order->order_number . '.pdf'
+        );
     }
 }
