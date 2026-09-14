@@ -568,6 +568,40 @@
                                     Order Cancelled
 
                                 </span>
+                                <div class="mt-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>
+                                                Cancellation Reason
+                                            </strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->cancel_reason ?? '-' }}
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <strong>
+                                                Cancellation Remark
+                                            </strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->cancel_remark ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    @if($pcBuilder->cancelled_at)
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <strong>
+                                                    Cancelled At
+                                                </strong>
+                                                <p class="mt-1 mb-0">
+                                                    {{ $pcBuilder->cancelled_at->format('d-m-Y h:i A') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
 
                             </div>
 

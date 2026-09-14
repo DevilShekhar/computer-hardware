@@ -123,6 +123,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/pc-builder-orders', [PcBuilderOrderManagementController::class, 'index'])->name('pc-builder-orders.index');
     Route::get('/pc-builder-orders/{pcBuilder}', [PcBuilderOrderManagementController::class, 'show'])->name('pc-builder-orders.show');
     Route::post('/pc-builder-orders/{pcBuilder}/update-status', [PcBuilderOrderManagementController::class, 'updateStatus'])->name('pc-builder-orders.update-status');
+    Route::put('/my-pc-builder-orders/{pcBuilder}/cancel', [PcBuilderOrderManagementController::class, 'cancel'])->name('my-pc-builder-orders.cancel');
+    Route::put('/my-pc-builder-orders/{pcBuilder}/return', [PcBuilderOrderManagementController::class, 'returnOrder'])->name('my-pc-builder-orders.return');
 });
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
 Route::get('/our-brand', [OurBrandController::class, 'index'])->name('our-brand');
