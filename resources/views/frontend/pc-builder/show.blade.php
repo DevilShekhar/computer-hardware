@@ -1,5 +1,5 @@
 @extends('frontend.layouts.app')
-@section('title', $meta_title) 
+@section('title', $meta_title)
 @section('meta_keyword', $meta_keyword)
 @section('meta_description', $meta_description)
 @section('content')
@@ -1119,20 +1119,18 @@ $(document).ready(function() {
         const selectedProducts = {};
 
         $('.builder-product-radio:checked').each(function() {
-            const product =
-                $(this);
+            const product = $(this);
 
             selectedProducts[
-                String(
-                    product.data('product-type')
-                )
-            ] = String(
-                product.val()
-            );
+                String(product.data('product-type'))
+            ] = String(product.val());
         });
 
         if (!Object.keys(selectedProducts).length) {
-            Swal.fire({ icon: 'warning', text: 'Please select at least one product.' });
+            Swal.fire({
+                icon: 'warning',
+                text: 'Please select at least one product.'
+            });
 
             return;
         }
@@ -1141,6 +1139,8 @@ $(document).ready(function() {
             storageKey,
             JSON.stringify(selectedProducts)
         );
+
+        window.location.href = '{{ route('pc-builder.checkout') }}';
     });
 
     restoreProducts();

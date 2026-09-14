@@ -373,6 +373,12 @@
                                 <span>My Orders</span>
                             </a>
                         </li>
+                        <li class="{{ request()->routeIs('my-pc-builder-orders*') ? 'active' : '' }}">
+                            <a href="{{ route('my-pc-builder-orders') }}" class="nav-link">
+                                <i data-feather="shopping-bag"></i>
+                                <span>My PC Builder Orders</span>
+                            </a>
+                        </li>
                         @endcan
                         @can('promotional-banner-manage')
                             <li class="{{ request()->routeIs('promotional-banners.*') ? 'active' : '' }}">
@@ -511,6 +517,12 @@
                             <a href="{{ route('checkout.index') }}" class="nav-link">
                                 <i data-feather="shopping-cart"></i>
                                 <span>Go To Checkout</span>
+                            </a>
+                        </li>
+                        <li class="{{ request()->routeIs('pc-builder.checkout.*') ? 'active' : '' }}">
+                            <a href="{{ route('pc-builder.checkout') }}" class="nav-link">
+                                <i data-feather="shopping-cart"></i>
+                                <span>Go To PC Builder Checkout</span>
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('checkout.index.*') ? 'active' : '' }}">
