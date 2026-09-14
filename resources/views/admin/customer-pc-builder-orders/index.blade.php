@@ -97,9 +97,12 @@
                                         </td>
                                         <td>{{ $order->created_at ? $order->created_at->format('d-m-Y') : '-' }}</td>
                                         <td>
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center" style="gap: 5px;">
                                                 <a href="{{ route('pc-builder-orders.show', $order->id) }}" class="btn btn-info btn-sm" title="View PC Builder Order">
                                                     <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('pc-builder-orders.invoice', $order->id) }}" class="btn btn-danger btn-sm ml-1" title="Download Invoice">
+                                                    <i class="fas fa-file-pdf"></i>
                                                 </a>
                                             </div>
                                         </td>

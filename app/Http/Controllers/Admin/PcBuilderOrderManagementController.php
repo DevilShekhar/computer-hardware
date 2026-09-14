@@ -7,6 +7,7 @@ use App\Models\PcBuilder;
 use App\Models\PcBuilderStatusHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Razorpay\Api\Api;
 
 class PcBuilderOrderManagementController extends Controller
@@ -308,5 +309,18 @@ class PcBuilderOrderManagementController extends Controller
         });
 
         return back()->with('success', 'Return request submitted successfully.');
+    }
+    public function downloadInvoice(PcBuilder $pcBuilder)
+    {
+        $pcBuilder->load('user');
+
+        $pdf = Pdf::loadView(
+            'admin.customer-pc-builder-orders.invoice',
+            compact('pcBuilder')
+        );
+
+        return $pdf->download(
+            'pc-builder-invoice-'.$pcBuilder->builder_number.'.pdf'
+        );
     }
 }
