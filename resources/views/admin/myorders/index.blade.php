@@ -127,9 +127,12 @@
                                             {{ $order->created_at ? $order->created_at->format('d-m-Y') : '-' }}
                                         </td>
                                         <td>
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center" style="gap: 5px;">
                                                 <a href="{{ route('my-orders.show', $order->id) }}" class="btn btn-info btn-sm" title="View Order">
                                                     <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('my-orders.invoice', $order->id) }}" class="btn btn-success btn-sm" title="Download Invoice">
+                                                    <i class="fas fa-download"></i>
                                                 </a>
                                             </div>
                                         </td>

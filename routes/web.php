@@ -96,6 +96,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-orders/{order}', [MyOrderController::class, 'show'])->name('my-orders.show');
     Route::put('/my-orders/{order}/cancel', [MyOrderController::class, 'cancel'])->name('my-orders.cancel');
     Route::put('/my-orders/{id}/return', [MyOrderController::class, 'returnOrder'])->name('my-orders.return');
+    Route::get('/my-orders/{order}/invoice',[MyOrderController::class, 'downloadInvoice'])->name('my-orders.invoice');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
