@@ -129,6 +129,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/my-pc-builder-orders/{pcBuilder}/cancel', [PcBuilderOrderManagementController::class, 'cancel'])->name('my-pc-builder-orders.cancel');
     Route::put('/my-pc-builder-orders/{pcBuilder}/return', [PcBuilderOrderManagementController::class, 'returnOrder'])->name('my-pc-builder-orders.return');
     Route::put('/pc-builder-orders/{pcBuilder}/refund', [PcBuilderOrderManagementController::class, 'refund'])->name('pc-builder-orders.refund');
+    Route::get('/pc-builder-orders/{pcBuilder}/invoice', [PcBuilderOrderManagementController::class, 'downloadInvoice'])->name('pc-builder-orders.invoice');
 });
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
 Route::get('/our-brand', [OurBrandController::class, 'index'])->name('our-brand');
