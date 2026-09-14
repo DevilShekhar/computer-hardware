@@ -138,7 +138,16 @@ class PermissionSeeder extends Seeder
             'dashboard-expired-coupon-count',
             'dashboard-latest-order',
             'dashboard-latest-review',
-            'dashboard-chart'
+            'dashboard-chart',
+
+            //my pc builder
+            'my-pc-builder-order-index',
+            'my-pc-builder-order-show',
+
+            //pc builder order
+            'pc-builder-order-index',
+            'pc-builder-order-show',
+
 
         ];
         /*
