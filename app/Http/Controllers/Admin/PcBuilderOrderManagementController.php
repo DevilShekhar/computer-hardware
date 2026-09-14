@@ -7,7 +7,7 @@ use App\Models\PcBuilder;
 use App\Models\PcBuilderStatusHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Razorpay\Api\Api;
 
 class PcBuilderOrderManagementController extends Controller
 {
@@ -135,93 +135,109 @@ class PcBuilderOrderManagementController extends Controller
 
     public function refund(Request $request, PcBuilder $pcBuilder)
     {
-        if (! in_array(
-            $pcBuilder->status,
-            ['cancelled', 'returned'],
-            true
-        )) {
-            return back()->with(
-                'error',
-                'Only returned and cancelled orders can be refunded.'
-            );
+        if ((int) $pcBuilder->status !== 8) {
+            return back()->with('error', 'Only returned orders can be refunded.');
         }
 
-        if ($pcBuilder->payment_status === 'refunded') {
-            return back()->with(
-                'error',
-                'Refund has already been processed.'
-            );
+        if ($pcBuilder->payment_status === 'refunded' || (int) $pcBuilder->status === 7) {
+            return back()->with('error', 'This order has already been refunded.');
+        }
+
+        $refundAmount = (float) $pcBuilder->total_amount;
+
+        if ($refundAmount <= 0) {
+            return back()->with('error', 'Invalid refund amount.');
+        }
+
+        if ($pcBuilder->payment_method === 'cod') {
+            $request->validate([
+                'customer_upi_id' => 'nullable|string|max:255',
+            ]);
+
+            DB::transaction(function () use ($pcBuilder, $refundAmount, $request) {
+                $pcBuilder->update([
+                    'status' => 7,
+                    'payment_status' => 'refunded',
+                    'refund_status' => 'processed',
+                    'refund_method' => 'upi',
+                    'refund_amount' => $refundAmount,
+                    'customer_upi_id' => $request->customer_upi_id,
+                    'refunded_at' => now(),
+                ]);
+
+                PcBuilderStatusHistory::create([
+                    'pc_builder_id' => $pcBuilder->id,
+                    'status' => 7,
+                    'updated_by' => auth()->id(),
+                ]);
+            });
+
+            return back()->with('success', 'COD refund marked as processed successfully.');
         }
 
         if ($pcBuilder->payment_method === 'razorpay') {
-
-            if (empty($pcBuilder->razorpay_payment_id)) {
-                return back()->with(
-                    'error',
-                    'Razorpay payment ID is missing.'
-                );
+            if (!$pcBuilder->razorpay_payment_id) {
+                return back()->with('error', 'Razorpay payment ID not found.');
             }
 
             try {
-                $api = new \Razorpay\Api\Api(
+                $api = new Api(
                     config('services.razorpay.key'),
                     config('services.razorpay.secret')
                 );
 
-                $refund = $api->payment
-                    ->fetch($pcBuilder->razorpay_payment_id)
-                    ->refund([
-                        'amount' => (int) round(
-                            $pcBuilder->total_amount * 100
-                        ),
+                $payment = $api->payment->fetch($pcBuilder->razorpay_payment_id);
+
+                if (($payment['status'] ?? null) !== 'captured') {
+                    return back()->with(
+                        'error',
+                        'Razorpay payment is not captured. Current status: '.($payment['status'] ?? 'unknown')
+                    );
+                }
+
+                $capturedAmount = (int) ($payment['amount'] ?? 0);
+                $refundedAmount = (int) ($payment['amount_refunded'] ?? 0);
+                $remainingAmount = $capturedAmount - $refundedAmount;
+
+                $refundAmountPaise = (int) round($refundAmount * 100);
+
+                if ($refundAmountPaise > $remainingAmount) {
+                    return back()->with(
+                        'error',
+                        'Refund amount is greater than the remaining Razorpay payment amount.'
+                    );
+                }
+
+                $refund = $payment->refund([
+                    'amount' => $refundAmountPaise,
+                ]);
+
+                DB::transaction(function () use ($pcBuilder, $refund, $refundAmount) {
+                    $pcBuilder->update([
+                        'status' => 7,
+                        'payment_status' => 'refunded',
+                        'refund_status' => $refund['status'] ?? 'processed',
+                        'refund_method' => 'razorpay',
+                        'refund_amount' => $refundAmount,
+                        'razorpay_refund_id' => $refund['id'] ?? null,
+                        'refunded_at' => now(),
                     ]);
 
-                DB::transaction(function () use ($pcBuilder) {
-                    $pcBuilder->update([
-                        'payment_status' => 'refunded',
-                        'status' => 'refunded',
+                    PcBuilderStatusHistory::create([
+                        'pc_builder_id' => $pcBuilder->id,
+                        'status' => 7,
+                        'updated_by' => auth()->id(),
                     ]);
                 });
 
-                return back()->with(
-                    'success',
-                    'Razorpay refund processed successfully.'
-                );
+                return back()->with('success', 'Razorpay refund processed successfully.');
 
             } catch (\Throwable $e) {
-
-                Log::error('PC Builder Razorpay refund failed', [
-                    'pc_builder_id' => $pcBuilder->id,
-                    'builder_number' => $pcBuilder->builder_number,
-                    'razorpay_payment_id' => $pcBuilder->razorpay_payment_id,
-                    'message' => $e->getMessage(),
-                ]);
-
-                return back()->with(
-                    'error',
-                    'Razorpay refund failed. Please try again.'
-                );
+                return back()->with('error', 'Razorpay refund failed: '.$e->getMessage());
             }
         }
 
-        if ($pcBuilder->payment_method === 'cod') {
-            DB::transaction(function () use ($pcBuilder) {
-                $pcBuilder->update([
-                    'payment_status' => 'refunded',
-                    'status' => 'refunded',
-                ]);
-            });
-
-            return back()->with(
-                'success',
-                'COD refund marked successfully.'
-            );
-        }
-
-        return back()->with(
-            'error',
-            'Invalid payment method.'
-        );
+        return back()->with('error', 'Invalid payment method.');
     }
 
     public function cancel(Request $request, PcBuilder $pcBuilder)
@@ -268,6 +284,7 @@ class PcBuilderOrderManagementController extends Controller
         $request->validate([
             'return_reason' => 'required|string|max:1000',
             'return_remark' => 'nullable|string|max:1000',
+            'customer_upi_id' => 'required|string|max:255',
         ]);
 
         if ((int) $pcBuilder->status !== 4) {
@@ -279,6 +296,7 @@ class PcBuilderOrderManagementController extends Controller
                 'status' => 8,
                 'return_reason' => $request->return_reason,
                 'return_remark' => $request->return_remark,
+                'customer_upi_id' => $request->customer_upi_id,
                 'returned_at' => now(),
             ]);
 

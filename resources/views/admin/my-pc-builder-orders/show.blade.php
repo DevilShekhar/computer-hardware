@@ -404,9 +404,7 @@
                             @if($currentStatus === 4)
                                 <hr>
                                 <div class="text-center">
-                                    <h6 class="mb-3">
-                                        Order Actions
-                                    </h6>
+                                    <h6 class="mb-3">Order Actions</h6>
 
                                     <form action="{{ route('my-pc-builder-orders.return', $pcBuilder->id) }}" method="POST" id="return-pc-builder-form">
                                         @csrf
@@ -414,6 +412,7 @@
 
                                         <input type="hidden" name="return_reason" id="return_reason">
                                         <input type="hidden" name="return_remark" id="return_remark">
+                                        <input type="hidden" name="customer_upi_id" id="customer_upi_id">
 
                                         <button type="button" class="btn btn-danger" id="return-pc-builder-btn">
                                             <i class="fas fa-undo"></i>
@@ -558,132 +557,113 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancel-pc-builder-btn');
     const cancelForm = document.getElementById('cancel-pc-builder-form');
 
-    if (!cancelBtn || !cancelForm) {
-        return;
+    if (cancelBtn && cancelForm) {
+        cancelBtn.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Cancel Order',
+                html: `
+                    <select id="swal-cancel-reason" class="swal2-select" style="width:100%;margin:10px 0;">
+                        <option value="">Select cancellation reason</option>
+                        <option value="Changed my mind">Changed my mind</option>
+                        <option value="Ordered by mistake">Ordered by mistake</option>
+                        <option value="Found a better price">Found a better price</option>
+                        <option value="Product is no longer required">Product is no longer required</option>
+                        <option value="Want to change the product">Want to change the product</option>
+                        <option value="Delivery is taking too long">Delivery is taking too long</option>
+                        <option value="Payment issue">Payment issue</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <textarea id="swal-cancel-remark" class="swal2-textarea" placeholder="Enter remark (optional)" style="width:100%;margin:10px 0;"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#fc544b',
+                cancelButtonColor: '#2878f0',
+                confirmButtonText: 'Continue',
+                cancelButtonText: 'Cancel',
+                preConfirm: function() {
+                    const reason = document.getElementById('swal-cancel-reason').value;
+                    const remark = document.getElementById('swal-cancel-remark').value.trim();
+
+                    if (!reason) {
+                        Swal.showValidationMessage('Please select a cancellation reason.');
+                        return false;
+                    }
+
+                    return {
+                        reason: reason,
+                        remark: remark
+                    };
+                }
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    document.getElementById('cancel_reason').value = result.value.reason;
+                    document.getElementById('cancel_remark').value = result.value.remark;
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'Do you really want to cancel this order?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#fc544b',
+                        cancelButtonColor: '#2878f0',
+                        confirmButtonText: 'Yes, Cancel Order',
+                        cancelButtonText: 'No'
+                    }).then(function(confirmResult) {
+                        if (confirmResult.isConfirmed) {
+                            cancelForm.submit();
+                        }
+                    });
+                }
+            });
+        });
     }
 
-    cancelBtn.addEventListener('click', function() {
-        Swal.fire({
-            title: 'Cancel Order',
-            html: `
-                <select id="swal-cancel-reason" class="swal2-select" style="width:100%;margin:10px 0;">
-                    <option value="">Select cancellation reason</option>
-                    <option value="Changed my mind">Changed my mind</option>
-                    <option value="Ordered by mistake">Ordered by mistake</option>
-                    <option value="Found a better price">Found a better price</option>
-                    <option value="Product is no longer required">Product is no longer required</option>
-                    <option value="Want to change the product">Want to change the product</option>
-                    <option value="Delivery is taking too long">Delivery is taking too long</option>
-                    <option value="Payment issue">Payment issue</option>
-                    <option value="Other">Other</option>
-                </select>
-                <textarea id="swal-cancel-remark" class="swal2-textarea" placeholder="Enter remark (optional)" style="width:100%;margin:10px 0;"></textarea>
-            `,
-            showCancelButton: true,
-            confirmButtonColor: '#fc544b',
-            cancelButtonColor: '#2878f0',
-            confirmButtonText: 'Continue',
-            cancelButtonText: 'Cancel',
-            preConfirm: function() {
-                const reason = document.getElementById('swal-cancel-reason').value;
-                const remark = document.getElementById('swal-cancel-remark').value.trim();
-
-                if (!reason) {
-                    Swal.showValidationMessage('Please select a cancellation reason.');
-                    return false;
-                }
-
-                return {
-                    reason: reason,
-                    remark: remark
-                };
-            }
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                document.getElementById('cancel_reason').value = result.value.reason;
-                document.getElementById('cancel_remark').value = result.value.remark;
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'Do you really want to cancel this order?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#fc544b',
-                    cancelButtonColor: '#2878f0',
-                    confirmButtonText: 'Yes, Cancel Order',
-                    cancelButtonText: 'No'
-                }).then(function(confirmResult) {
-                    if (confirmResult.isConfirmed) {
-                        cancelForm.submit();
-                    }
-                });
-            }
-        });
-    });
-});
-document.addEventListener('DOMContentLoaded', function() {
     const returnBtn = document.getElementById('return-pc-builder-btn');
     const returnForm = document.getElementById('return-pc-builder-form');
 
-    if (!returnBtn || !returnForm) return;
+    if (returnBtn && returnForm) {
+        returnBtn.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Return Order',
+                html:
+                    '<input id="swal-return-reason" class="swal2-input" placeholder="Return reason">' +
+                    '<textarea id="swal-return-remark" class="swal2-textarea" placeholder="Additional remark"></textarea>' +
+                    '<input id="swal-customer-upi" class="swal2-input" placeholder="Customer UPI ID">',
+                showCancelButton: true,
+                confirmButtonColor: '#2878f0',
+                cancelButtonColor: '#fc544b',
+                confirmButtonText: 'Submit Return',
+                cancelButtonText: 'Cancel',
+                preConfirm: function() {
+                    const reason = document.getElementById('swal-return-reason').value.trim();
+                    const upi = document.getElementById('swal-customer-upi').value.trim();
 
-    returnBtn.addEventListener('click', function() {
-        Swal.fire({
-            title: 'Return Order',
-            html: `
-                <select id="swal-return-reason" class="swal2-select" style="width:100%;margin:10px 0;">
-                    <option value="">Select return reason</option>
-                    <option value="Product damaged">Product damaged</option>
-                    <option value="Wrong product received">Wrong product received</option>
-                    <option value="Product not as described">Product not as described</option>
-                    <option value="Quality issue">Quality issue</option>
-                    <option value="Performance issue">Performance issue</option>
-                    <option value="Missing component">Missing component</option>
-                    <option value="Other">Other</option>
-                </select>
-                <textarea id="swal-return-remark" class="swal2-textarea" placeholder="Enter return remark (optional)" style="width:100%;margin:10px 0;"></textarea>
-            `,
-            showCancelButton: true,
-            confirmButtonColor: '#2878f0',
-            cancelButtonColor: '#fc544b',
-            confirmButtonText: 'Continue',
-            cancelButtonText: 'Cancel',
-            preConfirm: function() {
-                const reason = document.getElementById('swal-return-reason').value;
-                const remark = document.getElementById('swal-return-remark').value.trim();
-
-                if (!reason) {
-                    Swal.showValidationMessage('Please select a return reason.');
-                    return false;
-                }
-
-                return {
-                    reason: reason,
-                    remark: remark
-                };
-            }
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                document.getElementById('return_reason').value = result.value.reason;
-                document.getElementById('return_remark').value = result.value.remark;
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'Do you really want to return this order?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#2878f0',
-                    cancelButtonColor: '#fc544b',
-                    confirmButtonText: 'Yes, Return Order',
-                    cancelButtonText: 'No'
-                }).then(function(confirmResult) {
-                    if (confirmResult.isConfirmed) {
-                        returnForm.submit();
+                    if (!reason) {
+                        Swal.showValidationMessage('Return reason is required.');
+                        return false;
                     }
-                });
-            }
+
+                    if (!upi) {
+                        Swal.showValidationMessage('Customer UPI ID is required.');
+                        return false;
+                    }
+
+                    return {
+                        reason: reason,
+                        remark: document.getElementById('swal-return-remark').value.trim(),
+                        upi: upi
+                    };
+                }
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    document.getElementById('return_reason').value = result.value.reason;
+                    document.getElementById('return_remark').value = result.value.remark;
+                    document.getElementById('customer_upi_id').value = result.value.upi;
+                    returnForm.submit();
+                }
+            });
         });
-    });
+    }
 });
 </script>
 @push('scripts')

@@ -65,7 +65,11 @@
                             </div>
                             <div class="col-md-3">
                                 <strong>Payment Method</strong>
-                                <p>{{ strtoupper($pcBuilder->payment_method ?? '-') }}</p>
+                                <p class="mb-1">{{ strtoupper($pcBuilder->payment_method ?? '-') }}</p>
+                                @if($pcBuilder->payment_method === 'cod')
+                                    <strong>Customer UPI ID</strong>
+                                    <p class="mb-0">{{ $pcBuilder->customer_upi_id ?? '-' }}</p>
+                                @endif
                             </div>
                             <div class="col-md-3">
                                 <strong>Payment Status</strong>
@@ -502,21 +506,73 @@
                             @endif
 
                             @if($isRefunded)
+                                <hr>
 
-                            <div class="text-center">
+                                <div class="text-center">
+                                    <span class="badge badge-dark" style="font-size:15px;">
+                                        <i class="fas fa-undo"></i>
+                                        Order Refunded
+                                    </span>
+                                </div>
 
-                                <span
-                                    class="badge badge-dark"
-                                    style="font-size:15px;">
+                                <div class="mt-4">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Return Reason</strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->return_reason ?? '-' }}
+                                            </p>
+                                        </div>
 
-                                    <i class="fas fa-check-circle"></i>
+                                        <div class="col-md-4">
+                                            <strong>Return Remark</strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->return_remark ?? '-' }}
+                                            </p>
+                                        </div>
 
-                                    Order Refunded
+                                        <div class="col-md-4">
+                                            <strong>Refund Amount</strong>
+                                            <p class="mt-1 mb-0">
+                                                ₹{{ number_format($pcBuilder->refund_amount ?? $pcBuilder->total_amount, 2) }}
+                                            </p>
+                                        </div>
+                                    </div>
 
-                                </span>
+                                    <div class="row mt-3">
+                                        <div class="col-md-4">
+                                            <strong>Refund Method</strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ ucfirst($pcBuilder->refund_method ?? '-') }}
+                                            </p>
+                                        </div>
 
-                            </div>
+                                        <div class="col-md-4">
+                                            <strong>Refund Status</strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ ucfirst($pcBuilder->refund_status ?? '-') }}
+                                            </p>
+                                        </div>
 
+                                        <div class="col-md-4">
+                                            <strong>Refunded At</strong>
+                                            <p class="mt-1 mb-0">
+                                                {{ $pcBuilder->refunded_at ? $pcBuilder->refunded_at->format('d-m-Y h:i A') : '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    @if($pcBuilder->razorpay_refund_id)
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <strong>Razorpay Refund ID</strong>
+                                                <p class="mt-1 mb-0 text-break">
+                                                    {{ $pcBuilder->razorpay_refund_id }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
                             @endif
 
                             @if($isReturned)
@@ -605,6 +661,25 @@
 
                             </div>
 
+                            @endif
+                            @if((int) $pcBuilder->status === 8)
+                                <hr>
+                                <div class="text-center">
+                                    <h6 class="mb-3">Refund Order</h6>
+                                    <form action="{{ route('pc-builder-orders.refund', $pcBuilder->id) }}" method="POST" id="refund-pc-builder-form">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="form-group text-left">
+                                            <label>Refund Amount</label>
+                                            <input type="text" class="form-control" value="₹{{ number_format($pcBuilder->total_amount, 2) }}" readonly>
+                                        </div>
+
+                                        <button type="button" class="btn btn-danger" id="refund-pc-builder-btn">
+                                            <i class="fas fa-undo"></i>
+                                            Refund Order
+                                        </button>
+                                    </form>
+                                </div>
                             @endif
 
                         </div>
@@ -723,6 +798,31 @@ $(document).ready(function() {
         }).then(function(result) {
             if(result.isConfirmed) {
                 form.submit();
+            }
+        });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const refundBtn = document.getElementById('refund-pc-builder-btn');
+    const refundForm = document.getElementById('refund-pc-builder-form');
+
+    if (!refundBtn || !refundForm) return;
+
+    refundBtn.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Refund Order?',
+            text: 'The full order amount will be refunded.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#2878f0',
+            cancelButtonColor: '#fc544b',
+            confirmButtonText: 'Yes, Refund Order',
+            cancelButtonText: 'Cancel'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                refundForm.submit();
             }
         });
     });

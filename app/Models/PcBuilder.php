@@ -37,6 +37,12 @@ class PcBuilder extends Model
         'return_reason',
         'return_remark',
         'returned_at',
+        'razorpay_refund_id',
+        'refund_status',
+        'refund_method',
+        'refund_amount',
+        'customer_upi_id',
+        'refunded_at',
     ];
 
     protected $casts = [
@@ -48,6 +54,8 @@ class PcBuilder extends Model
         'total_amount' => 'decimal:2',
         'cancelled_at' => 'datetime',
         'returned_at' => 'datetime',
+        'refunded_at' => 'datetime',
+        'refund_amount' => 'decimal:2',
     ];
 
     public function user(): BelongsTo
