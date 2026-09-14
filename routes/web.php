@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\MyOrderController;
+use App\Http\Controllers\Admin\MyPcBuilderOrderController;
 use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -111,6 +112,14 @@ Route::get('/compare', [OurProductController::class, 'compare'])->name('compare'
 Route::get('/compare/products', [OurProductController::class, 'compareProducts'])->name('compare.products');
 
 Route::get('/pc-builder', [PcBuilderController::class, 'index'])->name('pc-builder.index');
+Route::middleware('auth')->group(function () {
+    Route::get('/pc-builder/checkout', [PcBuilderController::class, 'checkout'])->name('pc-builder.checkout');
+    Route::post('/pc-builder/products', [PcBuilderController::class, 'getProducts'])->name('pc-builder.products');
+    Route::post('/pc-builder/place-order', [PcBuilderController::class, 'placeOrder'])->name('pc-builder.place-order');
+    Route::post('/pc-builder/verify-payment', [PcBuilderController::class, 'verifyPayment'])->name('pc-builder.verify-payment');
+    Route::get('/my-pc-builder-orders', [MyPcBuilderOrderController::class, 'index'])->name('my-pc-builder-orders');
+    Route::get('/my-pc-builder-orders/{pcBuilder}', [MyPcBuilderOrderController::class, 'show'])->name('my-pc-builder-orders.show');
+});
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
 Route::get('/our-brand', [OurBrandController::class, 'index'])->name('our-brand');
 Route::get('/our-brand/{slug}', [OurBrandController::class, 'show'])->name('our-brand.show');
