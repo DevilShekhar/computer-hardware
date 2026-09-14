@@ -1,4 +1,4 @@
-@can('my-order-index')
+@can('my-pc-builder-order-index')
 @extends('admin.layouts.app')
 @section('content')
 <section class="section">
@@ -59,64 +59,58 @@
                                             @endif
                                         </td>
                                         <td>
-                                            @switch(strtolower((string) $order->status))
-                                                @case('pending')
-                                                <div class="badge badge-warning badge-shadow">
-                                                    Pending
-                                                </div>
-                                                @break
-                                                @case('confirmed')
-                                                <div class="badge badge-info badge-shadow">
-                                                    Confirmed
-                                                </div>
-                                                @break
-                                                @case('processing')
-                                                <div class="badge badge-primary badge-shadow">
-                                                    Processing
-                                                </div>
-                                                @break
-                                                @case('shipped')
-                                                <div class="badge badge-info badge-shadow">
-                                                    Shipped
-                                                </div>
-                                                @break
-                                                @case('delivered')
-                                                <div class="badge badge-success badge-shadow">
-                                                    Delivered
-                                                </div>
-                                                @break
-                                                @case('cancelled')
-                                                @case('canceled')
-                                                <div class="badge badge-danger badge-shadow">
-                                                    Cancelled
-                                                </div>
-                                                @break
-                                                @case('failed')
-                                                <div class="badge badge-danger badge-shadow">
-                                                    Failed
-                                                </div>
-                                                @break
-                                                @case('refunded')
-                                                <div class="badge badge-dark badge-shadow">
-                                                    Refunded
-                                                </div>
-                                                @break
-                                                @case('returned')
-                                                <div class="badge badge-warning badge-shadow">
-                                                    Returned
-                                                </div>
-                                                @break
-                                                @case('return_requested')
-                                                <div class="badge badge-warning badge-shadow">
-                                                    Return Requested
-                                                </div>
-                                                @break
-                                                @default
-                                                <div class="badge badge-secondary badge-shadow">
-                                                    Unknown
-                                                </div>
-                                            @endswitch
-                                        </td>
+                                        @switch((int) $order->status)
+                                            @case(0)
+                                            <div class="badge badge-warning badge-shadow">
+                                                Pending
+                                            </div>
+                                            @break
+                                            @case(1)
+                                            <div class="badge badge-info badge-shadow">
+                                                Confirmed
+                                            </div>
+                                            @break
+                                            @case(2)
+                                            <div class="badge badge-primary badge-shadow">
+                                                Processing
+                                            </div>
+                                            @break
+                                            @case(3)
+                                            <div class="badge badge-info badge-shadow">
+                                                Shipped
+                                            </div>
+                                            @break
+                                            @case(4)
+                                            <div class="badge badge-success badge-shadow">
+                                                Delivered
+                                            </div>
+                                            @break
+                                            @case(5)
+                                            <div class="badge badge-danger badge-shadow">
+                                                Cancelled
+                                            </div>
+                                            @break
+                                            @case(6)
+                                            <div class="badge badge-danger badge-shadow">
+                                                Failed
+                                            </div>
+                                            @break
+                                            @case(7)
+                                            <div class="badge badge-dark badge-shadow">
+                                                Refunded
+                                            </div>
+                                            @break
+                                            @case(8)
+                                            <div class="badge badge-warning badge-shadow">
+                                                Returned
+                                            </div>
+                                            @break
+                                            @default
+                                            <div class="badge badge-secondary badge-shadow">
+                                                Unknown
+                                            </div>
+                                        @endswitch
+                                    </td>
                                         <td>
                                             {{ $order->created_at ? $order->created_at->format('d-m-Y') : '-' }}
                                         </td>

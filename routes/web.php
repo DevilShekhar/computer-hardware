@@ -34,6 +34,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\MyOrderController;
 use App\Http\Controllers\Admin\MyPcBuilderOrderController;
+use App\Http\Controllers\Admin\PcBuilderOrderManagementController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Admin\InvoiceController;
 use Illuminate\Support\Facades\Auth;
@@ -120,6 +121,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/pc-builder/verify-payment', [PcBuilderController::class, 'verifyPayment'])->name('pc-builder.verify-payment');
     Route::get('/my-pc-builder-orders', [MyPcBuilderOrderController::class, 'index'])->name('my-pc-builder-orders');
     Route::get('/my-pc-builder-orders/{pcBuilder}', [MyPcBuilderOrderController::class, 'show'])->name('my-pc-builder-orders.show');
+    Route::get('/pc-builder-orders', [PcBuilderOrderManagementController::class, 'index'])->name('pc-builder-orders.index');
+    Route::get('/pc-builder-orders/{pcBuilder}', [PcBuilderOrderManagementController::class, 'show'])->name('pc-builder-orders.show');
+    Route::post('/pc-builder-orders/{pcBuilder}/update-status', [PcBuilderOrderManagementController::class, 'updateStatus'])->name('pc-builder-orders.update-status');
 });
 Route::get('/pc-builder/{slug}', [PcBuilderController::class, 'show'])->name('pc-builder.show');
 Route::get('/our-brand', [OurBrandController::class, 'index'])->name('our-brand');
