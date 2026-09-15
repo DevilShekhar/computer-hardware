@@ -143,21 +143,19 @@ class PermissionSeeder extends Seeder
             //my pc builder
             'my-pc-builder-order-index',
             'my-pc-builder-order-show',
-
             //pc builder order
             'pc-builder-order-index',
             'pc-builder-order-show',
-
             //checkout-page
             'checkout-page',
-
             //my-refund
             'my-refund',
-
             //download-invoce
             'download-invoce',
             //pc-download-invoce
-            'pc-download-invoce'
+            'pc-download-invoce',
+            //dashboard-order-count
+            'dashboard-order-count'
         ];
         /*
         |--------------------------------------------------------------------------

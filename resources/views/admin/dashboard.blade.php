@@ -299,6 +299,224 @@
             </div>
             @endcan
         </div>
+
+        {{-- Order Status wise cards --}}
+        @can('dashboard-order-count')
+        <h4>Latest Customer Orders</h4>
+        <div class="row">
+
+            {{-- Pending --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 0]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Pending</h5>
+                                            <h2 class="mb-3 font-18">{{ $orderStatusCounts[0] ?? 0 }}</h2>
+                                            <p class="mb-0">Orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/1.png') }}" alt="Pending Orders">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Confirmed --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 1]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Confirmed</h5>
+                                            <h2 class="mb-3 font-18">{{ $orderStatusCounts[1] ?? 0 }}</h2>
+                                            <p class="mb-0">Orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/2.png') }}" alt="Confirmed Orders">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Processing --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 2]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Processing</h5>
+                                            <h2 class="mb-3 font-18">{{ $orderStatusCounts[2] ?? 0 }}</h2>
+                                            <p class="mb-0">Orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/3.png') }}" alt="Processing Orders">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Shipped --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 3]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Shipped</h5>
+                                            <h2 class="mb-3 font-18">{{ $orderStatusCounts[3] ?? 0 }}</h2>
+                                            <p class="mb-0">Orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/4.png') }}" alt="Shipped Orders">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Delivered --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 4]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Delivered</h5>
+                                            <h2 class="mb-3 font-18">{{ $orderStatusCounts[4] ?? 0 }}</h2>
+                                            <p class="mb-0">Orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/1.png') }}" alt="Delivered Orders">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Cancelled --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 5]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Cancelled</h5>
+                                            <h2 class="mb-3 font-18">{{ $orderStatusCounts[5] ?? 0 }}</h2>
+                                            <p class="mb-0">Orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/2.png') }}" alt="Cancelled Orders">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Failed --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 6]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="card-statistic-4">
+                                <div class="align-items-center justify-content-between">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                            <div class="card-content">
+                                                <h5 class="font-15">Failed</h5>
+                                                <h2 class="mb-3 font-18">{{ $orderStatusCounts[6] ?? 0 }}</h2>
+                                                <p class="mb-0">Orders</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                            <div class="banner-img">
+                                                <img src="{{ asset('assets/img/banner/3.png') }}" alt="Failed Orders">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            {{-- Refunded --}}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                <a href="{{ route('customer-orders.index', ['status' => 7]) }}" class="text-decoration-none">
+                    <div class="card dashboard-card">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Refunded</h5>
+                                            <h2 class="mb-3 font-18">{{ $orderStatusCounts[7] ?? 0 }}</h2>
+                                            <p class="mb-0">Orders</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img src="{{ asset('assets/img/banner/4.png') }}" alt="Refunded Orders">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        @endcan
+
         <div class="row">
             @can('dashboard-review-count')
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -336,7 +554,7 @@
                 </a>
             </div>
             @endcan
-            @can('dashboard-approved-review-count')      
+            @can('dashboard-approved-review-count')
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <a href="{{ route('product-review.index') }}" class="text-decoration-none">
                     <div class="card dashboard-card">
