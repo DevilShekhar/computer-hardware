@@ -14,6 +14,8 @@ use App\Services\CartService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Mail\OrderPaymentSuccessMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -443,7 +445,28 @@ class OrderController extends Controller
             }
 
             DB::commit();
-
+            $order->load([ 'user', 'items.product', ]); 
+            try 
+            { 
+                if (!empty($order->email)) 
+                { 
+                    Mail::to($order->email)->send( new OrderPaymentSuccessMail($order) ); 
+                } 
+                $adminEmail = config('mail.admin_email'); 
+                if (!empty($adminEmail)) { 
+                    Mail::to($adminEmail)->send( new OrderPaymentSuccessMail($order) );
+                } 
+            } 
+            catch (\Throwable $e) 
+            { 
+                Log::error('COD order email failed',[ 
+                    'order_id' => $order->id, 
+                    'order_number' => $order->order_number, 
+                    'customer' => $order->email, 
+                    'admin' => config('mail.admin_email'), 
+                    'message' => $e->getMessage(), 
+                ]); 
+            }
             return redirect()
                 ->route('home')
                 ->with('success', 'Order placed successfully.');
@@ -461,7 +484,7 @@ class OrderController extends Controller
             return back()->withInput()->with('error', $e->getMessage());
         }
     }
-  public function verifyRazorpayPayment(Request $request)
+    public function verifyRazorpayPayment(Request $request)
     {
         $request->validate([
             'razorpay_payment_id' => 'required|string',
@@ -584,6 +607,35 @@ class OrderController extends Controller
             session()->forget('razorpay_pending');
 
             DB::commit();
+
+            $order->load([
+                'user',
+                'items.product',
+            ]);
+
+            try {
+                if (! empty($order->email)) {
+                    Mail::to($order->email)->send(
+                        new OrderPaymentSuccessMail($order)
+                    );
+                }
+
+                $adminEmail = config('mail.admin_email');
+
+                if (! empty($adminEmail)) {
+                    Mail::to($adminEmail)->send(
+                        new OrderPaymentSuccessMail($order)
+                    );
+                }
+            } catch (\Throwable $e) {
+                Log::error('Order payment success email failed', [
+                    'order_id'     => $order->id,
+                    'order_number' => $order->order_number,
+                    'customer'     => $order->email,
+                    'admin'        => config('mail.admin_email'),
+                    'message'      => $e->getMessage(),
+                ]);
+            }
 
             return response()->json([
                 'success'      => true,
