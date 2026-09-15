@@ -11,6 +11,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Mail\PcBuilderSuccessMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 class PcBuilderController extends Controller
@@ -748,7 +750,44 @@ class PcBuilderController extends Controller
 
             DB::commit();
             session()->forget('pc_builder_razorpay_pending');
+            try {
+                if (!empty($pcBuilder->email)) {
+                    Mail::to($pcBuilder->email)
+                        ->send(new PcBuilderSuccessMail($pcBuilder));
 
+                    Log::info('PC Builder customer email sent', [
+                        'builder_number' => $pcBuilder->builder_number,
+                        'email' => $pcBuilder->email,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                Log::error('PC Builder customer email failed', [
+                    'builder_number' => $pcBuilder->builder_number,
+                    'email' => $pcBuilder->email ?? null,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            // Send success email to admin
+            try {
+                $adminEmail = config('mail.admin_email');
+
+                if (!empty($adminEmail)) {
+                    Mail::to($adminEmail)
+                        ->send(new PcBuilderSuccessMail($pcBuilder));
+
+                    Log::info('PC Builder admin email sent', [
+                        'builder_number' => $pcBuilder->builder_number,
+                        'admin_email' => $adminEmail,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                Log::error('PC Builder admin email failed', [
+                    'builder_number' => $pcBuilder->builder_number,
+                    'admin_email' => $adminEmail ?? null,
+                    'error' => $e->getMessage(),
+                ]);
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Payment successful. PC Builder order placed successfully.',
