@@ -119,9 +119,11 @@
                                                 <a href="{{ route('my-pc-builder-orders.show', $order->id) }}" class="btn btn-info btn-sm" title="View Order">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @can('pc-download-invoce')
                                                 <a href="{{ route('my-pc-builder-orders.invoice', $order->id) }}" class="btn btn-success btn-sm"  title="Download Invoice">
                                                     <i class="fas fa-download"></i>
-                                                </a>                                                
+                                                </a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

@@ -169,9 +169,11 @@
                                                 <a href="{{ route('customer-orders.show', $order->id) }}" class="btn btn-info btn-sm" title="View Order">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
+                                                @can('download-invoce')
                                                 <a href="{{ route('admin.orders.invoice', $order->id) }}"  class="btn btn-success btn-sm" title="Download Invoice">
                                                     <i class="fas fa-download"></i>
                                                 </a>
+                                                @endcan
                                             </div>
                                         </td>
                                     </tr>

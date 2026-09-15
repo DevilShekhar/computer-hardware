@@ -365,14 +365,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="{{ request()->routeIs('pc-builder-orders.*') ? 'active' : '' }}">
-                            <a href="{{ route('pc-builder-orders.index') }}" class="nav-link">
-                                <i data-feather="cpu"></i>
-                                <span>PC Builder Orders</span>
-                            </a>
-                        </li>
                         @endcan
-                        @can('my-pc-builder-order-index')
+                        @can('pc-builder-order-index')
                         <li class="dropdown {{ request()->routeIs('pc-builder-orders.*') ? 'active' : '' }}">
                             <a href="#" class="menu-toggle nav-link has-dropdown">
                                 <i data-feather="shopping-bag"></i>
@@ -559,6 +553,7 @@
                             </a>
                         </li>
                         @endcan
+                        @can('checkout-page')
                         <li class="{{ request()->routeIs('checkout.index.*') ? 'active' : '' }}">
                             <a href="{{ route('checkout.index') }}" class="nav-link">
                                 <i data-feather="shopping-cart"></i>
@@ -571,18 +566,21 @@
                                 <span>Go To PC Builder Checkout</span>
                             </a>
                         </li>
+                        @endcan
                         <li class="{{ request()->routeIs('checkout.index.*') ? 'active' : '' }}">
                             <a href="/" class="nav-link">
                                 <i data-feather="compass"></i>
                                 <span>Explore More</span>
                             </a>
                         </li>
+                        @can('my-refund')
                         <li class="{{ request()->routeIs('refunded-orders.*') ? 'active' : '' }}">
                             <a href="{{ route('refunded-orders.index') }}" class="nav-link">
                                 <i data-feather="rotate-ccw"></i>
                                 <span>Refunded Orders</span>
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </aside>
             </div>
