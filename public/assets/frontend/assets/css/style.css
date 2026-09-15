@@ -839,7 +839,7 @@ textarea:focus {
     padding: 0 15px;
 }
 /*----------------------------------------*/
-/* 	1.12 Li's Mobile Menu Customization 
+/* 	1.12 Li's Mobile Menu Customization
 /*----------------------------------------*/
 .mobile-menu .mean-nav > ul {
     overflow-y: auto;
@@ -8085,4 +8085,163 @@ span.required {
     color: #666;
     margin: 0;
     line-height: 1.45;
+}
+#selectedProductsList {
+    max-height: 335px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#selectedProductsList::-webkit-scrollbar {
+    display: none;
+}
+
+.your-order {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px
+}
+
+.order-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 16px
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .95rem
+}
+
+.order-table th,
+.order-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f1f1
+}
+
+.order-table thead th {
+    color: #6b7280;
+    font-size: .8rem;
+    font-weight: 500
+}
+
+.order-table tbody {
+    display: block;
+    max-height: 220px;
+    overflow-y: auto
+}
+
+.order-table thead,
+.order-table tfoot,
+.order-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed
+}
+
+.order-table .grand-total td {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 12px
+}
+
+.text-end {
+    text-align: right
+}
+
+/* Product row price + trash */
+.order-table .price-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px
+}
+
+.order-table .trash-btn {
+    color: #ff0033;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 1
+}
+
+.order-table .trash-btn:hover {
+    opacity: .8
+}
+
+.add-more {
+    font-size: .85rem;
+    color: #2563eb;
+    text-decoration: none
+}
+
+.radio-dot {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px
+}
+
+.badge {
+    font-size: .65rem;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 1px 6px;
+    border-radius: 99px;
+    margin-left: 4px
+}
+
+.error-msg {
+    color: #dc2626;
+    font-size: .85rem;
+    margin-bottom: 10px
+}
+
+.place-order-btn {
+    width: 100%;
+    padding: 12px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer
+}
+
+.place-order-btn:hover {
+    background: #333
+}
+
+.checkout-loader {
+    text-align: center;
+    margin-top: 16px
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    margin: 0 auto 6px;
+    animation: spin .7s linear infinite
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.checkout-loader p {
+    margin: 0;
+    font-size: .85rem;
+    color: #6b7280
 }

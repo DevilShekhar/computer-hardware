@@ -390,7 +390,7 @@
     }
 
     .pc-builder-start-button:hover {
-        background: #1265d1;
+        background: #242424;
         color: #ffffff;
         text-decoration: none;
         box-shadow: 0 8px 20px rgba(25, 118, 237, 0.3);

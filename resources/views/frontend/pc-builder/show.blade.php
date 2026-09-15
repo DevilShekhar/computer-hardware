@@ -1126,10 +1126,44 @@ $(document).ready(function() {
             ] = String(product.val());
         });
 
-        if (!Object.keys(selectedProducts).length) {
+        const requiredProductTypes = @json($allProductTypes->values());
+
+        const missingProductTypes = requiredProductTypes.filter(function(type) {
+            return !selectedProducts.hasOwnProperty(type);
+        });
+
+        if (missingProductTypes.length > 0) {
+            let missingItems = '';
+
+            missingProductTypes.forEach(function(type) {
+                missingItems += `
+                    <div style="text-align:left;padding:6px 10px;margin:4px 0;border-radius:5px;background:#fff5f5;color:#d93025;font-size:13px;font-weight:600;">
+                        <i class="fa fa-exclamation-circle"></i>
+                        ${escapeHtml(type)}
+                    </div>
+                `;
+            });
+
             Swal.fire({
                 icon: 'warning',
-                text: 'Please select at least one product.'
+                title: 'Complete Your PC Build',
+                html: `
+                    <div style="font-size:13px;color:#667085;margin-bottom:12px;">
+                        Please select the following component${missingProductTypes.length > 1 ? 's' : ''} before proceeding:
+                    </div>
+
+                    <div>
+                        ${missingItems}
+                    </div>
+
+                    <div style="margin-top:12px;padding:8px 12px;border-radius:6px;background:#f8f9fc;color:#475467;font-size:12px;font-weight:600;">
+                        ${missingProductTypes.length}
+                        component${missingProductTypes.length > 1 ? 's' : ''}
+                        remaining
+                    </div>
+                `,
+                confirmButtonText: 'Continue Selecting',
+                confirmButtonColor: '#ea0505'
             });
 
             return;

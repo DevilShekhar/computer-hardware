@@ -34,7 +34,7 @@
             <p class="text-muted">
                 Please select components before proceeding to checkout.
             </p>
-            <a href="{{ route('pc-builder.index') }}" class="btn btn-primary mt-3">
+            <a href="{{ route('pc-builder.index') }}" class="btn btn-danger mt-3">
                 Back to PC Builder
             </a>
         </div>
@@ -459,251 +459,113 @@
                 </div>
 
                 <div class="col-lg-6 col-12">
-
                     <div class="your-order">
-
-                        <h3>Your PC Build</h3>
+                        <h3 class="order-title">Your PC Build</h3>
 
                         <div id="selectedComponentsArea"></div>
-
-                        <div class="your-order-table table-responsive">
-
-                            <table class="table">
-
+                        <div class="order-table-wrap">
+                            <table class="order-table">
                                 <thead>
-
                                     <tr>
-                                        <th class="cart-product-name">
-                                            Component
-                                        </th>
-
-                                        <th class="cart-product-quantity">
-                                            Quantity
-                                        </th>
-
-                                        <th class="cart-product-total">
-                                            Total
-                                        </th>
+                                        <th>Component</th>
+                                        <th class="text-end">Total</th>
                                     </tr>
-
                                 </thead>
-
                                 <tbody id="pcBuilderProductsList"></tbody>
-
                                 <tfoot>
-
-                                    <tr class="cart-subtotal">
-
-                                        <th colspan="2">
-                                            Cart Subtotal
-                                        </th>
-
-                                        <td>
-                                            <span
-                                                class="amount"
-                                                id="cartSubtotal"
-                                            >
-                                                ₹0.00
-                                            </span>
-                                        </td>
-
+                                    <tr>
+                                        <td>Cart Subtotal</td>
+                                        <td class="text-end"><span id="cartSubtotal">₹0.00</span></td>
                                     </tr>
-
-                                    <tr
-                                        class="cart-gst"
-                                        id="cartGstRow"
-                                        style="display:none;"
-                                    >
-
-                                        <th colspan="2">
-                                            GST
-                                        </th>
-
-                                        <td>
-                                            <span
-                                                class="amount"
-                                                id="cartGst"
-                                            >
-                                                ₹0.00
-                                            </span>
-                                        </td>
-
+                                    <tr id="cartGstRow" style="display:none;">
+                                        <td>GST</td>
+                                        <td class="text-end"><span id="cartGst">₹0.00</span></td>
                                     </tr>
-
-                                    <tr class="order-total">
-
-                                        <th colspan="2">
-                                            Order Total
-                                        </th>
-
-                                        <td>
-                                            <strong>
-                                                <span
-                                                    class="amount"
-                                                    id="cartGrandTotal"
-                                                >
-                                                    ₹0.00
-                                                </span>
-                                            </strong>
-                                        </td>
-
+                                    <tr class="grand-total">
+                                        <td><strong>Order Total</strong></td>
+                                        <td class="text-end"><strong><span id="cartGrandTotal">₹0.00</span></strong></td>
                                     </tr>
-
                                 </tfoot>
-
                             </table>
-
                         </div>
 
                         <div class="payment-method">
+                        <h4 class="payment-title">Payment Method</h4>
 
-                            <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="payment-options">
 
-                                <h4 class="payment-title mb-0">
-                                    Payment Method
-                                </h4>
+                            <label class="payment-option {{ old('payment_method', 'cod') == 'cod' ? 'selected' : '' }}">
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="cod"
+                                    class="payment-radio"
+                                    {{ old('payment_method', 'cod') == 'cod' ? 'checked' : '' }}>
 
-                                <a
-                                    href="{{ route('pc-builder.index') }}"
-                                    class="add-new-link"
-                                >
-                                    <i class="fa fa-plus"></i>
-                                    Add More
-                                </a>
+                                <span class="payment-radio-mark"></span>
 
-                            </div>
-
-                            <div class="payment-options">
-
-                                <label class="payment-option">
-
-                                    <input
-                                        type="radio"
-                                        name="payment_method"
-                                        value="cod"
-                                        class="payment-radio"
-                                    >
-
-                                    <span class="payment-radio-mark"></span>
-
-                                    <div class="payment-option-body">
-
-                                        <div class="payment-option-head">
-
-                                            <span class="payment-option-title">
-                                                Cash on Delivery
-                                            </span>
-
-                                        </div>
-
-                                        <p class="payment-option-desc">
-                                            Pay when your order is delivered.
-                                        </p>
-
+                                <div class="payment-option-body">
+                                    <div class="payment-option-head">
+                                        <span class="payment-option-title">Cash on Delivery</span>
                                     </div>
-                                </label>
-
-                                <label class="payment-option selected">
-
-                                    <input
-                                        type="radio"
-                                        name="payment_method"
-                                        value="razorpay"
-                                        class="payment-radio"
-                                        checked
-                                    >
-
-                                    <span class="payment-radio-mark"></span>
-
-                                    <div class="payment-option-body">
-
-                                        <div class="payment-option-head">
-
-                                            <span class="payment-option-title">
-                                                Online Payment (Razorpay)
-                                            </span>
-
-                                        </div>
-
-                                        <p class="payment-option-desc">
-                                            Pay securely using UPI, Card, Netbanking, Wallet.
-                                        </p>
-
-                                    </div>
-                                </label>
-
-                                <label class="payment-option payment-option-disabled">
-
-                                    <input
-                                        type="radio"
-                                        name="payment_method"
-                                        value="snapmint_emi"
-                                        class="payment-radio"
-                                        disabled
-                                    >
-
-                                    <span class="payment-radio-mark"></span>
-
-                                    <div class="payment-option-body">
-
-                                        <div class="payment-option-head">
-
-                                            <span class="payment-option-title">
-
-                                                Snapmint EMI
-
-                                                <span class="payment-option-badge">
-                                                    Coming Soon
-                                                </span>
-
-                                            </span>
-
-                                        </div>
-
-                                        <p class="payment-option-desc">
-                                            This payment method will be available in the future.
-                                            Stay tuned!
-                                        </p>
-
-                                    </div>
-                                </label>
-
-                            </div>
-
-                            @error('payment_method')
-                                <div class="text-danger mt-2">
-                                    {{ $message }}
+                                    <p class="payment-option-desc">Pay when your order is delivered.</p>
                                 </div>
-                            @enderror
+                            </label>
 
-                            <div class="order-button-payment">
+                            <label class="payment-option {{ old('payment_method') == 'razorpay' ? 'selected' : '' }}">
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="razorpay"
+                                    class="payment-radio"
+                                    {{ old('payment_method') == 'razorpay' ? 'checked' : '' }}>
 
-                                <input
-                                    value="Place order"
-                                    type="submit"
-                                    id="placeOrderBtn"
-                                >
+                                <span class="payment-radio-mark"></span>
 
-                            </div>
+                                <div class="payment-option-body">
+                                    <div class="payment-option-head">
+                                        <span class="payment-option-title">Online Payment (Razorpay)</span>
+                                    </div>
+                                    <p class="payment-option-desc">Pay securely using UPI, Card, Netbanking, Wallet.</p>
+                                </div>
+                            </label>
 
-                            <div
-                                class="checkout-loader text-center mt-3"
-                                id="checkoutLoader"
-                                style="display:none;"
-                            >
+                            <label class="payment-option payment-option-disabled">
+                                <input type="radio"
+                                    name="payment_method"
+                                    value="snapmint_emi"
+                                    class="payment-radio"
+                                    disabled>
 
-                                <div class="checkout-spinner"></div>
+                                <span class="payment-radio-mark"></span>
 
-                                <p class="mt-2 text-muted">
-                                    Processing your order...
-                                </p>
-
-                            </div>
+                                <div class="payment-option-body">
+                                    <div class="payment-option-head">
+                                        <span class="payment-option-title">
+                                            Snapmint EMI
+                                            <span class="payment-option-badge">Coming Soon</span>
+                                        </span>
+                                    </div>
+                                    <p class="payment-option-desc">This payment method will be available in the future. Stay tuned!</p>
+                                </div>
+                            </label>
 
                         </div>
 
-                    </div>
+                        @error('payment_method')
+                            <div class="text-danger mt-2">{{ $message }}</div>
+                        @enderror
 
+                        <div class="order-button-payment">
+                            <input value="Place order" type="submit" id="placeOrderBtn">
+                        </div>
+
+                        <div class="checkout-loader text-center mt-3" id="checkoutLoader" style="display:none;">
+                            <div class="checkout-spinner"
+                                style="width:30px;height:30px;border:3px solid #ddd;border-top-color:#2878f0;border-radius:50%;animation:checkoutSpin .7s linear infinite;margin:auto;">
+                            </div>
+                            <p class="mt-2 text-muted">Processing your order...</p>
+                        </div>
+                    </div>
+                    </div>
                 </div>
 
             </div>
@@ -1108,8 +970,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        if (product.product_image) {
-            const imageUrl = buildImageUrl(product.product_image);
+        if (product.productimage) {
+            const imageUrl = buildImageUrl(product.productimage);
 
             if (imageUrl) {
                 return imageUrl;
@@ -1124,7 +986,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let primaryImage = product.images.find(function (image) {
                 return (
                     image &&
-                    (image.is_primary == 1 || image.is_primary === true)
+                    (image.isprimary == 1 || image.isprimary === true)
                 );
             });
 
@@ -1135,8 +997,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (primaryImage) {
                 const imageValue =
                     primaryImage.image ||
-                    primaryImage.product_image ||
-                    primaryImage.image_path ||
+                    primaryImage.productimage ||
+                    primaryImage.imagepath ||
                     primaryImage.path;
 
                 const imageUrl = buildImageUrl(imageValue);
@@ -1156,7 +1018,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const regularPrice = parseFloat(product.price) || 0;
-        const salePrice = parseFloat(product.sale_price) || 0;
+        const salePrice = parseFloat(product.saleprice) || 0;
 
         if (
             salePrice > 0 &&
@@ -1178,13 +1040,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getStock(product) {
-        const stock = parseInt(product.stock_quantity, 10);
+    const stock = parseInt(product.stockquantity, 10);
 
         if (!Number.isFinite(stock)) {
             return 0;
         }
 
         return stock;
+    }
+
+
+    function getProductGstRate(product) {
+        if (!product) {
+            return 0;
+        }
+
+        // Backend field: gst_rate (e.g. 10 means 10%)
+        const rate = parseFloat(product.gst_rate);
+
+        return Number.isFinite(rate) && rate > 0 ? rate : 0;
     }
 
     /* ============================================================
@@ -1203,15 +1077,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             subtotal += itemTotal;
 
-            let gstRate = 0;
-
-            if (
-                product.gst_type === 'yes' &&
-                product.gst &&
-                product.gst.gst_amount
-            ) {
-                gstRate = parseFloat(product.gst.gst_amount) || 0;
-            }
+            const gstRate = getProductGstRate(product);
 
             if (gstRate > 0) {
                 gstTotal += (itemTotal * gstRate) / 100;
@@ -1280,27 +1146,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const price = getProductPrice(product);
             const itemTotal = price * quantity;
-
-            let gstRate = 0;
-            let gstAmount = 0;
-
-            if (
-                product.gst_type === 'yes' &&
-                product.gst &&
-                product.gst.gst_amount
-            ) {
-                gstRate = parseFloat(product.gst.gst_amount) || 0;
-                gstAmount = (itemTotal * gstRate) / 100;
-            }
+            const gstRate = getProductGstRate(product);
+            const gstAmount = gstRate > 0 ? (itemTotal * gstRate) / 100 : 0;
 
             const image = getProductImage(product);
-            const maxQuantity = stock > 0 ? stock : 1;
 
             const row = document.createElement('tr');
 
-            row.className = 'cart_item';
+            row.className = 'cartitem';
             row.id = 'builder-cart-item-' + id;
             row.dataset.productId = id;
+            row.dataset.price = price;
+            row.dataset.gstRate = gstRate;
 
             row.innerHTML = `
                 <td class="cart-product-name">
@@ -1312,81 +1169,38 @@ document.addEventListener('DOMContentLoaded', function () {
                             onerror="this.onerror=null;this.src='{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}';"
                             style="width:50px;height:50px;object-fit:contain;border:1px solid #eee;border-radius:4px;margin-right:10px;"
                         >
-
                         <div>
-
                             <div class="pc-builder-product-name">
                                 ${escapeHtml(product.name)}
                             </div>
-
                             <small class="text-muted">
                                 ${formatPrice(price)}
                             </small>
-
-                            <button
-                                type="button"
-                                class="remove-builder-product"
-                                data-product-id="${id}"
-                                style="display:inline-block;margin-top:4px;padding:2px 8px;font-size:10px;font-weight:600;color:#ef4444;background:#fff1f2;border:1px solid #fecdd3;border-radius:4px;cursor:pointer;text-transform:uppercase;letter-spacing:0.3px;"
-                            >
-                                Remove
-                            </button>
-
                         </div>
-
                     </div>
                 </td>
 
-                <td class="cart-product-quantity">
-
-                    <div class="quantity-wrapper">
-
-                        <button
-                            type="button"
-                            class="quantity-btn quantity-minus"
-                            data-product-id="${id}"
-                            ${quantity <= 1 ? 'disabled' : ''}
-                        >
-                            −
-                        </button>
-
-                        <span
-                            class="quantity-value"
-                            id="quantity-${id}"
-                        >
-                            ${quantity}
+                <td class="cart-product-total item-total text-end">
+                    <div class="price-cell">
+                        <span class="amount">
+                            ${formatPrice(itemTotal)}
                         </span>
-
                         <button
                             type="button"
-                            class="quantity-btn quantity-plus"
+                            class="trash-btn remove-builder-product"
                             data-product-id="${id}"
-                            ${stock <= 0 || quantity >= maxQuantity ? 'disabled' : ''}
+                            title="Remove"
                         >
-                            +
+                            <i class="fa fa-trash"></i>
                         </button>
-
                     </div>
-
-                </td>
-
-                <td class="cart-product-total item-total">
-
-                    <span class="amount">
-                        ${formatPrice(itemTotal)}
-                    </span>
-
                     ${
-                        gstRate > 0
-                        ?
-                        `<div class="product-gst">
-                            GST ${gstRate.toFixed(2)}%:
-                            ${formatPrice(gstAmount)}
+                        gstRate > 0 && gstAmount > 0
+                        ? `<div class="product-gst">
+                            GST ${gstRate.toFixed(2)}%: ${formatPrice(gstAmount)}
                         </div>`
-                        :
-                        ''
+                        : ''
                     }
-
                 </td>
             `;
 
@@ -1717,11 +1531,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function verifyRazorpayPayment(paymentResponse, orderResponse) {
         const data = new URLSearchParams();
 
-        data.append('_token', "{{ csrf_token() }}");
-        data.append('pc_builder_id', orderResponse.pc_builder_id || '');
-        data.append('razorpay_order_id', paymentResponse.razorpay_order_id || '');
-        data.append('razorpay_payment_id', paymentResponse.razorpay_payment_id || '');
-        data.append('razorpay_signature', paymentResponse.razorpay_signature || '');
+        data.append('token', "{{ csrf_token() }}");
+        data.append('pcbuilderid', orderResponse.pcbuilderid || '');
+        data.append('razorpayorderid', paymentResponse.razorpayorderid || '');
+        data.append('razorpaypaymentid', paymentResponse.razorpaypaymentid || '');
+        data.append('razorpaysignature', paymentResponse.razorpaysignature || '');
 
         fetch("{{ route('pc-builder.verify-payment') }}", {
             method: 'POST',
@@ -1754,8 +1568,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     confirmButtonColor: '#2878f0',
                     allowOutsideClick: false
                 }).then(function () {
-                    if (response.redirect_url) {
-                        window.location.href = response.redirect_url;
+                    if (response.redirecturl) {
+                        window.location.href = response.redirecturl;
                     } else {
                         window.location.reload();
                     }
@@ -1953,13 +1767,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            if (invalidQuantity) {
-                alert(
-                    'One or more selected products have an invalid quantity or are out of stock. Please check your PC build.'
-                );
+            // if (invalidQuantity) {
+            //     alert(
+            //         'One or more selected products have an invalid quantity or are out of stock. Please check your PC build.'
+            //     );
 
-                return;
-            }
+            //     return;
+            // }
 
             isSubmitting = true;
 
@@ -1981,17 +1795,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.set('payment_method', paymentMethod);
 
             /*
-             * IMPORTANT:
              * Send quantities using PRODUCT ID as the primary key.
-             *
-             * Example:
-             * {
-             *     "8": 1,
-             *     "15": 2
-             * }
-             *
-             * This fixes:
-             * "Invalid quantity for ASUS Prime B760M-A."
              */
 
             const submitQuantities = {};
@@ -2000,31 +1804,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const productId = String(selectedProducts[builderType]);
                 const quantity = getQuantity(productId);
 
-                /*
-                 * Primary key = product ID
-                 */
                 submitQuantities[productId] = quantity;
             });
 
-            /*
-             * Send products exactly as selected.
-             */
             formData.set('products', JSON.stringify(selectedProducts));
-
-            /*
-             * Send quantity map by PRODUCT ID.
-             */
             formData.set('quantities', JSON.stringify(submitQuantities));
-
-            /*
-             * Also send total calculated on frontend.
-             * Backend should calculate again for security.
-             */
-            formData.set('total_amount', Number(currentTotal).toFixed(2));
-
-            /*
-             * Explicit payment method.
-             */
+            formData.set('totalamount', Number(currentTotal).toFixed(2));
             formData.set('payment_method', paymentMethod);
 
             fetch("{{ route('pc-builder.place-order') }}", {
@@ -2087,8 +1872,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         confirmButtonColor: '#2878f0',
                         allowOutsideClick: false
                     }).then(function () {
-                        if (response.redirect_url) {
-                            window.location.href = response.redirect_url;
+                        if (response.redirecturl) {
+                            window.location.href = response.redirecturl;
                         } else {
                             window.location.reload();
                         }
