@@ -157,7 +157,13 @@ class PermissionSeeder extends Seeder
             //download-invoce
             'download-invoce',
             //pc-download-invoce
-            'pc-download-invoce'
+            'pc-download-invoce',
+            //best-seller-items
+            'best-seller-items',
+            //dashboard-order-count
+            'dashboard-order-count',
+            //best-selling-product-index
+            'best-selling-product-index',
         ];
         /*
         |--------------------------------------------------------------------------

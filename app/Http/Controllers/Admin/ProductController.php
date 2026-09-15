@@ -8,12 +8,14 @@ use App\Models\Inventory;
 use App\Models\InventoryHistory;
 use App\Models\Product;
 use App\Models\Gst;
+use App\Models\OrderItem;
 use App\Models\ProductBrand;
 use App\Models\ProductImage;
 use App\Models\ProductSpecification;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -521,4 +523,31 @@ class ProductController extends Controller
             'title'
         ));
     }
+public function bestseller(Request $request)
+{
+    $soldProducts = OrderItem::select(
+            'product_id',
+            DB::raw('SUM(quantity) as total_sold')
+        )
+        ->whereHas('order', function ($query) {
+            $query->whereNotIn('status', [5, 6]);
+        })
+        ->groupBy('product_id')
+        ->pluck('total_sold', 'product_id');
+
+    $products = Product::with([
+            'productBrand',
+            'category',
+            'subCategory',
+            'images',
+        ])
+        ->get()
+        ->each(function ($product) use ($soldProducts) {
+            $product->total_sold = (int) ($soldProducts[$product->id] ?? 0);
+        })
+        ->sortByDesc('total_sold')
+        ->values();
+
+    return view('admin.products.best-selling-products', compact('products'));
+}
 }

@@ -76,6 +76,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::get('products/categories-by-brand/{brand}', [ProductController::class, 'getCategoriesByBrand'])->name('products.categories-by-brand');
     Route::get('products/sub-categories-by-category/{category}', [ProductController::class, 'getSubCategoriesByCategory'])->name('products.sub-categories-by-category');
+    Route::get('/best-selling-products', [ProductController::class, 'bestseller'])->name('best-selling-products.index');
 
     Route::resource('coupons', CouponController::class)->names('coupons');
 
