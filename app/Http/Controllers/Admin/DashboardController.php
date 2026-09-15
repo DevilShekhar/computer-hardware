@@ -12,10 +12,12 @@ use App\Models\User;
 use App\Models\Review;
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderItem;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
     {
         // Basic Counts
         $productCount = Product::count();
@@ -42,23 +44,38 @@ class DashboardController extends Controller
         $shippedOrderCount = 0;
         $deliveredOrderCount = 0;
         $cancelledOrderCount = 0;
+        $latestOrders = collect();
+        $latestPendingReviews = collect();
+        $monthlyOrders = collect(range(1, 12))->map(function ($month) {
+            return [
+                'month' => $month,
+                'total' => 0,
+            ];
+        });
+        $monthlySales = collect(range(1, 12))->map(function ($month) {
+            return [
+                'month' => $month,
+                'total' => 0,
+            ];
+        });
+
         if (auth()->check()) {
             $userId = auth()->id();
             $myOrderCount = Order::where('user_id', $userId)->count();
             $pendingOrderCount = Order::where('user_id', $userId)
-                ->where('status', 'pending')
+                ->where('status', 0)
                 ->count();
             $confirmedOrderCount = Order::where('user_id', $userId)
-                ->where('status', 'confirmed')
+                ->where('status', 1)
                 ->count();
             $shippedOrderCount = Order::where('user_id', $userId)
-                ->where('status', 'shipped')
+                ->where('status', 3)
                 ->count();
             $deliveredOrderCount = Order::where('user_id', $userId)
-                ->where('status', 'delivered')
+                ->where('status', 4)
                 ->count();
             $cancelledOrderCount = Order::where('user_id', $userId)
-                ->where('status', 'cancelled')
+                ->where('status', 5)
                 ->count();
             $latestOrders = Order::with('user')
                 ->latest()
@@ -100,7 +117,33 @@ class DashboardController extends Controller
                 ->groupBy('status')
                 ->orderBy('status')
                 ->get();
+        } else {
+            $orderStatus = collect();
         }
+
+        // Status Wise Order Counts
+        $orderStatusCounts = [
+            0 => Order::where('status', 0)->count(),
+            1 => Order::where('status', 1)->count(),
+            2 => Order::where('status', 2)->count(),
+            3 => Order::where('status', 3)->count(),
+            4 => Order::where('status', 4)->count(),
+            5 => Order::where('status', 5)->count(),
+            6 => Order::where('status', 6)->count(),
+            7 => Order::where('status', 7)->count(),
+        ];
+        $bestSellingProducts = OrderItem::with([
+            'product.productBrand',
+            'product.images',
+        ])
+            ->select('product_id', DB::raw('SUM(quantity) as total_sold'))
+            ->whereHas('order', function ($query) {
+                $query->whereNotIn('status', [5, 6]);
+            })
+            ->groupBy('product_id')
+            ->orderByDesc('total_sold')
+            ->take(6)
+            ->get();
 
         return view('admin.dashboard', compact(
             'productCount',
@@ -122,7 +165,17 @@ class DashboardController extends Controller
             'latestPendingReviews',
             'monthlyOrders',
             'monthlySales',
-            'orderStatus'
+            'orderStatus',
+            'orderStatusCounts',
+            'bestSellingProducts'
         ));
+    }
+
+    public function orderStatusCounts()
+    {
+        return Order::selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->orderBy('status')
+            ->pluck('total', 'status');
     }
 }
