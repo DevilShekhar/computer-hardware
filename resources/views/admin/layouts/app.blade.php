@@ -436,6 +436,14 @@
                                 </a>
                             </li>
                         @endcan
+                        @can('shipping-charge-index')
+                            <li class="{{ request()->routeIs('shipping-charges.*') ? 'active' : '' }}">
+                                <a href="{{ route('shipping-charges.index') }}" class="nav-link">
+                                    <i data-feather="truck"></i>
+                                    <span>Shipping Charges</span>
+                                </a>
+                            </li>
+                        @endcan
                         @can('product-manage')
                             <li class="dropdown {{ request()->routeIs('product-brands.*', 'categories.*', 'sub-categories.*', 'products.*') ? 'active' : '' }}">
                                 <a href="#" class="menu-toggle nav-link has-dropdown">

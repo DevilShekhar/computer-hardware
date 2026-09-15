@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\MyPcBuilderOrderController;
 use App\Http\Controllers\Admin\PcBuilderOrderManagementController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\ShippingChargeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -98,6 +99,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/my-orders/{order}/cancel', [MyOrderController::class, 'cancel'])->name('my-orders.cancel');
     Route::put('/my-orders/{id}/return', [MyOrderController::class, 'returnOrder'])->name('my-orders.return');
     Route::get('/my-orders/{order}/invoice',[MyOrderController::class, 'downloadInvoice'])->name('my-orders.invoice');
+    //shippin
+    Route::resource('shipping-charges', ShippingChargeController::class);
+    Route::post('/checkout/shipping-charge', [ShippingChargeController::class, 'getShippingCharge'])->name('checkout.shipping-charge');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');

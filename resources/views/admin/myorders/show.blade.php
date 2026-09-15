@@ -372,7 +372,7 @@
                             <strong>
                                 Total Amount
                             </strong>
-                            <strong class="text-primary">
+                            <strong class="text-success">
                                 ₹{{ number_format($order->total_amount, 2) }}
                             </strong>
                         </div>

@@ -164,6 +164,10 @@ class PermissionSeeder extends Seeder
             'dashboard-order-count',
             //best-selling-product-index
             'best-selling-product-index',
+            // shipping-charges-index
+            'shipping-charge-create',
+            'shipping-charge-edit',
+            'shipping-charge-index'
         ];
         /*
         |--------------------------------------------------------------------------

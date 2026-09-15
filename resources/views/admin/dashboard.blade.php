@@ -336,7 +336,7 @@
                 </a>
             </div>
             @endcan
-            @can('dashboard-approved-review-count')      
+            @can('dashboard-approved-review-count')
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                 <a href="{{ route('product-review.index') }}" class="text-decoration-none">
                     <div class="card dashboard-card">
@@ -591,9 +591,15 @@
         </div>
         @endcan
 
-        @can('best-seller-items')
+       @can('best-seller-items')
         {{-- Best seller product  table --}}
-        <h4>Best Selling Products</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Best Selling Products</h4>
+            <a href="{{ route('best-selling-products.index') }}" class="btn btn-primary">
+                View All
+            </a>
+        </div>
+
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -601,6 +607,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Image</th>
                                 <th>Product</th>
                                 <th>SKU</th>
                                 <th>Brand</th>
@@ -612,15 +619,48 @@
                             @forelse($bestSellingProducts as $index => $item)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
-                                    <td>{{ $item->product->name ?? '-' }}</td>
-                                    <td>{{ $item->product->sku ?? '-' }}</td>
-                                    <td>{{ $item->product->productBrand->name ?? '-' }}</td>
-                                    <td>₹{{ number_format($item->product->sale_price ?? $item->product->price, 2) }}</td>
-                                    <td>{{ $item->total_sold }}</td>
+
+                                    <td>
+                                        @if($item->product && $item->product->images->first())
+                                            <img src="{{ asset('storage/' . $item->product->images->first()->image) }}"
+                                                alt="{{ $item->product->name }}"
+                                                width="45"
+                                                height="45"
+                                                class="rounded"
+                                                style="object-fit:cover;">
+                                        @else
+                                            <img src="{{ asset('assets/img/default.png') }}"
+                                                alt="image"
+                                                width="45"
+                                                height="45"
+                                                class="rounded"
+                                                style="object-fit:cover;">
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        {{ $item->product->name ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->product->sku ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->product->productBrand->name ?? '-' }}
+                                    </td>
+
+                                    <td>
+                                        ₹{{ number_format($item->product->sale_price ?? $item->product->price, 2) }}
+                                    </td>
+
+                                    <td>
+                                        <strong>{{ $item->total_sold }}</strong>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">
+                                    <td colspan="7" class="text-center">
                                         No sales data available.
                                     </td>
                                 </tr>
@@ -630,7 +670,7 @@
                 </div>
             </div>
         </div>
-        @endcan
+       @endcan
         <div class="row">
             @can('dashboard-active-coupon-count')
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
