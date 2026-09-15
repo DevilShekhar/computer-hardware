@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OrderPaymentSuccessMail;
+use App\Models\ShippingCharge;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
@@ -264,9 +265,12 @@ class OrderController extends Controller
 
         $discountAmount = (float) session('coupon_discount', 0);
         $discountAmount = min($discountAmount, $subtotal + $gstAmount);
-
-        $shippingAmount = 0;
-        $totalAmount    = $subtotal + $gstAmount + $shippingAmount - $discountAmount;
+        $shippingAmount = $this->resolveShippingCharge(
+            $orderAddress['pincode'] ?? null,
+            $orderAddress['city']    ?? null,
+            $orderAddress['state']   ?? null
+        );
+        $totalAmount = $subtotal + $gstAmount + $shippingAmount - $discountAmount;
         if ($validated['payment_method'] === 'razorpay') {
             foreach ($cart->items as $item) {
                 if (! $item->product) {
@@ -439,33 +443,26 @@ class OrderController extends Controller
                 session()->forget(['coupon_id', 'coupon_code', 'coupon_discount']);
             }
 
-            if (session()->has('coupon_id')) {
-                Coupon::where('id', session('coupon_id'))->increment('used_count');
-                session()->forget(['coupon_id', 'coupon_code', 'coupon_discount']);
-            }
-
             DB::commit();
-            $order->load([ 'user', 'items.product', ]); 
-            try 
-            { 
-                if (!empty($order->email)) 
-                { 
-                    Mail::to($order->email)->send( new OrderPaymentSuccessMail($order) ); 
-                } 
-                $adminEmail = config('mail.admin_email'); 
-                if (!empty($adminEmail)) { 
-                    Mail::to($adminEmail)->send( new OrderPaymentSuccessMail($order) );
-                } 
-            } 
-            catch (\Throwable $e) 
-            { 
-                Log::error('COD order email failed',[ 
-                    'order_id' => $order->id, 
-                    'order_number' => $order->order_number, 
-                    'customer' => $order->email, 
-                    'admin' => config('mail.admin_email'), 
-                    'message' => $e->getMessage(), 
-                ]); 
+            $order->load(['user', 'items.product']);
+            try
+            {
+                if (!empty($order->email))
+                {
+                    Mail::to($order->email)->send(new OrderPaymentSuccessMail($order));
+                }
+                $adminEmail = config('mail.admin_email');
+                if (!empty($adminEmail)) {
+                    Mail::to($adminEmail)->send(new OrderPaymentSuccessMail($order));
+                }
+            }  catch (\Throwable $e) {
+                ([
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                    'customer' => $order->email,
+                    'admin' => config('mail.admin_email'),
+                    'message' => $e->getMessage(),
+                ]);
             }
             return redirect()
                 ->route('home')
@@ -483,6 +480,35 @@ class OrderController extends Controller
 
             return back()->withInput()->with('error', $e->getMessage());
         }
+    }
+    private function resolveShippingCharge(?string $pincode, ?string $city, ?string $state): float
+    {
+        $pincode = preg_replace('/\D/', '', (string) $pincode);
+        $city    = trim((string) $city);
+        $state   = trim((string) $state);
+
+        $charge = null;
+
+        if ($pincode !== '') {
+            $charge = ShippingCharge::where('pincode', $pincode)->first();
+        }
+
+        if (! $charge && $city !== '') {
+            $charge = ShippingCharge::where('city', $city)->first();
+        }
+
+        if (! $charge && $state !== '') {
+            $charge = ShippingCharge::where('state', $state)->first();
+        }
+
+        if (! $charge) {
+            $charge = ShippingCharge::whereNull('pincode')
+                ->whereNull('city')
+                ->whereNull('state')
+                ->first();
+        }
+
+        return $charge ? (float) $charge->charges : 0.0;
     }
     public function verifyRazorpayPayment(Request $request)
     {

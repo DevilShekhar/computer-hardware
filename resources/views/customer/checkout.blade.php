@@ -327,6 +327,15 @@
                                             </span>
                                         </td>
                                     </tr>
+                                    <tr class="cart-shipping" id="cartShippingRow">
+                                        <th colspan="2">
+                                            Shipping
+                                            <small id="shippingLabel" class="text-muted"></small>
+                                        </th>
+                                        <td>
+                                            <span class="amount" id="cartShipping">₹0.00</span>
+                                        </td>
+                                    </tr>
                                     <tr class="order-total">
                                         <th colspan="2">Order Total</th>
                                         <td>
@@ -535,6 +544,8 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let appliedDiscount = 0;
+        let shippingCharge = 0;
+        let shippingFetchTimer = null;
         const csrfToken = document.querySelector('meta[name="csrf-token"]')
             ? document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             : '{{ csrf_token() }}';
@@ -549,6 +560,44 @@
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
+        }
+
+        function getDisplayedGrandTotal() {
+            const el = document.getElementById('cartGrandTotal');
+            if (!el) return 0;
+            const cleaned = (el.textContent || '0').replace(/[^0-9.]/g, '');
+            return parseFloat(cleaned) || 0;
+        }
+
+        function syncHiddenTotals() {
+            if (!form) return;
+
+            let hiddenShipping = form.querySelector('input[name="shipping_charge"]');
+            if (!hiddenShipping) {
+                hiddenShipping = document.createElement('input');
+                hiddenShipping.type = 'hidden';
+                hiddenShipping.name = 'shipping_charge';
+                form.appendChild(hiddenShipping);
+            }
+            hiddenShipping.value = (shippingCharge || 0).toFixed(2);
+
+            let hiddenGrand = form.querySelector('input[name="grand_total"]');
+            if (!hiddenGrand) {
+                hiddenGrand = document.createElement('input');
+                hiddenGrand.type = 'hidden';
+                hiddenGrand.name = 'grand_total';
+                form.appendChild(hiddenGrand);
+            }
+            hiddenGrand.value = getDisplayedGrandTotal().toFixed(2);
+
+            let hiddenCoupon = form.querySelector('input[name="coupon_discount"]');
+            if (!hiddenCoupon) {
+                hiddenCoupon = document.createElement('input');
+                hiddenCoupon.type = 'hidden';
+                hiddenCoupon.name = 'coupon_discount';
+                form.appendChild(hiddenCoupon);
+            }
+            hiddenCoupon.value = (appliedDiscount || 0).toFixed(2);
         }
 
         function showToast(message, type = 'success') {
@@ -603,11 +652,73 @@
             }
         }
 
+        function fetchShippingCharge(immediate) {
+            const pincodeEl = document.getElementById('checkoutPincode');
+            const cityEl    = document.getElementById('checkoutCity');
+            const stateEl   = document.getElementById('checkoutState');
+            const labelEl   = document.getElementById('shippingLabel');
+
+            const pincode = pincodeEl ? pincodeEl.value.trim() : '';
+            const city    = cityEl ? cityEl.value.trim() : '';
+            const state   = stateEl ? stateEl.value.trim() : '';
+
+            if (!pincode && !city && !state) {
+                shippingCharge = 0;
+                if (labelEl) labelEl.textContent = '';
+                refreshTotals();
+                return;
+            }
+
+            const doFetch = function () {
+                fetch('{{ route('checkout.shipping-charge') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ pincode: pincode, city: city, state: state })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        shippingCharge = parseFloat(data.charge) || 0;
+                        if (labelEl) labelEl.textContent = data.name ? '(' + data.name + ')' : '';
+                    } else {
+                        shippingCharge = 0;
+                        if (labelEl) labelEl.textContent = '';
+                    }
+                    refreshTotals();
+                })
+                .catch(err => {
+                    console.error('Shipping fetch error:', err);
+                    shippingCharge = 0;
+                    refreshTotals();
+                });
+            };
+
+            if (immediate) {
+                doFetch();
+            } else {
+                clearTimeout(shippingFetchTimer);
+                shippingFetchTimer = setTimeout(doFetch, 400); // debounce
+            }
+        }
+
+        ['checkoutPincode', 'checkoutCity', 'checkoutState'].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('input',  function () { fetchShippingCharge(false); });
+            el.addEventListener('change', function () { fetchShippingCharge(true);  });
+        });
+
         function refreshTotals(subtotalOverride) {
             const subtotalEl   = document.getElementById('cartSubtotal');
             const gstEl        = document.getElementById('cartGst');
             const gstRow       = document.getElementById('cartGstRow');
             const grandTotalEl = document.getElementById('cartGrandTotal');
+            const shippingEl   = document.getElementById('cartShipping');
+            const shippingRow  = document.getElementById('cartShippingRow');
 
             const totals = readCurrentTotals();
             const subtotal = (subtotalOverride === undefined || subtotalOverride === null)
@@ -617,11 +728,18 @@
             const gst = totals.gst;
 
             if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
-
             if (gstEl)  gstEl.textContent  = formatPrice(gst);
             if (gstRow) gstRow.style.display = gst > 0 ? '' : 'none';
 
-            let grand;
+            // Shipping row
+            if (shippingEl) shippingEl.textContent = shippingCharge > 0
+                ? formatPrice(shippingCharge)
+                : formatPrice(0);
+            if (shippingRow) shippingRow.style.display = '';
+
+            let grand = subtotal + gst + shippingCharge;
+
+            // Coupon discount row
             if (appliedDiscount > 0) {
                 let discountRow = document.getElementById('couponDiscountRow');
                 if (!discountRow) {
@@ -636,15 +754,16 @@
                 const discountEl = document.getElementById('couponDiscount');
                 if (discountEl) discountEl.textContent = '− ' + formatPrice(appliedDiscount);
 
-                grand = Math.max(0, subtotal + gst - appliedDiscount);
+                grand = Math.max(0, grand - appliedDiscount);
             } else {
                 const discountRow = document.getElementById('couponDiscountRow');
                 if (discountRow) discountRow.remove();
-
-                grand = subtotal + gst;
             }
 
             if (grandTotalEl) grandTotalEl.textContent = formatPrice(grand);
+
+            // Keep hidden inputs in sync with the visible totals
+            syncHiddenTotals();
         }
 
         function updateAllTotalsLocally() {
@@ -828,6 +947,10 @@
 
         function startRazorpayPayment() {
             const formData = new FormData(form);
+
+            // Make sure hidden totals are fresh before sending
+            syncHiddenTotals();
+
             fetch('{{ route('checkout.place-order') }}', {
                 method: 'POST',
                 headers: {
@@ -952,6 +1075,9 @@
             form.addEventListener('submit', function (e) {
                 const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
 
+                // Make sure shipping + grand total are sent with form
+                syncHiddenTotals();
+
                 if (button) { button.disabled = true; button.value = 'Processing...'; }
                 if (loader) { loader.style.display = 'block'; }
 
@@ -964,6 +1090,9 @@
         }
 
         updateAllTotalsLocally();
+        if (document.getElementById('checkoutPincode')?.value) {
+            fetchShippingCharge(true);
+        }
 
         const paymentOptions = document.querySelectorAll('.payment-option');
 
@@ -1034,6 +1163,7 @@
                     c.classList.remove('selected');
                 });
                 card.classList.add('selected');
+                fetchShippingCharge(true);
             });
         });
 
