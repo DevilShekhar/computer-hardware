@@ -8992,3 +8992,27 @@ span.required {
         font-size: 12px;
     }
 }
+.billing-locked .checkout-form-list input,
+.billing-locked .checkout-form-list textarea,
+.billing-locked .country-select select,
+.billing-locked .nice-select {
+    background-color: #f5f5f5 !important;
+    color: #555 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+.billing-locked .country-select .nice-select {
+    pointer-events: none !important;
+}
+
+/* Small hint shown above the locked fields */
+.billing-locked-hint {
+    display: none;
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+}
+.billing-locked .billing-locked-hint {
+    display: block;
+}

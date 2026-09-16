@@ -188,6 +188,12 @@
 
                         @endif
 
+                        <div id="billingFields" class="billing-fields">
+                            <div class="billing-locked-hint">
+                                These details are filled from your selected saved address.
+                                Uncheck or choose another address to edit them.
+                            </div>
+
                         <div class="row">
 
                             <div class="col-md-12">
@@ -453,6 +459,7 @@
                             </div>
 
                         </div>
+                        </div>
 
                     </div>
 
@@ -481,9 +488,17 @@
                                         <td>Cart Subtotal</td>
                                         <td class="text-end"><span id="cartSubtotal">₹0.00</span></td>
                                     </tr>
-                                    <tr id="cartGstRow" style="display:none;">
-                                        <td>GST</td>
-                                        <td class="text-end"><span id="cartGst">₹0.00</span></td>
+                                    <tr id="cartCgstRow" style="display:none;">
+                                        <td>CGST</td>
+                                        <td class="text-end"><span id="cartCgst">₹0.00</span></td>
+                                    </tr>
+                                    <tr id="cartSgstRow" style="display:none;">
+                                        <td>SGST</td>
+                                        <td class="text-end"><span id="cartSgst">₹0.00</span></td>
+                                    </tr>
+                                    <tr id="cartIgstRow" style="display:none;">
+                                        <td>IGST</td>
+                                        <td class="text-end"><span id="cartIgst">₹0.00</span></td>
                                     </tr>
                                     <tr id="cartShippingRow">
                                         <td>
@@ -896,6 +911,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('pcBuilderCheckoutForm');
     const productsList = document.getElementById('pcBuilderProductsList');
 
+    const billingFields = document.getElementById('billingFields');
+
+    /* ============================================================
+       BILLING LOCK HELPERS
+       ============================================================ */
+
+    function setBillingLocked(locked) {
+        if (!billingFields) return;
+
+        if (locked) {
+            billingFields.classList.add('billing-locked');
+            billingFields
+                .querySelectorAll('input, select, textarea')
+                .forEach(el => {
+                    if (el.type === 'hidden') return;
+                    el.setAttribute('tabindex', '-1');
+                });
+        } else {
+            billingFields.classList.remove('billing-locked');
+            billingFields
+                .querySelectorAll('input, select, textarea')
+                .forEach(el => {
+                    el.removeAttribute('tabindex');
+                });
+        }
+    }
+
     /* ============================================================
        UTILITY FUNCTIONS
        ============================================================ */
@@ -1074,14 +1116,36 @@ document.addEventListener('DOMContentLoaded', function () {
         return Number.isFinite(rate) && rate > 0 ? rate : 0;
     }
 
-    function fetchShippingCharge(immediate) {
-        const pincodeEl = document.getElementById('checkoutPincode');
-        const cityEl    = document.getElementById('checkoutCity');
-        const stateEl   = document.getElementById('checkoutState');
+    /* ============================================================
+       DELIVERY ADDRESS RESOLVER
+       ============================================================ */
 
-        const pincode = pincodeEl ? pincodeEl.value.trim() : '';
-        const city    = cityEl ? cityEl.value.trim() : '';
-        const state   = stateEl ? stateEl.value.trim() : '';
+    function getDeliveryAddressFields() {
+        const shipBox = document.getElementById('ship-box');
+        const useShipping = shipBox && shipBox.checked;
+
+        if (useShipping) {
+            return {
+                pincode: document.getElementById('shipPincode'),
+                city:    document.getElementById('shipCity'),
+                state:   document.getElementById('shipState'),
+            };
+        }
+        return {
+            pincode: document.getElementById('checkoutPincode'),
+            city:    document.getElementById('checkoutCity'),
+            state:   document.getElementById('checkoutState'),
+        };
+    }
+
+    function fetchShippingCharge(immediate) {
+        const delivery = getDeliveryAddressFields();
+        const labelEl  = document.getElementById('shippingLabel');
+
+        const pincode = delivery.pincode ? delivery.pincode.value.trim() : '';
+        const city    = delivery.city    ? delivery.city.value.trim()    : '';
+        const state   = delivery.state   ? delivery.state.value.trim()   : '';
+
         const doFetch = function () {
             fetch('{{ route('checkout.shipping-charge') }}', {
                 method: 'POST',
@@ -1096,8 +1160,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (data) {
                 if (data.success) {
                     shippingCharge = parseFloat(data.charge) || 0;
+                    if (labelEl) labelEl.textContent = data.name ? '(' + data.name + ')' : '';
                 } else {
                     shippingCharge = 0;
+                    if (labelEl) labelEl.textContent = '';
                 }
                 calculateTotals();
             })
@@ -1116,11 +1182,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    ['checkoutPincode', 'checkoutCity', 'checkoutState'].forEach(function (id) {
+    // Attach listeners to BOTH billing and shipping address fields
+    [
+        'checkoutPincode', 'checkoutCity', 'checkoutState',
+        'shipPincode',     'shipCity',     'shipState'
+    ].forEach(function (id) {
         const el = document.getElementById(id);
         if (!el) return;
-        el.addEventListener('input',  function () { fetchShippingCharge(false); });
-        el.addEventListener('change', function () { fetchShippingCharge(true);  });
+        el.addEventListener('input',  function () { fetchShippingCharge(false); calculateTotals(); });
+        el.addEventListener('change', function () { fetchShippingCharge(true);  calculateTotals(); });
     });
 
     /* ============================================================
@@ -1130,6 +1200,14 @@ document.addEventListener('DOMContentLoaded', function () {
     function calculateTotals() {
         let subtotal = 0;
         let gstTotal = 0;
+        let cgstTotal = 0;
+        let sgstTotal = 0;
+        let igstTotal = 0;
+
+        // Delivery state — shipping if ship_to_different, else billing
+        const delivery = getDeliveryAddressFields();
+        const state = (delivery.state?.value || '').trim().toLowerCase();
+        const isMaharashtra = state === 'maharashtra';
 
         Object.keys(productsData).forEach(function (id) {
             const product = productsData[id];
@@ -1142,25 +1220,49 @@ document.addEventListener('DOMContentLoaded', function () {
             const gstRate = getProductGstRate(product);
 
             if (gstRate > 0) {
-                gstTotal += (itemTotal * gstRate) / 100;
+                const itemGst = (itemTotal * gstRate) / 100;
+                gstTotal += itemGst;
+
+                if (isMaharashtra) {
+                    cgstTotal += itemGst / 2;
+                    sgstTotal += itemGst / 2;
+                } else {
+                    igstTotal += itemGst;
+                }
             }
         });
 
         currentTotal = subtotal + gstTotal + shippingCharge;
 
         const subtotalElement = document.getElementById('cartSubtotal');
-        const gstElement = document.getElementById('cartGst');
         const grandTotalElement = document.getElementById('cartGrandTotal');
-        const gstRow = document.getElementById('cartGstRow');
         const shippingElement = document.getElementById('cartShipping');
         const shippingRow = document.getElementById('cartShippingRow');
+
+        const cgstRow = document.getElementById('cartCgstRow');
+        const sgstRow = document.getElementById('cartSgstRow');
+        const igstRow = document.getElementById('cartIgstRow');
 
         if (subtotalElement) {
             subtotalElement.textContent = formatPrice(subtotal);
         }
 
-        if (gstElement) {
-            gstElement.textContent = formatPrice(gstTotal);
+        if (cgstRow) {
+            cgstRow.style.display = cgstTotal > 0 ? '' : 'none';
+            const el = document.getElementById('cartCgst');
+            if (el) el.textContent = formatPrice(cgstTotal);
+        }
+
+        if (sgstRow) {
+            sgstRow.style.display = sgstTotal > 0 ? '' : 'none';
+            const el = document.getElementById('cartSgst');
+            if (el) el.textContent = formatPrice(sgstTotal);
+        }
+
+        if (igstRow) {
+            igstRow.style.display = igstTotal > 0 ? '' : 'none';
+            const el = document.getElementById('cartIgst');
+            if (el) el.textContent = formatPrice(igstTotal);
         }
 
         if (shippingElement) {
@@ -1175,10 +1277,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (grandTotalElement) {
             grandTotalElement.textContent = formatPrice(currentTotal);
-        }
-
-        if (gstRow) {
-            gstRow.style.display = gstTotal > 0 ? '' : 'none';
         }
     }
 
@@ -1339,6 +1437,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedRadio = document.querySelector('.address-radio:checked');
 
         if (!selectedRadio) {
+            setBillingLocked(false);
             return;
         }
 
@@ -1407,7 +1506,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         selected.classList.add('selected');
+        setBillingLocked(true);
         fetchShippingCharge(true);
+        calculateTotals();
     }
 
     /* ============================================================
@@ -1453,6 +1554,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
+
+        // Delivery address just changed — recalc shipping + GST
+        fetchShippingCharge(true);
+        calculateTotals();
     }
 
     /* ============================================================
