@@ -48,58 +48,88 @@
     @stack('styles')
     <style>
         .search-input-wrapper {
-    position: relative;
-    flex: 1;
-}
-
-.product-search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border: 1px solid #ddd;
-    z-index: 9999;
-    display: none;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.product-search-item {
-    display: block;
-    padding: 12px 15px;
-    color: #333;
-    text-decoration: none;
-    border-bottom: 1px solid #eee;
-    background: #fff;
-}
-
-.product-search-item:hover {
-    background: #f5f5f5;
-    color: #333;
-}
-
-.product-search-item .product-name {
-    font-size: 14px;
-    font-weight: 500;
-    display: block;
-}
-
-.product-search-item .product-sku {
-    font-size: 12px;
-    color: #999;
-    display: block;
-    margin-top: 3px;
-}
-
-.search-no-result {
-    padding: 15px;
-    color: #777;
-    text-align: center;
-}
+            position: relative;
+            flex: 1;
+        }
+        .product-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            z-index: 9999;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .product-search-item {
+            display: block;
+            padding: 12px 15px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+        }
+        .product-search-item:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+        .product-search-item .product-name {
+            font-size: 14px;
+            font-weight: 500;
+            display: block;
+        }
+        .product-search-item .product-sku {
+            font-size: 12px;
+            color: #999;
+            display: block;
+            margin-top: 3px;
+        }
+        .search-no-result {
+            padding: 15px;
+            color: #777;
+            text-align: center;
+        }
+        /* WhatsApp Floating Button */
+        .whatsapp-float {
+            position: fixed;
+            width: 58px;
+            height: 58px;
+            bottom: 90px;
+            right: 25px;
+            background: #25D366;
+            color: #fff !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            text-decoration: none !important;
+            z-index: 99999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+        .whatsapp-float:hover {
+            background: #20b957;
+            color: #fff !important;
+            transform: scale(1.08);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.30);
+        }
+        .whatsapp-float i {
+            line-height: 1;
+        }
+        @media (max-width: 767px) {
+            .whatsapp-float {
+                width: 52px;
+                height: 52px;
+                bottom: 18px;
+                right: 18px;
+                font-size: 27px;
+            }
+        }
     </style>
 </head>
-
 <body>
     <div class="body-wrapper">
         <!-- Begin Header Area -->
@@ -1383,5 +1413,10 @@
     </script>
     @endif
     @stack('scripts')
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/919767555737?text=Hello%20METAVERSE%20INFO,%20I%20would%20like%20to%20know%20more%20about%20your%20products."
+        class="whatsapp-float"  target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" title="Chat with us on WhatsApp">
+        <i class="fa fa-whatsapp"></i>
+    </a>
 </body>
 </html>
