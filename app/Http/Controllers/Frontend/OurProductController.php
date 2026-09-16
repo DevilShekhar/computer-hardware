@@ -37,7 +37,8 @@ class OurProductController extends Controller
             ->when(!$request->filled('sort'),function($query){
                 $query->latest('id');
             })
-            ->get();
+            ->paginate(9)
+            ->appends($request->query());
 
         if($request->ajax()){
             return response()->json([
@@ -66,7 +67,10 @@ class OurProductController extends Controller
                         'cart_url'=>url('/cart/add/'.$product->id)
                     ];
                 }),
-                'count'=>$products->count()
+                'count'=>$products->count(),
+                'total'=>$products->total(),
+                'current_page'=>$products->currentPage(),
+                'last_page'=>$products->lastPage()
             ]);
         }
 

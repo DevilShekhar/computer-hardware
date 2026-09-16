@@ -121,6 +121,33 @@
                     </div>
                 @endforelse
             </div>
+            @if($products->hasPages())
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="li-paginatoin-area text-center pt-25">
+                            <ul class="li-pagination-box">
+                                @if($products->onFirstPage())
+                                    <li class="disabled"><a class="Previous" href="javascript:void(0)">Previous</a></li>
+                                @else
+                                    <li><a class="Previous" href="{{ $products->previousPageUrl() }}">Previous</a></li>
+                                @endif
+
+                                @for($i = 1; $i <= $products->lastPage(); $i++)
+                                    <li class="{{ $i == $products->currentPage() ? 'active' : '' }}">
+                                        <a href="{{ $products->url($i) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+
+                                @if($products->hasMorePages())
+                                    <li><a class="Next" href="{{ $products->nextPageUrl() }}">Next</a></li>
+                                @else
+                                    <li class="disabled"><a class="Next" href="javascript:void(0)">Next</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </section>
 @endsection

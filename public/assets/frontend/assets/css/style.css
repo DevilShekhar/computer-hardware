@@ -8128,7 +8128,7 @@ span.required {
 
 .order-table tbody {
     display: block;
-    max-height: 220px;
+    max-height: 450px;
     overflow-y: auto
 }
 
