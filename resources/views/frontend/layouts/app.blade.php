@@ -121,46 +121,25 @@
                         <div class="col-lg-9 col-md-8">
                             <div class="header-top-right">
                                 <ul class="ht-menu">
-                                    <!-- Begin Setting Area -->
+                                    <!-- Begin My Orders Area -->
                                     <li>
-                                        <div class="ht-setting-trigger"><span>Setting</span></div>
-                                        <div class="setting ht-setting">
-                                            <ul class="ht-setting-list">
-                                                <li><a href="login-register.html">My Account</a></li>
-                                                <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="login-register.html">Sign In</a></li>
-                                            </ul>
-                                        </div>
+                                        <a href="{{ route('my-orders') }}">My Orders</a>
                                     </li>
-                                    <!-- Setting Area End Here -->
-                                    <!-- Begin Currency Area -->
+                                    <!-- My Orders Area End Here -->
+
+                                    <!-- Begin PC Builder Orders Area -->
                                     <li>
-                                        <span class="currency-selector-wrapper">Currency :</span>
-                                        <div class="ht-currency-trigger"><span>USD $</span></div>
-                                        <div class="currency ht-currency">
-                                            <ul class="ht-setting-list">
-                                                <li><a href="#">EUR €</a></li>
-                                                <li class="active"><a href="#">USD $</a></li>
-                                            </ul>
-                                        </div>
+                                        <a href="{{ route('my-pc-builder-orders') }}">PC Builder Order</a>
                                     </li>
-                                    <!-- Currency Area End Here -->
-                                    <!-- Begin Language Area -->
-                                    <li>
-                                        <span class="language-selector-wrapper">Language :</span>
-                                        <div class="ht-language-trigger"><span>English</span></div>
-                                        <div class="language ht-language">
-                                            <ul class="ht-setting-list">
-                                                <li class="active"><a href="#"><img
-                                                            src="{{ asset('assets/frontend/assets/images/menu/flag-icon/1.jpg') }}"
-                                                            alt="">English</a></li>
-                                                <li><a href="#"><img
-                                                            src="{{ asset('assets/frontend/assets/images/menu/flag-icon/2.jpg') }}"
-                                                            alt="">Français</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <!-- Language Area End Here -->
+                                    <!-- PC Builder Orders Area End Here -->
+
+                                    <!-- Begin Login Area - Show only when user is not logged in -->
+                                    @guest
+                                        <li>
+                                            <a href="{{ route('login') }}">Login</a>
+                                        </li>
+                                    @endguest
+                                    <!-- Login Area End Here -->
                                 </ul>
                             </div>
                         </div>
@@ -176,7 +155,7 @@
                         <!-- Begin Header Logo Area -->
                         <div class="col-lg-3">
                             <div class="logo ">
-                                <a href="index.html">
+                                <a href="/">
                                     <img src="{{ asset('assets/frontend/assets/images/menu/logo/logo.png') }}" alt="">
                                 </a>
                             </div>

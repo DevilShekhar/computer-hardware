@@ -467,9 +467,13 @@
                             <table class="order-table">
                                 <thead>
                                     <tr>
-                                        <th>Component</th>
-                                        <th class="text-end">Total</th>
-                                    </tr>
+                                    <th>Image</th>
+                                    <th>Components</th>
+                                    <th>Price</th>
+                                    <th>GST Rate</th>
+                                    <th>GST Amount</th>
+                                    <th>Total</th>
+                                </tr>
                                 </thead>
                                 <tbody id="pcBuilderProductsList"></tbody>
                                 <tfoot>
@@ -1230,47 +1234,32 @@ document.addEventListener('DOMContentLoaded', function () {
             row.dataset.gstRate = gstRate;
 
             row.innerHTML = `
-                <td class="cart-product-name">
-                    <div class="d-flex align-items-center">
-                        <img
-                            src="${image}"
-                            alt="${escapeHtml(product.name)}"
-                            class="pc-builder-product-image"
-                            onerror="this.onerror=null;this.src='{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}';"
-                            style="width:50px;height:50px;object-fit:contain;border:1px solid #eee;border-radius:4px;margin-right:10px;"
-                        >
-                        <div>
-                            <div class="pc-builder-product-name">
-                                ${escapeHtml(product.name)}
-                            </div>
-                            <small class="text-muted">
-                                ${formatPrice(price)}
-                            </small>
-                        </div>
-                    </div>
+                <td class="cart-product-image">
+                    <img
+                        src="${image}"
+                        alt="${escapeHtml(product.name)}"
+                        class="pc-builder-product-image"
+                        onerror="this.onerror=null;this.src='{{ asset('assets/frontend/assets/images/product/large-size/1.jpg') }}';"
+                    style="width: 60px;height: 40px;">
                 </td>
-
+                <td class="cart-product-name">
+                    ${escapeHtml(product.name)}
+                </td>
+                <td class="cart-product-price">
+                    ${formatPrice(price)}
+                </td>
+                <td class="cart-product-gst-rate">
+                    ${gstRate > 0 ? gstRate.toFixed(2) + '%' : '0%'}
+                </td>
+                <td class="cart-product-gst-amount">
+                    ${gstAmount > 0 ? formatPrice(gstAmount) : formatPrice(0)}
+                </td>
                 <td class="cart-product-total item-total text-end">
                     <div class="price-cell">
                         <span class="amount">
-                            ${formatPrice(itemTotal)}
+                            ${formatPrice(itemTotal + gstAmount)}
                         </span>
-                        <button
-                            type="button"
-                            class="trash-btn remove-builder-product"
-                            data-product-id="${id}"
-                            title="Remove"
-                        >
-                            <i class="fa fa-trash"></i>
-                        </button>
                     </div>
-                    ${
-                        gstRate > 0 && gstAmount > 0
-                        ? `<div class="product-gst">
-                            GST ${gstRate.toFixed(2)}%: ${formatPrice(gstAmount)}
-                        </div>`
-                        : ''
-                    }
                 </td>
             `;
 
