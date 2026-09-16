@@ -615,13 +615,11 @@
             </section>
             <section class="login-right">
                 <div class="login-heading">
-                  
                     <img
                         src="{{ asset('assets/frontend/assets/images/menu/logo/logo.png') }}"
                         alt="{{ config('app.name', 'Metaverse') }}"
                         class="register-logo"
                     >
-                
                     <h2>Welcome Back  </h2>
                     <p>Sign in to continue to your account.</p>
                 </div>
@@ -722,7 +720,7 @@
                 const passwordInput = document.getElementById("password");
                 const passwordToggle =  document.getElementById("passwordToggle");
                 const passwordEye =  document.getElementById("passwordEye");
-                if ( passwordInput && passwordToggle &&  passwordEye) 
+                if ( passwordInput && passwordToggle &&  passwordEye)
                 {
                     passwordToggle.addEventListener("click",
                         function() {
