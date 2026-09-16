@@ -48,6 +48,14 @@ class Order extends Model
         'refund_remark',
         'refunded_at',
         'razorpay_refund_id',
+        'gst_rate',
+        'gst_amount',
+        'cgst_rate',
+        'cgst_amount',
+        'sgst_rate',
+        'sgst_amount',
+        'igst_rate',
+        'igst_amount',
     ];
 
     protected $casts = [

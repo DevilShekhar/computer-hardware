@@ -73,8 +73,8 @@
             line-height: 1.55;
         }
         .invoice-box {
-            background: #fffafa;          
-            padding: 18px 16px;           
+            background: #fffafa;
+            padding: 18px 16px;
         }
         .invoice-title {
             font-size: 27px;
@@ -356,6 +356,36 @@
         $customerEmail = $pcBuilder->email ?: ($pcBuilder->user->email ?? '');
         $paymentMethod = $pcBuilder->payment_method ? ucfirst(str_replace('_', ' ', $pcBuilder->payment_method)) : 'N/A';
         $logoPath = public_path('assets/img/logo.png');
+        $gstType = $pcBuilder->gst_type
+            ?? (
+                strtolower(trim((string) $pcBuilder->state)) === 'maharashtra'
+                    ? 'intra_state'
+                    : 'inter_state'
+            );
+        $isIntraState = $gstType === 'intra_state';
+        $isInterState = $gstType === 'inter_state';
+        $cgstTotal = (float) ($pcBuilder->cgst_amount ?? 0);
+        $sgstTotal = (float) ($pcBuilder->sgst_amount ?? 0);
+        $igstTotal = (float) ($pcBuilder->igst_amount ?? 0);
+        $derivedCgst = 0;
+        $derivedSgst = 0;
+        $derivedIgst = 0;
+        $derivedGst  = 0;
+        foreach ($products as $__item) {
+            if (
+                isset($__item['gst_rate']) && (float) $__item['gst_rate'] > 0
+            ) {
+                $hasAnyGst = true;
+                break;
+            }
+            if (
+                isset($__item['gst_amount']) && (float) $__item['gst_amount'] > 0
+            ) {
+                $hasAnyGst = true;
+                break;
+            }
+        }
+        $hasAnyGst = $hasAnyGst ?? false;
     @endphp
     <div class="page">
         <div class="top-bar"></div>
@@ -408,14 +438,14 @@
                         <div class="invoice-detail">
                             <strong>Order Date:</strong>
                             {{ optional($pcBuilder->created_at)->format('d M Y') }}
-                        </div>             
+                        </div>
                     </div>
                 </td>
             </tr>
         </table>
         <table class="information">
             <tr>
-                <td class="information-box">             
+                <td class="information-box">
                     <div class="customer-name">
                         {{ $customerName }}
                     </div>
@@ -461,25 +491,42 @@
                     <th class="text-center" style="width: 5%;">
                         #
                     </th>
-                    <th class="text-left" style="width: 29%;">
+                    <th class="text-left" style="width: 25%;">
                         Product
                     </th>
-                    <th class="text-center"  style="width: 13%;">
+                    <th class="text-center" style="width: 11%;">
                         Product Type
                     </th>
-                    <th class="text-center" style="width: 7%;">
+                    <th class="text-center" style="width: 6%;">
                         Qty
                     </th>
-                    <th class="text-right" style="width: 12%;">
+                    <th class="text-right" style="width: 11%;">
                         Price
                     </th>
-                    <th class="text-center" style="width: 9%;">
-                        GST
-                    </th>
+                    @if($hasAnyGst)
+                        @if($isIntraState)
+                            <th class="text-center" style="width: 7%;">
+                                CGST
+                            </th>
+                            <th class="text-right" style="width: 9%;">
+                                CGST Amt
+                            </th>
+                            <th class="text-center" style="width: 7%;">
+                                SGST
+                            </th>
+                            <th class="text-right" style="width: 9%;">
+                                SGST Amt
+                            </th>
+                        @else
+                            <th class="text-center" style="width: 8%;">
+                                IGST
+                            </th>
+                            <th class="text-right" style="width: 11%;">
+                                IGST Amt
+                            </th>
+                        @endif
+                    @endif
                     <th class="text-right" style="width: 12%;">
-                        GST Amount
-                    </th>
-                    <th class="text-right" style="width: 13%;">
                         Total
                     </th>
                 </tr>
@@ -525,23 +572,55 @@
                             )
                         )
                     );
+                    $storedGstRate   = isset($item['gst_rate'])   ? (float) $item['gst_rate']   : 0;
+                    $storedGstAmount = isset($item['gst_amount']) ? (float) $item['gst_amount'] : 0;
+                    $storedCgstRate  = isset($item['cgst_rate'])  ? (float) $item['cgst_rate']  : 0;
+                    $storedCgstAmt   = isset($item['cgst_amount'])? (float) $item['cgst_amount']: 0;
+                    $storedSgstRate  = isset($item['sgst_rate'])  ? (float) $item['sgst_rate']  : 0;
+                    $storedSgstAmt   = isset($item['sgst_amount'])? (float) $item['sgst_amount']: 0;
+                    $storedIgstRate  = isset($item['igst_rate'])  ? (float) $item['igst_rate']  : 0;
+                    $storedIgstAmt   = isset($item['igst_amount'])? (float) $item['igst_amount']: 0;
                     $gstRate = 0;
-                    if ($gstType === 'yes' && $product && $product->gst) {
+                    if ($storedGstRate > 0) {
+                        $gstRate = $storedGstRate;
+                    } elseif ($gstType === 'yes' && $product && $product->gst) {
                         $gstRate = (float) (
-                            $product->gst->rate
+                            $product->gst->gst_amount
+                            ?? ($product->gst->rate
                             ?? ($product->gst->gst_rate
-                            ?? ($product->gst->percentage ?? 0))
+                            ?? ($product->gst->percentage ?? 0)))
                         );
                     }
-                    if ($gstRate <= 0 && $gstType === 'yes') {
-                        $gstRate = (float) (
-                            $item['gst_rate']
-                            ?? ($item['gst']
-                            ?? ($item['tax_rate'] ?? 0))
-                        );
+                    $itemGstAmount = $storedGstAmount > 0
+                        ? $storedGstAmount
+                        : ($gstRate > 0 ? ($baseAmount * $gstRate / 100) : 0);
+
+                    $cgstRate   = $storedCgstRate;
+                    $cgstAmount = $storedCgstAmt;
+                    $sgstRate   = $storedSgstRate;
+                    $sgstAmount = $storedSgstAmt;
+                    $igstRate   = $storedIgstRate;
+                    $igstAmount = $storedIgstAmt;
+
+                    if ($itemGstAmount > 0 && $cgstAmount === 0 && $sgstAmount === 0 && $igstAmount === 0) {
+                        if ($isIntraState) {
+                            $cgstRate   = $gstRate / 2;
+                            $sgstRate   = $gstRate / 2;
+                            $cgstAmount = $itemGstAmount / 2;
+                            $sgstAmount = $itemGstAmount / 2;
+                        } else {
+                            $igstRate   = $gstRate;
+                            $igstAmount = $itemGstAmount;
+                        }
                     }
-                    $itemGstAmount = $gstType === 'yes' ? ($baseAmount * $gstRate / 100) : 0;
+
                     $itemTotal = $baseAmount + $itemGstAmount;
+                    $derivedGst  += $itemGstAmount;
+                    $derivedCgst += $cgstAmount;
+                    $derivedSgst += $sgstAmount;
+                    $derivedIgst += $igstAmount;
+
+                    $hasGst = $gstRate > 0;
                 @endphp
                 <tr>
                     <td class="text-center">
@@ -579,27 +658,70 @@
                     <td class="text-right">
                         ₹{{ number_format($unitPrice, 2) }}
                     </td>
-                    <td class="text-center">
-                        @if($gstType === 'yes')
-                            <span class="gst-yes">
-                                {{ number_format($gstRate, 2) }}%
-                            </span>
+                    @if($hasAnyGst)
+                        @if($isIntraState)
+                            {{-- CGST --}}
+                            <td class="text-center">
+                                @if($cgstRate > 0)
+                                    <span class="gst-yes">
+                                        {{ rtrim(rtrim(number_format($cgstRate, 2), '0'), '.') }}%
+                                    </span>
+                                @else
+                                    <span class="gst-no">-</span>
+                                @endif
+                            </td>
+                            <td class="text-right">
+                                @if($cgstAmount > 0)
+                                    ₹{{ number_format($cgstAmount, 2) }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+
+                            {{-- SGST --}}
+                            <td class="text-center">
+                                @if($sgstRate > 0)
+                                    <span class="gst-yes">
+                                        {{ rtrim(rtrim(number_format($sgstRate, 2), '0'), '.') }}%
+                                    </span>
+                                @else
+                                    <span class="gst-no">-</span>
+                                @endif
+                            </td>
+                            <td class="text-right">
+                                @if($sgstAmount > 0)
+                                    ₹{{ number_format($sgstAmount, 2) }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                         @else
-                            <span class="gst-no">
-                                No GST
-                            </span>
+                            {{-- IGST --}}
+                            <td class="text-center">
+                                @if($igstRate > 0)
+                                    <span class="gst-yes">
+                                        {{ rtrim(rtrim(number_format($igstRate, 2), '0'), '.') }}%
+                                    </span>
+                                @else
+                                    <span class="gst-no">-</span>
+                                @endif
+                            </td>
+                            <td class="text-right">
+                                @if($igstAmount > 0)
+                                    ₹{{ number_format($igstAmount, 2) }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                         @endif
-                    </td>
-                    <td class="text-right">
-                        ₹{{ number_format($itemGstAmount, 2) }}
-                    </td>
+                    @endif
                     <td class="text-right">
                         ₹{{ number_format($itemTotal, 2) }}
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8"  class="text-center" style="padding: 20px; color: #9ca3af;">
+                    <td colspan="{{ $hasAnyGst ? ($isIntraState ? 10 : 8) : 6 }}" class="text-center" style="padding: 20px; color: #9ca3af;">
                         No PC components found.
                     </td>
                 </tr>
@@ -639,6 +761,12 @@
                     </div>
                 </td>
                 <td class="total-column">
+                    @php
+                        $displayCgst = $cgstTotal > 0 ? $cgstTotal : $derivedCgst;
+                        $displaySgst = $sgstTotal > 0 ? $sgstTotal : $derivedSgst;
+                        $displayIgst = $igstTotal > 0 ? $igstTotal : $derivedIgst;
+                        $displayGst  = $gstTotal  > 0 ? $gstTotal  : $derivedGst;
+                    @endphp
                     <table class="summary">
                         <tr>
                             <td class="summary-label">
@@ -648,14 +776,35 @@
                                 ₹{{ number_format($subtotal, 2) }}
                             </td>
                         </tr>
-                        <tr>
-                            <td class="summary-label">
-                                GST
-                            </td>
-                            <td class="summary-value">
-                                ₹{{ number_format($gstTotal, 2) }}
-                            </td>
-                        </tr>
+                        @if($hasAnyGst)
+                            @if($isIntraState)
+                                <tr>
+                                    <td class="summary-label">
+                                        CGST
+                                    </td>
+                                    <td class="summary-value">
+                                        ₹{{ number_format($displayCgst, 2) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="summary-label">
+                                        SGST
+                                    </td>
+                                    <td class="summary-value">
+                                        ₹{{ number_format($displaySgst, 2) }}
+                                    </td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td class="summary-label">
+                                        IGST
+                                    </td>
+                                    <td class="summary-value">
+                                        ₹{{ number_format($displayIgst, 2) }}
+                                    </td>
+                                </tr>
+                            @endif
+                        @endif
                         @if($shipping > 0)
                             <tr>
                                 <td class="summary-label">

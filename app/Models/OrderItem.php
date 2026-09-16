@@ -14,6 +14,11 @@ class OrderItem extends Model
         'price',
         'quantity',
         'total',
+        'gst_type',
+        'gst_amount',
+        'cgst_amount',
+        'sgst_amount',
+        'igst_amount',
     ];
 
     protected $casts = [

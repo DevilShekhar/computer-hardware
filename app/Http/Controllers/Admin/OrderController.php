@@ -16,16 +16,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OrderPaymentSuccessMail;
 use App\Models\ShippingCharge;
+use App\Services\GstService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
     protected CartService $cartService;
+    protected GstService $gstService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService ,GstService $gstService)
     {
         $this->cartService = $cartService;
+        $this->gstService  = $gstService;
     }
     public function index()
     {
@@ -248,21 +251,22 @@ class OrderController extends Controller
                 'country'       => $validated['country'],
             ];
         }
-
-        // Totals
+        $isMaharashtra = strtolower(trim($orderAddress['state'])) === 'maharashtra';
         $subtotal = $cart->items->sum(function ($item) {
             return (float) $item->price * (int) $item->quantity;
         });
+        $deliveryState = $shipToDifferent
+            ? $orderAddress['state']
+            : $validated['state'];
 
-        $gstAmount = 0;
-        foreach ($cart->items as $item) {
-            $product = $item->product;
-            if ($product && $product->gst_type === 'yes' && $product->gst) {
-                $rate = (float) $product->gst->gst_amount;
-                $gstAmount += ((float) $item->price * (int) $item->quantity) * $rate / 100;
-            }
-        }
+        $gst = $this->calculateGst($cart->items, $deliveryState);
 
+        $gstAmount   = $gst['gst_amount'];
+        $cgstAmount  = $gst['cgst_amount'];
+        $sgstAmount  = $gst['sgst_amount'];
+        $igstAmount  = $gst['igst_amount'];
+        $gstItems    = $gst['items'];
+        $gstType     = $gst['gst_type'];
         $discountAmount = (float) session('coupon_discount', 0);
         $discountAmount = min($discountAmount, $subtotal + $gstAmount);
         $shippingAmount = $this->resolveShippingCharge(
@@ -331,19 +335,15 @@ class OrderController extends Controller
                     'order_address'     => $orderAddress,
                     'ship_to_different' => $shipToDifferent,
                     'subtotal'          => $subtotal,
+                    'gst_type'          => $gstType,
                     'gst_amount'        => $gstAmount,
+                    'cgst_amount'       => $cgstAmount,
+                    'sgst_amount'       => $sgstAmount,
+                    'igst_amount'       => $igstAmount,
                     'discount_amount'   => $discountAmount,
                     'shipping_amount'   => $shippingAmount,
                     'total_amount'      => $totalAmount,
-                    'cart_items'        => $cart->items->map(function ($i) {
-                        return [
-                            'product_id'   => $i->product_id,
-                            'product_name' => $i->product->name ?? '',
-                            'sku'          => $i->product->sku ?? null,
-                            'price'        => (float) $i->price,
-                            'quantity'     => (int) $i->quantity,
-                        ];
-                    })->toArray(),
+                    'cart_items'        => $gstItems,
                 ],
             ]);
 
@@ -374,6 +374,11 @@ class OrderController extends Controller
                 'pincode'         => $orderAddress['pincode'],
                 'country'         => $orderAddress['country'],
                 'subtotal'        => $subtotal,
+                'gst_type'        => $gstType,
+                'gst_amount'      => $gstAmount,
+                'cgst_amount'     => $cgstAmount,
+                'sgst_amount'     => $sgstAmount,
+                'igst_amount'     => $igstAmount,
                 'shipping_amount' => $shippingAmount,
                 'discount_amount' => $discountAmount,
                 'total_amount'    => $totalAmount,
@@ -383,21 +388,31 @@ class OrderController extends Controller
                 'order_notes'     => $validated['order_notes'] ?? null,
             ]);
 
-            foreach ($cart->items as $item) {
-                OrderItem::create([
-                    'order_id'     => $order->id,
-                    'product_id'   => $item->product_id,
-                    'product_name' => $item->product->name,
-                    'sku'          => $item->product->sku,
-                    'price'        => $item->price,
-                    'quantity'     => $item->quantity,
-                    'total'        => $item->price * $item->quantity,
-                ]);
-
-                if (isset($item->product->stock_quantity)) {
-                    $item->product->decrement('stock_quantity', $item->quantity);
+            foreach ($gstItems as $row) {
+            OrderItem::create([
+                'order_id'     => $order->id,
+                'product_id'   => $row['product_id'],
+                'product_name' => $row['product_name'],
+                'sku'          => $row['sku'],
+                'price'        => $row['price'],
+                'quantity'     => $row['quantity'],
+                'total'        => $row['price'] * $row['quantity'],
+                'gst_rate'     => $row['gst_rate'],
+                'gst_amount'   => $row['gst_amount'],
+                'cgst_rate'    => $row['cgst_rate'],
+                'cgst_amount'  => $row['cgst_amount'],
+                'sgst_rate'    => $row['sgst_rate'],
+                'sgst_amount'  => $row['sgst_amount'],
+                'igst_rate'    => $row['igst_rate'],
+                'igst_amount'  => $row['igst_amount'],
+            ]);
+            if (isset($row['product_id'])) {
+                $product = Product::find($row['product_id']);
+                if ($product && isset($product->stock_quantity)) {
+                    $product->decrement('stock_quantity', $row['quantity']);
                 }
             }
+        }
 
             if ($shipToDifferent) {
                 $userId = Auth::id();
@@ -481,6 +496,89 @@ class OrderController extends Controller
             return back()->withInput()->with('error', $e->getMessage());
         }
     }
+
+    private function calculateGst($cartItems, string $state): array
+    {
+        $isMaharashtra = strtolower(trim($state)) === 'maharashtra';
+
+        $gstAmount  = 0;
+        $cgstAmount = 0;
+        $sgstAmount = 0;
+        $igstAmount = 0;
+
+        $items = [];
+
+        foreach ($cartItems as $item) {
+            $product = $item->product;
+
+            $price     = (float) $item->price;
+            $quantity  = (int) $item->quantity;
+            $itemTotal = $price * $quantity;
+
+            $gstRate = 0;
+
+            if ($product && $product->gst_type === 'yes' && $product->gst) {
+                $gstRate = (float) $product->gst->gst_amount;
+            }
+
+            $itemGstAmount = $gstRate > 0
+                ? ($itemTotal * $gstRate) / 100
+                : 0;
+
+            $itemCgstRate   = 0;
+            $itemCgstAmount = 0;
+            $itemSgstRate   = 0;
+            $itemSgstAmount = 0;
+            $itemIgstRate   = 0;
+            $itemIgstAmount = 0;
+
+            if ($isMaharashtra && $gstRate > 0) {
+                $itemCgstRate   = $gstRate / 2;
+                $itemSgstRate   = $gstRate / 2;
+                $itemCgstAmount = $itemGstAmount / 2;
+                $itemSgstAmount = $itemGstAmount / 2;
+
+                $cgstAmount += $itemCgstAmount;
+                $sgstAmount += $itemSgstAmount;
+            } elseif ($gstRate > 0) {
+                $itemIgstRate   = $gstRate;
+                $itemIgstAmount = $itemGstAmount;
+
+                $igstAmount += $itemIgstAmount;
+            }
+
+            $gstAmount += $itemGstAmount;
+
+            $items[] = [
+                'product_id'    => $item->product_id,
+                'product_name'  => $product->name ?? '',
+                'sku'           => $product->sku ?? null,
+                'price'         => $price,
+                'quantity'      => $quantity,
+
+                'gst_rate'      => $gstRate,
+                'gst_amount'    => $itemGstAmount,
+
+                'cgst_rate'     => $itemCgstRate,
+                'cgst_amount'   => $itemCgstAmount,
+
+                'sgst_rate'     => $itemSgstRate,
+                'sgst_amount'   => $itemSgstAmount,
+
+                'igst_rate'     => $itemIgstRate,
+                'igst_amount'   => $itemIgstAmount,
+            ];
+        }
+
+        return [
+            'gst_type'    => $isMaharashtra ? 'intra_state' : 'inter_state',
+            'gst_amount'  => $gstAmount,
+            'cgst_amount' => $cgstAmount,
+            'sgst_amount' => $sgstAmount,
+            'igst_amount' => $igstAmount,
+            'items'       => $items,
+        ];
+    }
     private function resolveShippingCharge(?string $pincode, ?string $city, ?string $state): float
     {
         $pincode = preg_replace('/\D/', '', (string) $pincode);
@@ -562,6 +660,11 @@ class OrderController extends Controller
                 'pincode'             => $orderAddress['pincode'],
                 'country'             => $orderAddress['country'],
                 'subtotal'            => $pending['subtotal'],
+                'gst_type'            => $pending['gst_type'],
+                'gst_amount'          => $pending['gst_amount'],
+                'cgst_amount'         => $pending['cgst_amount'],
+                'sgst_amount'         => $pending['sgst_amount'],
+                'igst_amount'         => $pending['igst_amount'],
                 'shipping_amount'     => $pending['shipping_amount'],
                 'discount_amount'     => $pending['discount_amount'],
                 'total_amount'        => $pending['total_amount'],
@@ -583,6 +686,14 @@ class OrderController extends Controller
                     'price'        => $row['price'],
                     'quantity'     => $row['quantity'],
                     'total'        => $row['price'] * $row['quantity'],
+                    'gst_rate'     => $row['gst_rate'],
+                    'gst_amount'   => $row['gst_amount'],
+                    'cgst_rate'    => $row['cgst_rate'],
+                    'cgst_amount'  => $row['cgst_amount'],
+                    'sgst_rate'    => $row['sgst_rate'],
+                    'sgst_amount'  => $row['sgst_amount'],
+                    'igst_rate'    => $row['igst_rate'],
+                    'igst_amount'  => $row['igst_amount'],
                 ]);
 
                 $product = Product::find($row['product_id']);

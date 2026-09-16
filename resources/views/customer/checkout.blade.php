@@ -103,6 +103,11 @@
                                 </ul>
                             </div>
                         @endif
+                        <div id="billingFields" class="billing-fields">
+                            <div class="billing-locked-hint">
+                                These details are filled from your selected saved address.
+                                Uncheck or choose another address to edit them.
+                            </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="country-select clearfix">
@@ -228,6 +233,7 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-12">
@@ -319,13 +325,17 @@
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr class="cart-gst" id="cartGstRow" style="{{ $cartGst > 0 ? '' : 'display:none;' }}">
-                                        <th colspan="2">GST</th>
-                                        <td>
-                                            <span class="amount" id="cartGst">
-                                                ₹{{ number_format($cartGst, 2) }}
-                                            </span>
-                                        </td>
+                                    <tr class="cart-gst" id="cartCgstRow" style="display:none;">
+                                        <th colspan="2">CGST</th>
+                                        <td><span class="amount" id="cartCgst">₹0.00</span></td>
+                                    </tr>
+                                    <tr class="cart-gst" id="cartSgstRow" style="display:none;">
+                                        <th colspan="2">SGST</th>
+                                        <td><span class="amount" id="cartSgst">₹0.00</span></td>
+                                    </tr>
+                                    <tr class="cart-gst" id="cartIgstRow" style="display:none;">
+                                        <th colspan="2">IGST</th>
+                                        <td><span class="amount" id="cartIgst">₹0.00</span></td>
                                     </tr>
                                     <tr class="cart-shipping" id="cartShippingRow">
                                         <th colspan="2">
@@ -540,6 +550,7 @@
     </div>
 </div>
 
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -554,6 +565,29 @@
         const loader = document.getElementById('checkoutLoader');
         const showCoupon = document.getElementById('showcoupon');
         const couponContent = document.getElementById('checkout_coupon');
+
+        const billingFields = document.getElementById('billingFields');
+
+        function setBillingLocked(locked) {
+            if (!billingFields) return;
+
+            if (locked) {
+                billingFields.classList.add('billing-locked');
+                billingFields
+                    .querySelectorAll('input, select, textarea')
+                    .forEach(el => {
+                        if (el.type === 'hidden') return;
+                        el.setAttribute('tabindex', '-1');
+                    });
+            } else {
+                billingFields.classList.remove('billing-locked');
+                billingFields
+                    .querySelectorAll('input, select, textarea')
+                    .forEach(el => {
+                        el.removeAttribute('tabindex');
+                    });
+            }
+        }
 
         function formatPrice(amount) {
             return '₹' + Number(amount || 0).toLocaleString('en-IN', {
@@ -607,10 +641,33 @@
                 Swal.fire({ icon: type, text: message });
             }
         }
+        function getDeliveryAddressFields() {
+            const shipBox = document.getElementById('ship-box');
+            const useShipping = shipBox && shipBox.checked;
+
+            if (useShipping) {
+                return {
+                    pincode: document.getElementById('shipPincode'),
+                    city:    document.getElementById('shipCity'),
+                    state:   document.getElementById('shipState'),
+                };
+            }
+            return {
+                pincode: document.getElementById('checkoutPincode'),
+                city:    document.getElementById('checkoutCity'),
+                state:   document.getElementById('checkoutState'),
+            };
+        }
 
         function readCurrentTotals() {
             let subtotal = 0;
             let gst = 0;
+            let cgst = 0;
+            let sgst = 0;
+            let igst = 0;
+            const delivery = getDeliveryAddressFields();
+            const state = (delivery.state?.value || '').trim().toLowerCase();
+            const isMaharashtra = state === 'maharashtra';
 
             document.querySelectorAll('.cart_item').forEach(function (row) {
                 const price = parseFloat(row.dataset.price) || 0;
@@ -619,19 +676,21 @@
                 const qty = parseInt(input?.value) || 1;
 
                 const itemTotal = price * qty;
-                const itemGst = (itemTotal * gstRate) / 100;
+                const itemGst = gstRate > 0 ? (itemTotal * gstRate) / 100 : 0;
 
                 subtotal += itemTotal;
                 gst += itemGst;
+                if (isMaharashtra && gstRate > 0) {
+                    cgst += itemGst / 2;
+                    sgst += itemGst / 2;
+                } else if (gstRate > 0) {
+                    igst += itemGst;
+                }
             });
 
             const grand = Math.max(0, subtotal + gst - appliedDiscount);
 
-            return {
-                subtotal: subtotal,
-                gst: gst,
-                grand: grand
-            };
+            return { subtotal, gst, cgst, sgst, igst, grand };
         }
 
         function updateItemTotal(row, quantity) {
@@ -653,14 +712,12 @@
         }
 
         function fetchShippingCharge(immediate) {
-            const pincodeEl = document.getElementById('checkoutPincode');
-            const cityEl    = document.getElementById('checkoutCity');
-            const stateEl   = document.getElementById('checkoutState');
+            const delivery  = getDeliveryAddressFields();
             const labelEl   = document.getElementById('shippingLabel');
 
-            const pincode = pincodeEl ? pincodeEl.value.trim() : '';
-            const city    = cityEl ? cityEl.value.trim() : '';
-            const state   = stateEl ? stateEl.value.trim() : '';
+            const pincode = delivery.pincode ? delivery.pincode.value.trim() : '';
+            const city    = delivery.city    ? delivery.city.value.trim()    : '';
+            const state   = delivery.state   ? delivery.state.value.trim()   : '';
 
             if (!pincode && !city && !state) {
                 shippingCharge = 0;
@@ -705,41 +762,57 @@
             }
         }
 
-        ['checkoutPincode', 'checkoutCity', 'checkoutState'].forEach(function (id) {
+        ['checkoutPincode', 'checkoutCity', 'checkoutState','shipPincode','shipCity','shipState'].forEach(function (id) {
             const el = document.getElementById(id);
             if (!el) return;
-            el.addEventListener('input',  function () { fetchShippingCharge(false); });
-            el.addEventListener('change', function () { fetchShippingCharge(true);  });
+            el.addEventListener('input',  function () {
+                fetchShippingCharge(false);
+                refreshTotals();
+            });
+            el.addEventListener('change', function () {
+                fetchShippingCharge(true);
+                refreshTotals();
+            });
         });
 
         function refreshTotals(subtotalOverride) {
             const subtotalEl   = document.getElementById('cartSubtotal');
-            const gstEl        = document.getElementById('cartGst');
-            const gstRow       = document.getElementById('cartGstRow');
             const grandTotalEl = document.getElementById('cartGrandTotal');
             const shippingEl   = document.getElementById('cartShipping');
             const shippingRow  = document.getElementById('cartShippingRow');
+            const cgstRow = document.getElementById('cartCgstRow');
+            const sgstRow = document.getElementById('cartSgstRow');
+            const igstRow = document.getElementById('cartIgstRow');
 
             const totals = readCurrentTotals();
             const subtotal = (subtotalOverride === undefined || subtotalOverride === null)
                 ? totals.subtotal
                 : subtotalOverride;
 
-            const gst = totals.gst;
-
             if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
-            if (gstEl)  gstEl.textContent  = formatPrice(gst);
-            if (gstRow) gstRow.style.display = gst > 0 ? '' : 'none';
 
-            // Shipping row
-            if (shippingEl) shippingEl.textContent = shippingCharge > 0
-                ? formatPrice(shippingCharge)
-                : formatPrice(0);
+            // GST breakdown
+            if (cgstRow) {
+                cgstRow.style.display = totals.cgst > 0 ? '' : 'none';
+                const el = document.getElementById('cartCgst');
+                if (el) el.textContent = formatPrice(totals.cgst);
+            }
+            if (sgstRow) {
+                sgstRow.style.display = totals.sgst > 0 ? '' : 'none';
+                const el = document.getElementById('cartSgst');
+                if (el) el.textContent = formatPrice(totals.sgst);
+            }
+            if (igstRow) {
+                igstRow.style.display = totals.igst > 0 ? '' : 'none';
+                const el = document.getElementById('cartIgst');
+                if (el) el.textContent = formatPrice(totals.igst);
+            }
+
+            if (shippingEl) shippingEl.textContent = formatPrice(shippingCharge || 0);
             if (shippingRow) shippingRow.style.display = '';
 
-            let grand = subtotal + gst + shippingCharge;
+            let grand = subtotal + totals.gst + (shippingCharge || 0);
 
-            // Coupon discount row
             if (appliedDiscount > 0) {
                 let discountRow = document.getElementById('couponDiscountRow');
                 if (!discountRow) {
@@ -762,7 +835,6 @@
 
             if (grandTotalEl) grandTotalEl.textContent = formatPrice(grand);
 
-            // Keep hidden inputs in sync with the visible totals
             syncHiddenTotals();
         }
 
@@ -1144,6 +1216,7 @@
                             jQuery(country).niceSelect('update');
                         }
                     }
+                    setBillingLocked(false);
                 } else {
                     if (name)    name.value    = card.dataset.name    || '';
                     if (mobile)  mobile.value  = card.dataset.mobile  || '';
@@ -1157,6 +1230,7 @@
                             jQuery(country).niceSelect('update');
                         }
                     }
+                    setBillingLocked(true);
                 }
 
                 document.querySelectorAll('.address-card').forEach(function (c) {
@@ -1211,6 +1285,10 @@
                     }
                 }
             }
+
+            // Delivery address just changed — recalc shipping + GST breakdown
+            fetchShippingCharge(true);
+            refreshTotals();
         }
         if (shipBox) {
     // Remove theme's handler + any previous one

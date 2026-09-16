@@ -314,13 +314,20 @@
         config('app.url'),
         '/'
     );
+    $gstType = $order->gst_type
+        ?? (
+            strtolower(trim((string) $order->state)) === 'maharashtra'
+                ? 'intra_state'
+                : 'inter_state'
+        );
+    $isIntraState = $gstType === 'intra_state';
+    $isInterState = $gstType === 'inter_state';
     $hasAnyGst = $order->items->contains(function ($item) {
-        return $item->product &&
-            strtolower(
-                trim(
-                    (string) $item->product->gst_type
-                )
-            ) === 'yes';
+        if ((float) ($item->gst_rate ?? 0) > 0) {
+            return true;
+        }
+        return $item->product
+            && strtolower(trim((string) $item->product->gst_type)) === 'yes';
     });
     $statusLabels = [
         0 => 'Pending',
@@ -546,12 +553,27 @@
                         Unit Price
                     </th>
                     @if($hasAnyGst)
-                        <th style="width: 10%;" class="text-center">
-                           GST
-                        </th>
-                        <th style="width: 14%;" class="text-right">
-                            GST Amount
-                        </th>
+                        @if($isIntraState)
+                            <th style="width: 8%;" class="text-center">
+                                CGST
+                            </th>
+                            <th style="width: 8%;" class="text-right">
+                                CGST Amt
+                            </th>
+                            <th style="width: 8%;" class="text-center">
+                                SGST
+                            </th>
+                            <th style="width: 8%;" class="text-right">
+                                SGST Amt
+                            </th>
+                        @else
+                            <th style="width: 10%;" class="text-center">
+                                IGST
+                            </th>
+                            <th style="width: 14%;" class="text-right">
+                                IGST Amt
+                            </th>
+                        @endif
                     @endif
                     <th style="width: 15%;" class="text-right">
                         Amount
@@ -562,23 +584,34 @@
                 @forelse($order->items as $index => $item)
                     @php
                         $itemSubtotal = (float) $item->price * (int) $item->quantity;
-                        $hasGst =
-                            $item->product &&
-                            strtolower(
-                                trim(
-                                    (string) $item->product->gst_type
-                                )
-                            ) === 'yes';
-                        $gstRate = 0;
-                        if ($hasGst && $item->product->gst ) {
-                            $gstRate = (float) $item->product->gst->gst_amount;
+                        $gstRate      = (float) ($item->gst_rate ?? 0);
+                        $itemGst      = (float) ($item->gst_amount ?? 0);
+                        $cgstRate     = (float) ($item->cgst_rate ?? 0);
+                        $cgstAmount   = (float) ($item->cgst_amount ?? 0);
+                        $sgstRate     = (float) ($item->sgst_rate ?? 0);
+                        $sgstAmount   = (float) ($item->sgst_amount ?? 0);
+                        $igstRate     = (float) ($item->igst_rate ?? 0);
+                        $igstAmount   = (float) ($item->igst_amount ?? 0);
+
+                        // Fallback for very old orders where order_items GST is 0
+                        if ($gstRate === 0 && $item->product
+                            && strtolower(trim((string) $item->product->gst_type)) === 'yes'
+                            && $item->product->gst) {
+                            $gstRate   = (float) $item->product->gst->gst_amount;
+                            $itemGst   = round(($itemSubtotal * $gstRate) / 100, 2);
+
+                            if ($isIntraState) {
+                                $cgstRate   = $gstRate / 2;
+                                $sgstRate   = $gstRate / 2;
+                                $cgstAmount = $itemGst / 2;
+                                $sgstAmount = $itemGst / 2;
+                            } else {
+                                $igstRate   = $gstRate;
+                                $igstAmount = $itemGst;
+                            }
                         }
-                        $itemGst = 0;
-                        if ($hasGst && $gstRate > 0 ) {
-                            $itemGst = round(
-                                ( $itemSubtotal * $gstRate ) / 100, 2
-                            );
-                        }
+
+                        $hasGst = $gstRate > 0;
                     @endphp
                     <tr>
                         <td>
@@ -604,32 +637,51 @@
                             ₹{{ number_format((float) $item->price, 2) }}
                         </td>
                         @if($hasAnyGst)
-                            <td class="text-center">
-                                @if($hasGst &&  $gstRate > 0 )
-                                    {{ rtrim(
-                                        rtrim(
-                                            number_format(
-                                                $gstRate,
-                                                2
-                                            ),
-                                            '0'
-                                        ),
-                                        '.'
-                                    ) }}%
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="text-right amount">
-                                @if($hasGst && $itemGst > 0 )
-                                    ₹{{ number_format(
-                                        $itemGst,
-                                        2
-                                    ) }}
-                                @else
-                                    -
-                                @endif
-                            </td>
+                            @if($isIntraState)
+                                <td class="text-center">
+                                    @if($cgstRate > 0)
+                                        {{ rtrim(rtrim(number_format($cgstRate, 2), '0'), '.') }}%
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td class="text-right amount">
+                                    @if($cgstAmount > 0)
+                                        ₹{{ number_format($cgstAmount, 2) }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if($sgstRate > 0)
+                                        {{ rtrim(rtrim(number_format($sgstRate, 2), '0'), '.') }}%
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td class="text-right amount">
+                                    @if($sgstAmount > 0)
+                                        ₹{{ number_format($sgstAmount, 2) }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            @else
+                                <td class="text-center">
+                                    @if($igstRate > 0)
+                                        {{ rtrim(rtrim(number_format($igstRate, 2), '0'), '.') }}%
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td class="text-right amount">
+                                    @if($igstAmount > 0)
+                                        ₹{{ number_format($igstAmount, 2) }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                            @endif
                         @endif
                         <td class="text-right amount">
                             ₹{{ number_format(
@@ -640,7 +692,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ $hasAnyGst ? 8 : 6 }}" class="no-data">
+                        <td colspan="{{ $hasAnyGst ? ($isIntraState ? 10 : 8) : 6 }}" class="no-data">
                             No products found for this order.
                         </td>
                     </tr>
@@ -711,17 +763,33 @@
                     </td>
                 </tr>
                 @if($hasAnyGst)
-                    <tr>
-                        <td class="summary-label">
-                            Total GST
-                        </td>
-                        <td class="summary-value">
-                            ₹{{ number_format(
-                                (float) $totalGst,
-                                2
-                            ) }}
-                        </td>
-                    </tr>
+                    @if($isIntraState)
+                        <tr>
+                            <td class="summary-label">
+                                CGST
+                            </td>
+                            <td class="summary-value">
+                                ₹{{ number_format((float) $order->cgst_amount, 2) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="summary-label">
+                                SGST
+                            </td>
+                            <td class="summary-value">
+                                ₹{{ number_format((float) $order->sgst_amount, 2) }}
+                            </td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td class="summary-label">
+                                IGST
+                            </td>
+                            <td class="summary-value">
+                                ₹{{ number_format((float) $order->igst_amount, 2) }}
+                            </td>
+                        </tr>
+                    @endif
                 @endif
                 <tr>
                     <td class="summary-label">
