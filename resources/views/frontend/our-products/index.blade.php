@@ -800,6 +800,15 @@ $filterBrands = $allProducts
             </div>
         </div>
     </div>
+    <div class="col-lg-12">
+        <div class="li-paginatoin-area text-center pt-25">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="li-pagination-box" id="productPagination"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -807,7 +816,8 @@ document.addEventListener('DOMContentLoaded', function() {
         brand: '',
         category: '',
         sub_category: '',
-        sort: 'latest'
+        sort: 'latest',
+        page: 1
     };
     const productGrid =
         document.getElementById('productGrid');
@@ -825,6 +835,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('filterSelectedInfo');
     const filterSelectedText =
         document.getElementById('filterSelectedText');
+    const productPagination =
+        document.getElementById('productPagination');
     function escapeHtml(value) {
         const div =
             document.createElement('div');
@@ -1040,6 +1052,7 @@ function listProduct(product) {
 
         '</div>';
 }
+
     function updateSelectedInfo(name) {
         if (!filterSelectedInfo ||
             !filterSelectedText) {
@@ -1058,7 +1071,59 @@ function listProduct(product) {
             );
         }
     }
+    function renderPagination(meta) {
+        if (!productPagination) {
+            return;
+        }
 
+        const current = parseInt(meta.current_page, 10) || 1;
+        const last    = parseInt(meta.last_page, 10) || 1;
+
+        productPagination.innerHTML = '';
+
+        if (last <= 1) {
+            return;
+        }
+
+        let html = '';
+
+        // Previous
+        if (current > 1) {
+            html += '<li><a class="Previous" href="javascript:void(0)" data-page="' + (current - 1) + '">Previous</a></li>';
+        } else {
+            html += '<li class="disabled"><a class="Previous" href="javascript:void(0)">Previous</a></li>';
+        }
+
+        // Numbered pages
+        for (let p = 1; p <= last; p++) {
+            const active = (p === current) ? ' class="active"' : '';
+            html += '<li' + active + '><a href="javascript:void(0)" data-page="' + p + '">' + p + '</a></li>';
+        }
+
+        // Next
+        if (current < last) {
+            html += '<li><a class="Next" href="javascript:void(0)" data-page="' + (current + 1) + '">Next</a></li>';
+        } else {
+            html += '<li class="disabled"><a class="Next" href="javascript:void(0)">Next</a></li>';
+        }
+
+        productPagination.innerHTML = html;
+
+        productPagination.querySelectorAll('a[data-page]').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = parseInt(this.dataset.page, 10) || 1;
+                if (page === currentFilter.page) return;
+                currentFilter.page = page;
+                loadProducts();
+                // Scroll to top of product area
+                if (productGrid) {
+                    const y = productGrid.getBoundingClientRect().top + window.pageYOffset - 120;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+            });
+        });
+    }
     function closeOtherBrands(currentBrandItem) {
         if (!filterTree) {
             return;
@@ -1192,6 +1257,10 @@ function listProduct(product) {
             'sort',
             currentFilter.sort
         );
+        params.set(
+            'page',
+            currentFilter.page || 1
+        );
         fetch(
                 "{{ route('our-products') }}?" +
                 params.toString(), {
@@ -1249,6 +1318,12 @@ function listProduct(product) {
                     'Showing ' +
                     (response.count ?? 0) +
                     ' Products';
+                // Render pagination
+                renderPagination({
+                    current_page: response.current_page ?? 1,
+                    last_page:    response.last_page    ?? 1
+                });
+
                 productLoader.style.display =
                     'none';
                 productGrid.style.opacity =
@@ -1427,6 +1502,8 @@ function listProduct(product) {
                 currentFilter.sub_category =
                     '';
 
+                currentFilter.page =
+                    1;
                 brand.classList.add(
                     'active'
                 );
@@ -1510,6 +1587,8 @@ function listProduct(product) {
                 currentFilter.sub_category =
                     '';
 
+                currentFilter.page =
+                    1;
                 const parentBrandItem =
                     categoryItem.closest(
                         '.brand-item'
@@ -1638,6 +1717,8 @@ function listProduct(product) {
                 currentFilter.sub_category =
                     subCategoryId;
 
+                currentFilter.page =
+                    1;
                 const brandItem =
                     subCategoryItem.closest(
                         '.brand-item'
@@ -1725,6 +1806,8 @@ function listProduct(product) {
                 currentFilter.sort =
                     this.value;
 
+                currentFilter.page =
+                    1;
                 loadProducts();
 
             }
@@ -1749,7 +1832,8 @@ function listProduct(product) {
                     brand: '',
                     category: '',
                     sub_category: '',
-                    sort: 'latest'
+                    sort: 'latest',
+                    page: 1
                 };
 
                 if (productSort) {
@@ -1818,6 +1902,10 @@ function listProduct(product) {
         );
 
     }
+    renderPagination({
+        current_page: {{ $products->currentPage() }},
+        last_page:    {{ $products->lastPage() }}
+    });
 
 });
 </script>

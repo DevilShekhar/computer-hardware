@@ -208,6 +208,15 @@
                         </div>
                         @endforelse
                     </div>
+                    @if($product->short_description)
+                    <div class="product-desc">
+                        <p>
+                            <span>
+                                {{ $product->short_description }}
+                            </span>
+                        </p>
+                    </div>
+                    @endif
                 </div>
             </div>
             <div class="col-lg-7 col-md-6">
@@ -274,15 +283,6 @@
                                 </span>
                             </div>
                         </div>
-                        @if($product->short_description)
-                        <div class="product-desc">
-                            <p>
-                                <span>
-                                    {{ $product->short_description }}
-                                </span>
-                            </p>
-                        </div>
-                        @endif
                         <div class="product-details-meta">
                             <div class="product-meta-header">
                                 <h4>Product Information</h4>
