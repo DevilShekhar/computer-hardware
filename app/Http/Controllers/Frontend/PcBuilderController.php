@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Mail\PcBuilderSuccessMail;
+use App\Models\ShippingCharge;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
@@ -424,10 +425,19 @@ class PcBuilderController extends Controller
             $subtotal = round($subtotal, 2);
             $gstAmount = round($gstAmount, 2);
             $discountAmount = 0;
-            $shippingAmount = $subtotal >= 999 ? 0 : 100;
+            $shippingAmount = (float) $request->input('shipping_charge', 0);
+            $shippingAmount = round($shippingAmount, 2);
+            if ($shippingAmount <= 0) {
+                $verifiedShipping = ShippingCharge::where('pincode', $validated['pincode'])->first()
+                    ?? ShippingCharge::whereNull('pincode')
+                        ->whereNull('city')->whereNull('state')->first();
+
+                if ($verifiedShipping) {
+                    $shippingAmount = (float) $verifiedShipping->charges;
+                }
+            }
 
             $totalAmount = round($subtotal + $gstAmount + $shippingAmount - $discountAmount, 2);
-
             if ($totalAmount <= 0) {
                 return response()->json(['success' => false, 'message' => 'Invalid order total.'], 422);
             }
