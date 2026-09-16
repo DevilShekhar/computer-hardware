@@ -2,7 +2,7 @@
 @section('title', $meta_title)
 @section('meta_keyword', $meta_keyword)
 @section('meta_description', $meta_description)
-@section('content')
+@section('content') 
 <!-- Start Hero Area -->
 <div class="slider-with-banner full-screen-slider">
     <div class="slider-area">
@@ -113,6 +113,79 @@
                         </div>
                     </div>
                 @endforelse
+            </div>
+        </div>
+    </div>
+</section>
+<section class="pc-builder-banner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 col-md-6">
+                <div class="pc-builder-content">
+                    <h1>
+                        Build Your <span>Dream PC</span>
+                    </h1>
+                    <h4>
+                        Performance. Reliability. Built for You.
+                    </h4>
+                    <div class="pc-builder-line"></div>
+                    <p class="pc-builder-description">
+                        Build your perfect PC with genuine components, expert
+                        guidance, and unbeatable prices. Only at
+                        <strong>METAVERSE INFO</strong>
+                    </p>
+                    <div class="pc-builder-button">
+                        <a href="{{ url('/pc-builder') }}">
+                            Click Here to Build Your PC
+                        </a>
+                    </div>
+                    <div class="pc-builder-features">
+                        <div class="pc-feature">
+                            <div class="pc-feature-icon">
+                                <i class="fa fa-shield"></i>
+                            </div>
+                            <div class="pc-feature-content">
+                                <span>Free</span>
+                                <strong>Delivery</strong>
+                            </div>
+                        </div>
+                        <div class="pc-feature-divider"></div>
+                        <div class="pc-feature">
+                            <div class="pc-feature-icon">
+                                <i class="fa fa-lightbulb-o"></i>
+                            </div>
+                            <div class="pc-feature-content">
+                                <span>Secure</span>
+                                <strong>Payments</strong>
+                            </div>
+                        </div>
+                        <div class="pc-feature-divider"></div>
+                        <div class="pc-feature">
+                            <div class="pc-feature-icon">
+                                <i class="fa fa-headphones"></i>
+                            </div>
+                            <div class="pc-feature-content">
+                                <span>Expert</span>
+                                <strong>Support</strong>
+                            </div>
+                        </div>
+                        <div class="pc-feature-divider"></div>
+                        <div class="pc-feature">
+                            <div class="pc-feature-icon">
+                                <i class="fa fa-thumbs-up"></i>
+                            </div>
+                            <div class="pc-feature-content">
+                                <span>Trusted by</span>
+                                <strong>Thousands</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="pc-builder-image">
+                    <img src="{{ asset('assets/frontend/assets/images/pc-builder/pc-builder.png') }}" alt="Build Your Dream PC">
+                </div>
             </div>
         </div>
     </div>
@@ -237,6 +310,107 @@
                             </div>
                         @endforelse
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="why-buy-section">
+    <div class="container">
+        <div class="why-buy-heading text-center">
+            <h2>Why Buy From METAVERSE INFO?</h2>
+            <p>
+                Your trusted destination for genuine PC products,
+                custom builds and instant digital gift cards.
+            </p>
+        </div>
+        <div class="row why-buy-row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-shield"></i>
+                    </div>
+                    <h3>100% Genuine Products</h3>
+                    <p>
+                        Only authentic products guaranteed.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-truck"></i>
+                    </div>
+                    <h3>Free Shipping</h3>
+                    <p>
+                        Free shipping on all products across India.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-bolt"></i>
+                    </div>
+                    <h3>Instant Digital Delivery</h3>
+                    <p>
+                        Digital codes delivered instantly.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <h3>GST Invoice</h3>
+                    <p>
+                        GST invoice is available with every order.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-credit-card"></i>
+                    </div>
+                    <h3>Secure Payments</h3>
+                    <p>
+                        Safe &amp; secure payment options.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-video-camera"></i>
+                    </div>
+                    <h3>Live Product Demo</h3>
+                    <p>
+                        Experience the product before you buy.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-dropbox"></i>
+                    </div>
+                    <h3>Secure Packaging</h3>
+                    <p>
+                        Video recorded before dispatch.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-buy-card">
+                    <div class="why-buy-icon">
+                        <i class="fa fa-undo"></i>
+                    </div>
+                    <h3>Easy Returns</h3>
+                    <p>
+                        Hassle-free returns on eligible products.
+                    </p>
                 </div>
             </div>
         </div>
@@ -371,347 +545,136 @@
         </div>
     </div>
 </section>
-<div class="li-static-home">
+<section class="why-choose-section">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="li-static-home-image"></div>
-                <div class="li-static-home-content">
-                    <p>Sale Offer<span>-20% Off</span>This Week</p>
-                    <h2>Featured Product</h2>
-                    <h2>Sanai Accessories 2018</h2>
-                    <p class="schedule">
-                        Starting at
-                        <span> $1209.00</span>
-                    </p>
-                    <div class="default-btn">
-                        <a href="shop-left-sidebar.html" class="links">Shopping Now</a>
+        <div class="why-choose-heading">
+            <h2>Why Choose Us</h2>
+        </div>
+        <div class="row why-choose-row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <i class="fa fa-exchange"></i>
                     </div>
+                    <h3>Fast Delivery</h3>
+                    <p>
+                        Quick and reliable shipping to your
+                        doorstep within 3-5 business days.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <i class="fa fa-shield"></i>
+                    </div>
+                    <h3>Secure Payment</h3>
+                    <p>
+                        Your transactions are protected with
+                        industry-leading security protocols.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <i class="fa fa-life-ring"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>
+                        Our customer service team is always
+                        here to help you with any questions.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="why-choose-card">
+                    <div class="why-choose-icon">
+                        <i class="fa fa-certificate"></i>
+                    </div>
+                    <h3>100% New &amp; Genuine</h3>
+                    <p>
+                        All our products are 100% brand new
+                        with official brand warranty.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="group-featured-product pt-60 pb-40 pb-xs-25">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="featured-product">
-                    <div class="li-section-title">
-                        <h2>
-                            <span>Chamcham</span>
-                        </h2>
-                    </div>
-                    <div class="featured-product-active-2 owl-carousel">
-                        <div class="featured-product-bundle">
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/1.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
+</section>
+<!-- End PC Builder Banner -->
+<div class="counterup-area">
+    <div class="container-fluid p-0">
+        <div class="row no-gutters">
+            <div class="col-lg-3 col-md-6">
+                <!-- Begin Limupa Counter Area -->
+                <div class="limupa-counter white-smoke-bg">
+                    <div class="container">
+                        <div class="counter-img">
+                            <img src="{{ asset('assets/frontend/assets/images/about-us/icon/1.png')}}" alt="">
+                        </div>
+                        <div class="counter-info">
+                            <div class="counter-number">
+                                <h3 class="counter">2169</h3>
                             </div>
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/2.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/3.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="counter-text">
+                                <span>HAPPY CUSTOMERS</span>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- limupa Counter Area End Here -->
             </div>
-            <div class="col-lg-4">
-                <div class="featured-product pt-sm-10 pt-xs-25">
-                    <div class="li-section-title">
-                        <h2>
-                            <span>Meito</span>
-                        </h2>
+            <div class="col-lg-3 col-md-6">
+                <!-- Begin limupa Counter Area -->
+                <div class="limupa-counter gray-bg">
+                    <div class="counter-img">
+                        <img src="{{ asset('assets/frontend/assets/images/about-us/icon/2.png')}}" alt="">
                     </div>
-                    <div class="featured-product-active-2 owl-carousel">
-                        <div class="featured-product-bundle">
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/4.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/5.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/6.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="counter-info">
+                        <div class="counter-number">
+                            <h3 class="counter">869</h3>
+                        </div>
+                        <div class="counter-text">
+                            <span>AWARDS WINNED</span>
                         </div>
                     </div>
                 </div>
+                <!-- limupa Counter Area End Here -->
             </div>
-            <div class="col-lg-4">
-                <div class="featured-product pt-sm-10 pt-xs-25">
-                    <div class="li-section-title">
-                        <h2>
-                            <span>Sanai</span>
-                        </h2>
+            <div class="col-lg-3 col-md-6">
+                <!-- Begin limupa Counter Area -->
+                <div class="limupa-counter white-smoke-bg">
+                    <div class="counter-img">
+                        <img src="{{ asset('assets/frontend/assets/images/about-us/icon/3.png')}}" alt="">
                     </div>
-                    <div class="featured-product-active-2 owl-carousel">
-                        <div class="featured-product-bundle">
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/6.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/4.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="group-featured-pro-wrapper">
-                                    <div class="product-img">
-                                        <a href="product-details.html">
-                                            <img
-                                                src="{{ asset('assets/frontend/assets/images/featured-product/2.jpg') }}">
-                                        </a>
-                                    </div>
-                                    <div class="featured-pro-content">
-                                        <div class="product-review">
-                                            <h5 class="manufacturer">
-                                                <a href="product-details.html">Studio Design</a>
-                                            </h5>
-                                        </div>
-                                        <div class="rating-box">
-                                            <ul class="rating">
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                            </ul>
-                                        </div>
-                                        <h4><a class="featured-product-name" href="single-product.html">Mug Today is a
-                                                good day</a></h4>
-                                        <div class="featured-price-box">
-                                            <span class="new-price">$71.80</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="counter-info">
+                        <div class="counter-number">
+                            <h3 class="counter">689</h3>
+                        </div>
+                        <div class="counter-text">
+                            <span>HOURS WORKED</span>
                         </div>
                     </div>
                 </div>
+                <!-- limupa Counter Area End Here -->
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <!-- Begin limupa Counter Area -->
+                <div class="limupa-counter gray-bg">
+                    <div class="counter-img">
+                        <img src="{{ asset('assets/frontend/assets/images/about-us/icon/4.png')}}" alt="">
+                    </div>
+                    <div class="counter-info">
+                        <div class="counter-number">
+                            <h3 class="counter">2169</h3>
+                        </div>
+                        <div class="counter-text">
+                            <span>COMPLETE PROJECTS</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- limupa Counter Area End Here -->
             </div>
         </div>
     </div>

@@ -2833,13 +2833,10 @@ textarea:focus {
     position: relative;
 }
 .li-section-title > h2 {
-    float: left;
-    font-size: 20px;
+    font-size: 35px;
     color: #ea0505;
     font-weight: 500;
-    letter-spacing: -0.025em;
-    padding: 0;
-    line-height: 1;
+   text-align: center;
     padding-bottom: 13px;
     z-index: 0;
 }
@@ -8244,4 +8241,754 @@ span.required {
     margin: 0;
     font-size: .85rem;
     color: #6b7280
+}
+/* =========================================
+   PC BUILDER BANNER
+========================================= */
+
+.pc-builder-banner {
+    padding: 45px 0;
+    background: linear-gradient(90deg, #fff8f3 0%, #ffffff 55%, #fff 100%);
+    overflow: hidden;
+}
+
+.pc-builder-content {
+    padding: 10px 0;
+}
+
+/* Heading */
+.pc-builder-content h1 {
+    margin: 0;
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #111;
+}
+
+.pc-builder-content h1 span {
+    color: #ea0505;
+}
+
+/* Subtitle */
+.pc-builder-content h4 {
+    margin: 12px 0 8px;
+    font-size: 23px;
+    line-height: 1.4;
+    font-weight: 500;
+    color: #222;
+}
+
+/* Orange line */
+.pc-builder-line {
+    width: 380px;
+    height: 3px;
+    margin: 12px 0 18px;
+    background: linear-gradient(
+        to right,
+        #ea0505,
+        #f58a50
+    );
+}
+
+/* Description */
+.pc-builder-description {
+    max-width: 650px;
+    margin-bottom: 25px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #333;
+}
+
+.pc-builder-description strong {
+    color: #ea0505;
+    font-weight: 700;
+}
+
+/* CTA */
+.pc-builder-button {
+    margin-bottom: 28px;
+}
+
+.pc-builder-button a {
+    display: inline-block;
+    padding: 13px 22px;
+    border-radius: 30px;
+    background: #ea0505;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.pc-builder-button a:hover {
+    background: #d94e10;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   FEATURES
+========================================= */
+
+.pc-builder-features {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 620px;
+    padding: 12px 15px;
+    border: 1px solid #f0a27a;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.pc-feature {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.pc-feature-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    color: #ea0505;
+    font-size: 21px;
+}
+
+.pc-feature-content {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.pc-feature-content span {
+    color: #333;
+    font-size: 14px;
+}
+
+.pc-feature-content strong {
+    color: #222;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.pc-feature-divider {
+    width: 1px;
+    height: 35px;
+    background: #555;
+    opacity: 0.6;
+}
+
+
+/* =========================================
+   RIGHT IMAGE
+========================================= */
+
+.pc-builder-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.pc-builder-image img {
+    width: 100%;
+    max-width: 620px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 991px) {
+
+    .pc-builder-banner {
+        padding: 35px 0;
+    }
+
+    .pc-builder-content h1 {
+        font-size: 34px;
+    }
+
+    .pc-builder-content h4 {
+        font-size: 19px;
+    }
+
+    .pc-builder-description {
+        font-size: 15px;
+    }
+
+    .pc-builder-features {
+        max-width: 100%;
+    }
+
+    .pc-feature {
+        gap: 5px;
+    }
+
+    .pc-feature-content span,
+    .pc-feature-content strong {
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767px) {
+
+    .pc-builder-banner {
+        padding: 30px 15px;
+    }
+
+    .pc-builder-content {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .pc-builder-content h1 {
+        font-size: 30px;
+    }
+
+    .pc-builder-content h4 {
+        font-size: 17px;
+    }
+
+    .pc-builder-line {
+        width: 200px;
+        margin: 12px auto 18px;
+    }
+
+    .pc-builder-description {
+        font-size: 14px;
+    }
+
+    .pc-builder-features {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        padding: 15px 10px;
+    }
+
+    .pc-feature-divider {
+        display: none;
+    }
+
+    .pc-feature {
+        min-width: 42%;
+        justify-content: flex-start;
+    }
+
+    .pc-builder-image {
+        padding-top: 10px;
+    }
+
+    .pc-builder-image img {
+        max-width: 100%;
+    }
+}
+/* =========================================
+   WHY BUY FROM METAVERSE INFO
+========================================= */
+
+.why-buy-section {
+    padding: 55px 0 45px;
+    background: #fff9f5;
+}
+
+
+/* =========================================
+   SECTION HEADING
+========================================= */
+
+.why-buy-heading {
+    margin-bottom: 32px;
+}
+
+.why-buy-heading h2 {
+
+    color: #ea0505;
+
+    font-size: 35x;
+    font-weight: 500;
+}
+
+.why-buy-heading p {
+    margin: 0 auto;
+
+    color: #222222;
+
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   FEATURES ROW
+========================================= */
+
+.why-buy-row {
+    margin-left: -6px;
+    margin-right: -6px;
+}
+
+.why-buy-row > div {
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-bottom: 12px;
+}
+
+
+/* =========================================
+   FEATURE CARD
+========================================= */
+
+.why-buy-card {
+    height: 200px;
+    border-radius: 15px;
+    padding: 30px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+/* =========================================
+   CARD HOVER
+========================================= */
+
+.why-buy-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #ea0505;
+
+    box-shadow: 0 8px 25px rgba(234, 5, 5, 0.15);
+}
+
+
+/* =========================================
+   ICON CIRCLE
+========================================= */
+
+.why-buy-icon {
+    width: 64px;
+    height: 64px;
+
+    margin-bottom: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #ffeaea;
+
+    color: #ea0505;
+
+    font-size: 27px;
+
+    transition: all 0.3s ease;
+}
+
+
+/* =========================================
+   ICON HOVER
+========================================= */
+
+.why-buy-card:hover .why-buy-icon {
+    background: #ea0505;
+
+    color: #ffffff;
+
+    transform: scale(1.05);
+}
+
+
+/* =========================================
+   CARD TITLE
+========================================= */
+
+.why-buy-card h3 {
+    margin: 0 0 5px;
+
+    color: #111111;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    font-weight: 700;
+}
+
+
+/* =========================================
+   CARD DESCRIPTION
+========================================= */
+
+.why-buy-card p {
+    max-width: 250px;
+
+    margin: 0;
+
+    color: #222222;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 992px) {
+
+    .why-buy-card {
+        min-height: 200px;
+    }
+
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 991px) {
+
+    .why-buy-section {
+        padding: 45px 15px 35px;
+    }
+
+    .why-buy-heading h2 {
+        font-size: 26px;
+    }
+
+    .why-buy-heading p {
+        font-size: 14px;
+    }
+
+    .why-buy-card {
+        height: 195px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 767px) {
+
+    .why-buy-section {
+        padding: 40px 10px 30px;
+    }
+
+    .why-buy-heading {
+        margin-bottom: 25px;
+    }
+
+    .why-buy-heading h2 {
+        font-size: 24px;
+    }
+
+    .why-buy-heading p {
+        font-size: 13px;
+    }
+
+    .why-buy-row {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+
+    .why-buy-row > div {
+        padding-left: 5px;
+        padding-right: 5px;
+        margin-bottom: 10px;
+    }
+
+    .why-buy-card {
+        height: 190px;
+
+        padding: 25px 10px 15px;
+    }
+
+    .why-buy-icon {
+        width: 55px;
+        height: 55px;
+
+        font-size: 23px;
+
+        margin-bottom: 10px;
+    }
+
+    .why-buy-card h3 {
+        font-size: 14px;
+    }
+
+    .why-buy-card p {
+        font-size: 12px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    .why-buy-section {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .why-buy-card {
+        height: 185px;
+
+        padding: 23px 7px 12px;
+    }
+    .why-buy-icon {
+        width: 50px;
+        height: 50px;
+
+        font-size: 21px;
+    }
+    .why-buy-card h3 {
+        font-size: 13px;
+    }
+    .why-buy-card p {
+        font-size: 11px;
+    }
+}
+/* =========================================
+   WHY CHOOSE US SECTION
+========================================= */
+.why-choose-section {
+    padding: 70px 0 65px;
+    background: #fff9f5;
+}
+.why-choose-heading {
+    text-align: center;
+    margin-bottom: 70px;
+}
+.why-choose-heading h2 {
+    margin: 0;
+    color: #ea0505;
+    font-size: 35px;
+    font-weight: 500;
+}
+.why-choose-row {
+    margin-left: -18px;
+    margin-right: -18px;
+}
+.why-choose-row > div {
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.why-choose-card {
+    position: relative;
+    padding: 35px 20px 26px;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 45px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+}
+.why-choose-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(234, 5, 5, 0.25);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+.why-choose-icon {
+    width: 84px;
+    height: 84px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #fff0f0;
+    color: #ea0505;
+    font-size: 32px;
+    transition: all 0.35s ease;
+}
+
+.why-choose-card:hover .why-choose-icon {
+    background: #ea0505;
+    color: #ffffff;
+    transform: scale(1.08);
+}
+.why-choose-card h3 {
+    margin: 0 0 14px;
+    color: #172033;
+    font-size: 22px;
+    line-height: 1.35;
+    font-weight: 700;
+}
+.why-choose-card p {
+    max-width: 300px;
+    margin: 0;
+    color: #748096;
+    font-size: 14px;
+    line-height: 1.75;
+    font-weight: 400;
+}
+@media (max-width: 1199px) {
+    .why-choose-section {
+        padding: 60px 0 50px;
+    }
+    .why-choose-heading {
+        margin-bottom: 50px;
+    }
+    .why-choose-heading h2 {
+        font-size: 40px;
+    }
+    .why-choose-card {
+        height: 320px;
+        padding: 42px 25px 30px;
+        border-radius: 35px;
+    }
+    .why-choose-icon {
+        width: 75px;
+        height: 75px;
+        margin-bottom: 25px;
+        font-size: 28px;
+    }
+    .why-choose-card h3 {
+        font-size: 21px;
+    }
+    .why-choose-card p {
+        font-size: 15px;
+    }
+}
+@media (max-width: 991px) {
+    .why-choose-section {
+        padding: 55px 15px 45px;
+    }
+    .why-choose-heading {
+        margin-bottom: 40px;
+    }
+    .why-choose-heading h2 {
+        font-size: 36px;
+    }
+    .why-choose-row {
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+    .why-choose-row > div {
+        padding-left: 8px;
+        padding-right: 8px;
+        margin-bottom: 16px;
+    }
+    .why-choose-card {
+        height: 300px;
+        padding: 35px 20px 25px;
+        border-radius: 30px;
+    }
+    .why-choose-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 22px;
+        font-size: 26px;
+    }
+    .why-choose-card h3 {
+        font-size: 19px;
+    }
+    .why-choose-card p {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+}
+@media (max-width: 767px) {
+    .why-choose-section {
+        padding: 45px 10px 35px;
+    }
+    .why-choose-heading {
+        margin-bottom: 30px;
+    }
+    .why-choose-heading h2 {
+        font-size: 30px;
+        letter-spacing: -0.5px;
+    }
+    .why-choose-row {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    .why-choose-card {
+        height: 270px;
+        padding: 30px 15px 20px;
+        border-radius: 25px;
+    }
+    .why-choose-icon {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+    .why-choose-card h3 {
+        font-size: 17px;
+        margin-bottom: 10px;
+    }
+    .why-choose-card p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+}
+@media (max-width: 480px) {
+    .why-choose-section {
+        padding: 40px 8px 30px;
+    }
+    .why-choose-heading h2 {
+        font-size: 27px;
+    }
+    .why-choose-card {
+        height: 250px;
+        padding: 25px 10px 18px;
+        border-radius: 22px;
+    }
+    .why-choose-icon {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 17px;
+        font-size: 22px;
+    }
+    .why-choose-card h3 {
+        font-size: 15px;
+    }
+    .why-choose-card p {
+        font-size: 12px;
+    }
 }
