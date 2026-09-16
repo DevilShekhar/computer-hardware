@@ -75,10 +75,8 @@ class ShippingChargeController extends Controller
     public function getShippingCharge(Request $request)
     {
         $pincode = trim($request->pincode);
-        $city    = trim($request->city);
-        $state   = trim($request->state);
 
-        if (!$pincode && !$city && !$state) {
+        if (!$pincode ) {
             return response()->json([
                 'success' => false,
                 'message' => 'Please enter a pincode.',
@@ -89,18 +87,8 @@ class ShippingChargeController extends Controller
         // Priority: pincode > city > state > fallback (name = 'default')
         $charge = ShippingCharge::where('pincode', $pincode)->first();
 
-        if (!$charge && $city) {
-            $charge = ShippingCharge::where('city', $city)->first();
-        }
-
-        if (!$charge && $state) {
-            $charge = ShippingCharge::where('state', $state)->first();
-        }
-
         if (!$charge) {
             $charge = ShippingCharge::whereNull('pincode')
-                ->whereNull('city')
-                ->whereNull('state')
                 ->first();
         }
 

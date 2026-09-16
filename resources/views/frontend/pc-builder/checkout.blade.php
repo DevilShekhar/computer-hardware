@@ -481,6 +481,13 @@
                                         <td>GST</td>
                                         <td class="text-end"><span id="cartGst">₹0.00</span></td>
                                     </tr>
+                                    <tr id="cartShippingRow">
+                                        <td>
+                                            Shipping
+                                            <small id="shippingLabel" class="text-muted"></small>
+                                        </td>
+                                        <td class="text-end"><span id="cartShipping">₹0.00</span></td>
+                                    </tr>
                                     <tr class="grand-total">
                                         <td><strong>Order Total</strong></td>
                                         <td class="text-end"><strong><span id="cartGrandTotal">₹0.00</span></strong></td>
@@ -861,6 +868,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let productsData = {};
     let currentTotal = 0;
     let isSubmitting = false;
+    let shippingCharge = 0;
+    let shippingFetchTimer = null;
 
     try {
         selectedProducts = JSON.parse(localStorage.getItem(storageKey)) || {};
@@ -1061,6 +1070,55 @@ document.addEventListener('DOMContentLoaded', function () {
         return Number.isFinite(rate) && rate > 0 ? rate : 0;
     }
 
+    function fetchShippingCharge(immediate) {
+        const pincodeEl = document.getElementById('checkoutPincode');
+        const cityEl    = document.getElementById('checkoutCity');
+        const stateEl   = document.getElementById('checkoutState');
+
+        const pincode = pincodeEl ? pincodeEl.value.trim() : '';
+        const city    = cityEl ? cityEl.value.trim() : '';
+        const state   = stateEl ? stateEl.value.trim() : '';
+        const doFetch = function () {
+            fetch('{{ route('checkout.shipping-charge') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ pincode: pincode, city: city, state: state })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    shippingCharge = parseFloat(data.charge) || 0;
+                } else {
+                    shippingCharge = 0;
+                }
+                calculateTotals();
+            })
+            .catch(function (err) {
+                console.error('Shipping fetch error:', err);
+                shippingCharge = 0;
+                calculateTotals();
+            });
+        };
+
+        if (immediate) {
+            doFetch();
+        } else {
+            clearTimeout(shippingFetchTimer);
+            shippingFetchTimer = setTimeout(doFetch, 400);
+        }
+    }
+
+    ['checkoutPincode', 'checkoutCity', 'checkoutState'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input',  function () { fetchShippingCharge(false); });
+        el.addEventListener('change', function () { fetchShippingCharge(true);  });
+    });
+
     /* ============================================================
        CALCULATION FUNCTIONS
        ============================================================ */
@@ -1084,12 +1142,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        currentTotal = subtotal + gstTotal;
+        currentTotal = subtotal + gstTotal + shippingCharge;
 
         const subtotalElement = document.getElementById('cartSubtotal');
         const gstElement = document.getElementById('cartGst');
         const grandTotalElement = document.getElementById('cartGrandTotal');
         const gstRow = document.getElementById('cartGstRow');
+        const shippingElement = document.getElementById('cartShipping');
+        const shippingRow = document.getElementById('cartShippingRow');
 
         if (subtotalElement) {
             subtotalElement.textContent = formatPrice(subtotal);
@@ -1097,6 +1157,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (gstElement) {
             gstElement.textContent = formatPrice(gstTotal);
+        }
+
+        if (shippingElement) {
+            shippingElement.textContent = shippingCharge > 0
+                ? formatPrice(shippingCharge)
+                : formatPrice(0);
+        }
+
+        if (shippingRow) {
+            shippingRow.style.display = '';
         }
 
         if (grandTotalElement) {
@@ -1348,6 +1418,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         selected.classList.add('selected');
+        fetchShippingCharge(true);
     }
 
     /* ============================================================
@@ -1531,17 +1602,17 @@ document.addEventListener('DOMContentLoaded', function () {
     function verifyRazorpayPayment(paymentResponse, orderResponse) {
         const data = new URLSearchParams();
 
-        data.append('token', "{{ csrf_token() }}");
-        data.append('pcbuilderid', orderResponse.pcbuilderid || '');
-        data.append('razorpayorderid', paymentResponse.razorpayorderid || '');
-        data.append('razorpaypaymentid', paymentResponse.razorpaypaymentid || '');
-        data.append('razorpaysignature', paymentResponse.razorpaysignature || '');
+        data.append('_token', "{{ csrf_token() }}");
+        data.append('razorpay_payment_id', paymentResponse.razorpay_payment_id || '');
+        data.append('razorpay_order_id',   paymentResponse.razorpay_order_id   || '');
+        data.append('razorpay_signature',  paymentResponse.razorpay_signature  || '');
 
         fetch("{{ route('pc-builder.verify-payment') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             body: data.toString()
         })
@@ -1568,8 +1639,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     confirmButtonColor: '#2878f0',
                     allowOutsideClick: false
                 }).then(function () {
-                    if (response.redirecturl) {
-                        window.location.href = response.redirecturl;
+                    if (response.redirect_url) {
+                        window.location.href = response.redirect_url;
                     } else {
                         window.location.reload();
                     }
@@ -1811,6 +1882,7 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.set('quantities', JSON.stringify(submitQuantities));
             formData.set('totalamount', Number(currentTotal).toFixed(2));
             formData.set('payment_method', paymentMethod);
+            formData.set('shipping_charge', Number(shippingCharge || 0).toFixed(2));
 
             fetch("{{ route('pc-builder.place-order') }}", {
                 method: 'POST',
