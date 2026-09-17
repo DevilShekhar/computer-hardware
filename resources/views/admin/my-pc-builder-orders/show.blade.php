@@ -244,6 +244,7 @@
                     <div class="card-body">
                         @php
                             $currentStatus = (int) ($pcBuilder->status ?? 0);
+                            $isRazorpay = $pcBuilder->payment_method === 'razorpay';
                             $statuses = [
                                 0 => 'Pending',
                                 1 => 'Confirmed',
@@ -406,7 +407,7 @@
                                 <div class="text-center">
                                     <h6 class="mb-3">Order Actions</h6>
 
-                                    <form action="{{ route('my-pc-builder-orders.return', $pcBuilder->id) }}" method="POST" id="return-pc-builder-form">
+                                    <form action="{{ route('my-pc-builder-orders.return', $pcBuilder->id) }}" method="POST" id="return-pc-builder-form" data-payment-method="{{ $pcBuilder->payment_method }}">
                                         @csrf
                                         @method('PUT')
 
