@@ -239,13 +239,17 @@
                 <div class="col-lg-6 col-12">
                     <div class="your-order">
                         <h3>Your order</h3>
-                        <div class="your-order-table table-responsive">
-                            <table class="table">
+                        <div class="order-table-wrap">
+                            <table class="order-table">
                                 <thead>
                                     <tr>
-                                        <th class="cart-product-name">Product</th>
-                                        <th class="cart-product-quantity">Quantity</th>
-                                        <th class="cart-product-total">Total</th>
+                                        <th>Image</th>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th>GST Rate</th>
+                                        <th>GST Amount</th>
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -289,66 +293,94 @@
                                                 $itemGst = ($itemTotal * $gstRate) / 100;
                                             }
                                         @endphp
-                                        <tr class="cart_item" id="cart-item-{{ $product->id }}" data-product-id="{{ $product->id }}" data-price="{{ $price }}" data-gst-rate="{{ $gstRate }}">
-                                            <td class="cart-product-name">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="{{ $image }}" alt="{{ $product->name }}"
-                                                        style="width: 50px; height: 50px; object-fit: contain;border:1px solid #eee;border-radius:4px;margin-right:10px;">
-                                                    <div>{{ $product->name }}</div>
-                                                </div>
+                                        <tr class="cart_item"
+                                            id="cart-item-{{ $product->id }}"
+                                            data-product-id="{{ $product->id }}"
+                                            data-price="{{ $price }}"
+                                            data-gst-rate="{{ $gstRate }}">
+
+                                            <td class="cart-product-image">
+                                                <img src="{{ $image }}"
+                                                    alt="{{ $product->name }}"
+                                                    class="pc-builder-product-image"
+                                                    style="width: 60px; height: 40px; object-fit: contain; border:1px solid #eee; border-radius:4px;">
                                             </td>
+
+                                            <td class="cart-product-name">
+                                                {{ $product->name }}
+                                            </td>
+
+                                            <td class="cart-product-price">
+                                                ₹{{ number_format($price, 2) }}
+                                            </td>
+
                                             <td class="cart-product-quantity">
                                                 <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box quantity-input"value="{{ $item->quantity }}" type="text" name="quantity"data-product-id="{{ $product->id }}" data-price="{{ $price }}">
+                                                    <input class="cart-plus-minus-box quantity-input"
+                                                        value="{{ $item->quantity }}"
+                                                        type="text"
+                                                        name="quantity"
+                                                        data-product-id="{{ $product->id }}"
+                                                        data-price="{{ $price }}">
                                                 </div>
                                             </td>
-                                            <td class="cart-product-total item-total" data-product-id="{{ $product->id }}">
+
+                                            <td class="cart-product-gst-rate">
+                                                {{ $gstRate > 0 ? number_format($gstRate, 2) . '%' : '0%' }}
+                                            </td>
+
+                                            <td class="cart-product-gst-amount">
+                                                ₹{{ number_format($itemGst, 2) }}
+                                            </td>
+
+                                            <td class="cart-product-total item-total text-end"
+                                                data-product-id="{{ $product->id }}">
                                                 <span class="amount">
-                                                    ₹{{ number_format($itemTotal, 2) }}
+                                                    ₹{{ number_format($itemTotal + $itemGst, 2) }}
                                                 </span>
-                                                @if($gstRate > 0)
-                                                    <div class="product-gst">
-                                                        GST {{ number_format($gstRate, 2) }}%:
-                                                        ₹{{ number_format($itemGst, 2) }}
-                                                    </div>
-                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
-                                    <tr class="cart-subtotal">
-                                        <th colspan="2">Cart Subtotal</th>
-                                        <td>
+                                    <tr>
+                                        <td colspan="5">Cart Subtotal</td>
+                                        <td colspan="2" class="text-end">
                                             <span class="amount" id="cartSubtotal">
                                                 ₹{{ number_format($subtotal, 2) }}
                                             </span>
                                         </td>
                                     </tr>
-                                    <tr class="cart-gst" id="cartCgstRow" style="display:none;">
-                                        <th colspan="2">CGST</th>
-                                        <td><span class="amount" id="cartCgst">₹0.00</span></td>
+                                    <tr id="cartCgstRow" style="display:none;">
+                                        <td colspan="5">CGST</td>
+                                        <td colspan="2" class="text-end">
+                                            <span class="amount" id="cartCgst">₹0.00</span>
+                                        </td>
                                     </tr>
-                                    <tr class="cart-gst" id="cartSgstRow" style="display:none;">
-                                        <th colspan="2">SGST</th>
-                                        <td><span class="amount" id="cartSgst">₹0.00</span></td>
+                                    <tr id="cartSgstRow" style="display:none;">
+                                        <td colspan="5">SGST</td>
+                                        <td colspan="2" class="text-end">
+                                            <span class="amount" id="cartSgst">₹0.00</span>
+                                        </td>
                                     </tr>
-                                    <tr class="cart-gst" id="cartIgstRow" style="display:none;">
-                                        <th colspan="2">IGST</th>
-                                        <td><span class="amount" id="cartIgst">₹0.00</span></td>
+                                    <tr id="cartIgstRow" style="display:none;">
+                                        <td colspan="5">IGST</td>
+                                        <td colspan="2" class="text-end">
+                                            <span class="amount" id="cartIgst">₹0.00</span>
+                                        </td>
                                     </tr>
-                                    <tr class="cart-shipping" id="cartShippingRow">
-                                        <th colspan="2">
+                                    <tr id="cartShippingRow">
+                                        <td colspan="5">
                                             Shipping
                                             <small id="shippingLabel" class="text-muted"></small>
-                                        </th>
-                                        <td>
+                                        </td>
+                                        <td colspan="2" class="text-end">
                                             <span class="amount" id="cartShipping">₹0.00</span>
                                         </td>
                                     </tr>
-                                    <tr class="order-total">
-                                        <th colspan="2">Order Total</th>
-                                        <td>
+                                    <tr class="grand-total">
+                                        <td colspan="5"><strong>Order Total</strong></td>
+                                        <td colspan="2" class="text-end">
                                             <strong>
                                                 <span class="amount" id="cartGrandTotal">
                                                     ₹{{ number_format($subtotal + $cartGst, 2) }}
