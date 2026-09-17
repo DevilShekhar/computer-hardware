@@ -173,6 +173,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/razorpay/verify', [OrderController::class, 'verifyRazorpayPayment'])->name('razorpay.verify');
     Route::put('/customer-orders/{order}/refund', [OrderManagementController::class, 'refund'])->name('customer-orders.refund');
     Route::get('/refunded-orders', [MyOrderController::class, 'refundedOrders'])->name('refunded-orders.index');
+    Route::get('/customer-pc-builder-orders/refunded', [PcBuilderOrderManagementController::class, 'refundedOrders'])->name('customer-pc-builder-orders.refunded');
 });
 Route::post('/checkout/update-quantity', [OrderController::class, 'updateQuantity'])->name('checkout.update-quantity');
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.login');

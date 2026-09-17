@@ -791,7 +791,7 @@
                         @if($canRefund && !$isRefunded)
 
                         <hr>
-
+                        @if($order->payment_method === 'razorpay')
                         <div class="text-center">
 
                             <h6 class="mb-3">
@@ -820,7 +820,6 @@
                                     ₹{{ number_format($order->total_amount, 2) }}
                                 </span>
                             </div>
-
                             <form
                                 action="{{ route('customer-orders.refund', $order->id) }}"
                                 method="POST"
@@ -835,11 +834,11 @@
                                         <i class="fas fa-undo"></i>
                                         Refund Order
                                         <i class="fas fa-info-circle ml-1"></i>
-                                    </button>
+                                </button>
 
                             </form>
-
                         </div>
+                        @endif
 
                         @endif
 

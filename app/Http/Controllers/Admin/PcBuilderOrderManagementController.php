@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\PcBuilder;
 use App\Models\PcBuilderStatusHistory;
 use Illuminate\Http\Request;
@@ -136,8 +137,8 @@ class PcBuilderOrderManagementController extends Controller
 
     public function refund(Request $request, PcBuilder $pcBuilder)
     {
-        if ((int) $pcBuilder->status !== 8) {
-            return back()->with('error', 'Only returned orders can be refunded.');
+        if ($pcBuilder->payment_status === 'refunded' || (int) $pcBuilder->status === 7) {
+            return back()->with('error', 'This order has already been refunded.');
         }
 
         if ($pcBuilder->payment_status === 'refunded' || (int) $pcBuilder->status === 7) {
@@ -322,5 +323,14 @@ class PcBuilderOrderManagementController extends Controller
         return $pdf->download(
             'pc-builder-invoice-'.$pcBuilder->builder_number.'.pdf'
         );
+    }
+    public function refundedOrders()
+    {
+        $orders = PcBuilder::where('status', 7)
+            ->with('user')
+            ->latest('refunded_at')
+            ->get();
+
+        return view('admin.my-pc-builder-orders.refund', compact('orders'));
     }
 }

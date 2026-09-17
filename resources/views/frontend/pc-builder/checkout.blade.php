@@ -585,9 +585,6 @@
                         </div>
 
                         <div class="checkout-loader text-center mt-3" id="checkoutLoader" style="display:none;">
-                            <div class="checkout-spinner"
-                                style="width:30px;height:30px;border:3px solid #ddd;border-top-color:#2878f0;border-radius:50%;animation:checkoutSpin .7s linear infinite;margin:auto;">
-                            </div>
                             <p class="mt-2 text-muted">Processing your order...</p>
                         </div>
                     </div>

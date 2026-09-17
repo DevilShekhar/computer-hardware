@@ -662,7 +662,10 @@
                             </div>
 
                             @endif
-                            @if((int) $pcBuilder->status === 8)
+                            @php
+                                $canRefund = ((int) $pcBuilder->status === 8) || ((int) $pcBuilder->status === 5 && $pcBuilder->payment_method === 'razorpay');
+                            @endphp
+                            @if($canRefund)
                                 <hr>
                                 <div class="text-center">
                                     <h6 class="mb-3">Refund Order</h6>

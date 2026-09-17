@@ -589,6 +589,14 @@
                             </a>
                         </li>
                         @endcan
+                        @can('my-refund')
+                        <li class="{{ request()->routeIs('customer-pc-builder-orders.refunded.*') ? 'active' : '' }}">
+                            <a href="{{ route('customer-pc-builder-orders.refunded') }}" class="nav-link">
+                                <i data-feather="dollar-sign"></i>
+                                <span>PC Builder Refunded</span>
+                            </a>
+                        </li>
+                        @endcan
                     </ul>
                 </aside>
             </div>
