@@ -308,7 +308,7 @@
                                                                                         {{ strtoupper(substr($brand->name, 0, 1)) }}
                                                                                     </div>
                                                                                 @endif
-                                                                                <span>{{ $brand->name }}</span>
+                                                                                <span style="text-transform: none;">{{ ucfirst(strtolower($brand->name)) }}</span>
                                                                             </div>
                                                                             @if($brand->categories && $brand->categories->count())
                                                                                 <i class="fa fa-angle-right"></i>
@@ -331,9 +331,7 @@
                                                                                 <a href="{{ route('our-category.show', ['slug' => $category->slug]) }}"
                                                                                     class="mega-row__link category-trigger"
                                                                                     data-category="{{ $category->id }}">
-                                                                                    <span>
-                                                                                        {{ $category->name }}
-                                                                                    </span>
+                                                                                    <span style="text-transform: none;">{{ ucfirst(strtolower($category->name)) }}</span>
                                                                                     @if($category->subCategories && $category->subCategories->count())
                                                                                         <i class="fa fa-angle-right"></i>
                                                                                     @endif
@@ -359,9 +357,7 @@
                                                                                         <a href="{{ route('our-sub-category.show', ['slug' => $subCategory->slug]) }}"
                                                                                             class="mega-row__link subcategory-trigger"
                                                                                             data-subcategory="{{ $subCategory->id }}">
-                                                                                            <span>
-                                                                                                {{ $subCategory->name }}
-                                                                                            </span>
+                                                                                            <span style="text-transform: none;">{{ ucfirst(strtolower($subCategory->name)) }}</span>
                                                                                             @if($subCategory->products && $subCategory->products->count())
                                                                                                 <i class="fa fa-angle-right"></i>
                                                                                             @endif
