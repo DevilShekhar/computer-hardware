@@ -151,25 +151,32 @@
                         <div class="col-lg-9 col-md-8">
                             <div class="header-top-right">
                                 <ul class="ht-menu">
-                                    <!-- Begin My Orders Area -->
-                                    <li>
-                                        <a href="{{ route('my-orders') }}">My Orders</a>
-                                    </li>
-                                    <!-- My Orders Area End Here -->
 
-                                    <!-- Begin PC Builder Orders Area -->
+                                    @if(auth()->check())
+                                    <!-- My Orders -->
                                     <li>
-                                        <a href="{{ route('my-pc-builder-orders') }}">PC Builder Order</a>
+                                        <a href="{{ route('my-orders') }}" class="header-action-btn">
+                                            My Orders
+                                        </a>
                                     </li>
-                                    <!-- PC Builder Orders Area End Here -->
 
-                                    <!-- Begin Login Area - Show only when user is not logged in -->
+                                    <!-- PC Builder Orders -->
+                                    <li>
+                                        <a href="{{ route('my-pc-builder-orders') }}" class="header-action-btn">
+                                            PC Builder Order
+                                        </a>
+                                    </li>
+                                    @endif
+
+                                    <!-- Login -->
                                     @guest
                                         <li>
-                                            <a href="{{ route('login') }}">Login</a>
+                                            <a href="{{ route('login') }}" class="header-action-btn">
+                                                Login
+                                            </a>
                                         </li>
                                     @endguest
-                                    <!-- Login Area End Here -->
+
                                 </ul>
                             </div>
                         </div>
@@ -423,14 +430,6 @@
                                         <li ><a href="blog-left-sidebar.html">Blog</a></li>
                                         <li><a href="{{ route('about-us') }}">About Us</a></li>
                                         <li><a href="{{ route('contact.index') }}">Contact</a></li>
-                                         @if(auth()->check())
-                                            <li>
-                                                <a href="{{ route('dashboard') }}">Dashboard</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ route('my-orders') }}">My Orders</a>
-                                            </li>
-                                        @endif
                                     </ul>
                                 </nav>
                             </div>

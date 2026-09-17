@@ -339,10 +339,21 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>
-                           Order Summary
+                        Order Summary
                         </h4>
                     </div>
                     <div class="card-body">
+                        @php
+                            $gstType = $order->gst_type
+                                ?? (
+                                    strtolower(trim((string) $order->state)) === 'maharashtra'
+                                        ? 'intra_state'
+                                        : 'inter_state'
+                                );
+                            $isIntraState = $gstType === 'intra_state';
+                            $isInterState = $gstType === 'inter_state';
+                            $hasGst = (float) $order->gst_amount > 0;
+                        @endphp
                         <div class="d-flex justify-content-between mb-2">
                             <span>
                                 Subtotal
@@ -351,6 +362,35 @@
                                 ₹{{ number_format($order->subtotal, 2) }}
                             </strong>
                         </div>
+                        @if($hasGst)
+                            @if($isIntraState)
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>
+                                        CGST
+                                    </span>
+                                    <strong>
+                                        ₹{{ number_format((float) $order->cgst_amount, 2) }}
+                                    </strong>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>
+                                        SGST
+                                    </span>
+                                    <strong>
+                                        ₹{{ number_format((float) $order->sgst_amount, 2) }}
+                                    </strong>
+                                </div>
+                            @else
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>
+                                        IGST
+                                    </span>
+                                    <strong>
+                                        ₹{{ number_format((float) $order->igst_amount, 2) }}
+                                    </strong>
+                                </div>
+                            @endif
+                        @endif
                         <div class="d-flex justify-content-between mb-2">
                             <span>
                                 Shipping

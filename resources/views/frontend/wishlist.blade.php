@@ -21,7 +21,7 @@
             <div class="col-12">
                 <div id="empty-wishlist" class="text-center" style="display: none;">
                     <h4>Your wishlist is empty.</h4>
-                    <a href="{{ url('our-products') }}" class="li-button m-20">Continue Shopping</a>
+                    <a href="{{ url('our-products') }}" class="btn btn-danger">Continue Shopping</a>
                 </div>
 
                 <div id="wishlist-items">

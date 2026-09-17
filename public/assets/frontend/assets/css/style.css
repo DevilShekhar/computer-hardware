@@ -1353,10 +1353,8 @@ textarea:focus {
 .cart-plus-minus .cart-plus-minus-box {
     border: 1px solid #e1e1e1;
     color: #242424;
-    height: 46px;
+    height: 42px;
     text-align: center;
-    width: 48px;
-    width: 48px;
     width: 3rem;
     background: #fff;
 }
@@ -1381,12 +1379,12 @@ textarea:focus {
 }
 .cart-plus-minus .dec.qtybutton {
     bottom: 0;
-    right: 0;
+    right: 1px;
 }
 .cart-plus-minus .inc.qtybutton {
     border-bottom: none;
     top: 0;
-    right: 0;
+    right: 1px;
 }
 .product-details-thumbs .slick-arrow,
 .tab-style-right .slick-arrow,
@@ -9015,4 +9013,35 @@ span.required {
 }
 .billing-locked .billing-locked-hint {
     display: block;
+}
+
+.header-action-btn {
+    display: inline-block;
+    background: #e80f0f;
+    color: #fff !important;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 3px;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+}
+
+.header-action-btn:hover {
+    background: black;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.header-top-right .ht-menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.header-top-right .ht-menu > li {
+    border: 0 !important;
+    padding: 0 !important;
 }
