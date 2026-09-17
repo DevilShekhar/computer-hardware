@@ -44,6 +44,7 @@ class GoogleController extends Controller
                     'password'  => Str::random(32),
                     'status'    => true,
                 ]);
+                $user->assignRole('customer');
             }
             else {
                 if (!$user->google_id) {

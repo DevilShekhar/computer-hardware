@@ -75,12 +75,14 @@ class RegisterController extends Controller
         if (!$customerRoleId) {
             throw new \RuntimeException('Customer role not found.');
         }
-        return User::create([
+        $user = User::create([
             'role_id' => $customerRoleId,
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        $user->assignRole('customer');
+        return $user;
     }
     protected function registered(Request $request, $user)
     {
