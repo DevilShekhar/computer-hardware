@@ -111,14 +111,7 @@
                                     </p>
                                 </div>
 
-                                <div class="col-md-4">
-                                    <strong>
-                                        Razorpay Refund ID
-                                    </strong>
-                                    <p>
-                                        {{ $order->razorpay_refund_id ?? '-' }}
-                                    </p>
-                                </div>
+                                
 
                                 <div class="col-md-4">
                                     <strong>
@@ -140,7 +133,15 @@
                                         @endif
                                     </p>
                                 </div>
-
+                                @if(!empty($order->refund_status))
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Refund ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_refund_id ?? '-' }}
+                                    </p>
+                                </div>
                                 <div class="col-md-4">
                                     <strong>
                                         Refund Status
@@ -176,7 +177,7 @@
                                         {{ $order->refunded_at ? $order->refunded_at->format('d-m-Y h:i A') : '-' }}
                                     </p>
                                 </div>
-
+                                @endif
                             </div>
                         </div>
                     </div>
