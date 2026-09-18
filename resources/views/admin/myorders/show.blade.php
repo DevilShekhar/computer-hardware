@@ -60,14 +60,18 @@
                                     Payment Status
                                 </strong>
                                 <p>
-                                    @if($order->payment_status == 1)
-                                    <span class="badge badge-success">
-                                        Paid
-                                    </span>
+                                    @if($order->payment_status === 'paid')
+                                        <span class="badge badge-success">
+                                            Paid
+                                        </span>
+                                    @elseif($order->payment_status === 'refunded')
+                                        <span class="badge badge-dark">
+                                            Refunded
+                                        </span>
                                     @else
-                                    <span class="badge badge-warning">
-                                        Pending
-                                    </span>
+                                        <span class="badge badge-warning">
+                                            Pending
+                                        </span>
                                     @endif
                                 </p>
                             </div>
@@ -121,7 +125,7 @@
                                         Payment Status
                                     </strong>
                                     <p>
-                                        @if($order->payment_status == 1)
+                                        @if($order->payment_status === 'paid')
                                             <span class="badge badge-success">
                                                 Paid
                                             </span>

@@ -65,14 +65,18 @@
                                             {{ strtoupper($order->payment_method ?? '-') }}
                                         </td>
                                         <td>
-                                            @if($order->payment_status == 1)
-                                            <div class="badge badge-success badge-shadow">
-                                                Paid
-                                            </div>
+                                            @if($order->payment_status === 'paid')
+                                                <span class="badge badge-success">
+                                                    Paid
+                                                </span>
+                                            @elseif($order->payment_status === 'refunded')
+                                                <span class="badge badge-dark">
+                                                    Refunded
+                                                </span>
                                             @else
-                                            <div class="badge badge-warning badge-shadow">
-                                                Pending
-                                            </div>
+                                                <span class="badge badge-warning">
+                                                    Pending
+                                                </span>
                                             @endif
                                         </td>
                                         <td>
