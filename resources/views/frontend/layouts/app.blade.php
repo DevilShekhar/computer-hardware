@@ -151,32 +151,33 @@
                         <div class="col-lg-9 col-md-8">
                             <div class="header-top-right">
                                 <ul class="ht-menu">
-
                                     @if(auth()->check())
-                                    <!-- My Orders -->
-                                    <li>
-                                        <a href="{{ route('my-orders') }}" class="header-action-btn">
-                                            My Orders
-                                        </a>
-                                    </li>
-
-                                    <!-- PC Builder Orders -->
-                                    <li>
-                                        <a href="{{ route('my-pc-builder-orders') }}" class="header-action-btn">
-                                            PC Builder Order
-                                        </a>
-                                    </li>
-                                    @endif
-
-                                    <!-- Login -->
-                                    @guest
+                                        @if(auth()->user()->role_id == 2)
+                                            <li>
+                                                <a href="{{ route('my-orders') }}" class="header-action-btn">
+                                                    My Orders
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('my-pc-builder-orders') }}" class="header-action-btn">
+                                                    PC Builder Order
+                                                </a>
+                                            </li>
+                                        @elseif(in_array(auth()->user()->role_id, [1, 3]))
+                                            <li>
+                                                <a href="{{ route('dashboard') }}" class="header-action-btn">
+                                                    Dashboard
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @else
+                                        <!-- Login -->
                                         <li>
                                             <a href="{{ route('login') }}" class="header-action-btn">
                                                 Login
                                             </a>
                                         </li>
-                                    @endguest
-
+                                    @endif
                                 </ul>
                             </div>
                         </div>
