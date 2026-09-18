@@ -1,24 +1,20 @@
+@can('order-show')
 @extends('admin.layouts.app')
-
 @section('content')
-
 <section class="section">
     <div class="section-body">
-
         @if(session('success'))
         <div class="alert alert-success">
             <i class="fas fa-check-circle"></i>
             {{ session('success') }}
         </div>
         @endif
-
         @if(session('error'))
         <div class="alert alert-danger">
             <i class="fas fa-exclamation-circle"></i>
             {{ session('error') }}
         </div>
         @endif
-
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -33,10 +29,8 @@
                             </a>
                         </div>
                     </div>
-
                     <div class="card-body">
                         <div class="row">
-
                             <div class="col-md-3">
                                 <strong>
                                     Order Number
@@ -45,7 +39,6 @@
                                     {{ $order->order_number }}
                                 </p>
                             </div>
-
                             <div class="col-md-3">
                                 <strong>
                                     Order Date
@@ -54,7 +47,6 @@
                                     {{ $order->created_at ? $order->created_at->format('d-m-Y h:i A') : '-' }}
                                 </p>
                             </div>
-
                             <div class="col-md-3">
                                 <strong>
                                     Payment Method
@@ -71,30 +63,31 @@
                                     </p>
                                 @endif
                             </div>
-
                             <div class="col-md-3">
                                 <strong>
                                     Payment Status
                                 </strong>
                                 <p>
-                                    @if($order->payment_status == 1)
-                                    <span class="badge badge-success">
-                                        Paid
-                                    </span>
+                                    @if($order->payment_status === 'paid')
+                                        <span class="badge badge-success">
+                                            Paid
+                                        </span>
+                                    @elseif($order->payment_status === 'refunded')
+                                        <span class="badge badge-dark">
+                                            Refunded
+                                        </span>
                                     @else
-                                    <span class="badge badge-warning">
-                                        Pending
-                                    </span>
+                                        <span class="badge badge-warning">
+                                            Pending
+                                        </span>
                                     @endif
                                 </p>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         @if($order->payment_method === 'razorpay')
             <div class="row">
                 <div class="col-12">
@@ -104,10 +97,8 @@
                                 Razorpay Payment Details
                             </h4>
                         </div>
-
                         <div class="card-body">
                             <div class="row">
-
                                 <div class="col-md-4">
                                     <strong>
                                         Razorpay Order ID
@@ -116,7 +107,6 @@
                                         {{ $order->razorpay_order_id ?? '-' }}
                                     </p>
                                 </div>
-
                                 <div class="col-md-4">
                                     <strong>
                                         Razorpay Payment ID
@@ -124,23 +114,13 @@
                                     <p>
                                         {{ $order->razorpay_payment_id ?? '-' }}
                                     </p>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <strong>
-                                        Razorpay Refund ID
-                                    </strong>
-                                    <p>
-                                        {{ $order->razorpay_refund_id ?? '-' }}
-                                    </p>
-                                </div>
-
+                                </div>                                
                                 <div class="col-md-4">
                                     <strong>
                                         Payment Status
                                     </strong>
                                     <p>
-                                        @if($order->payment_status == 1)
+                                        @if($order->payment_status === 'paid')
                                             <span class="badge badge-success">
                                                 Paid
                                             </span>
@@ -155,7 +135,17 @@
                                         @endif
                                     </p>
                                 </div>
-
+                                @if(!empty($order->razorpay_refund_id))
+                                    <div class="col-md-4">
+                                        <strong>
+                                            Razorpay Refund ID
+                                        </strong>
+                                        <p>
+                                            {{ $order->razorpay_refund_id }}
+                                        </p>
+                                    </div>
+                                @endif
+                                @if(!empty($order->refund_status))
                                 <div class="col-md-4">
                                     <strong>
                                         Refund Status
@@ -164,7 +154,6 @@
                                         {{ ucfirst($order->refund_status ?? '-') }}
                                     </p>
                                 </div>
-
                                 <div class="col-md-4">
                                     <strong>
                                         Refund Method
@@ -173,7 +162,6 @@
                                         {{ ucfirst($order->refund_method ?? '-') }}
                                     </p>
                                 </div>
-
                                 <div class="col-md-4">
                                     <strong>
                                         Refund Amount
@@ -182,7 +170,6 @@
                                         ₹{{ number_format($order->refund_amount ?? 0, 2) }}
                                     </p>
                                 </div>
-
                                 <div class="col-md-4">
                                     <strong>
                                         Refunded At
@@ -191,16 +178,14 @@
                                         {{ $order->refunded_at ? $order->refunded_at->format('d-m-Y h:i A') : '-' }}
                                     </p>
                                 </div>
-
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         @endif
-
         <div class="row">
-
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
@@ -208,10 +193,8 @@
                             Customer Details
                         </h4>
                     </div>
-
                     <div class="card-body">
                         <div class="row">
-
                             <div class="col-md-6">
                                 <strong>
                                     Name
@@ -220,7 +203,6 @@
                                     {{ $order->customer_name ?? '-' }}
                                 </p>
                             </div>
-
                             <div class="col-md-6">
                                 <strong>
                                     Email
@@ -229,7 +211,6 @@
                                     {{ $order->email ?? '-' }}
                                 </p>
                             </div>
-
                             <div class="col-md-6">
                                 <strong>
                                     Mobile Number
@@ -242,7 +223,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
@@ -250,173 +230,125 @@
                             Shipping Address
                         </h4>
                     </div>
-
                     <div class="card-body">
-
                         <p class="mb-1">
                             <strong>
                                 {{ $order->customer_name }}
                             </strong>
                         </p>
-
                         <p class="mb-1">
                             {{ $order->address }}
                         </p>
-
                         <p class="mb-1">
                             {{ $order->city }},
                             {{ $order->state }}
                         </p>
-
                         <p class="mb-1">
                             {{ $order->pincode }}
                         </p>
-
                         <p class="mb-0">
                             {{ $order->country }}
                         </p>
-
                     </div>
                 </div>
             </div>
-
         </div>
-
         <div class="row">
             <div class="col-12">
                 <div class="card">
-
                     <div class="card-header">
                         <h4>
                             Order Items
                         </h4>
                     </div>
-
                     <div class="card-body">
-
                         <div class="table-responsive">
-
                             <table class="table table-striped">
-
                                 <thead>
                                     <tr>
-
                                         <th class="text-center">
                                             #
                                         </th>
-
                                         <th>
                                             Product
                                         </th>
-
                                         <th>
                                             SKU
                                         </th>
-
                                         <th>
                                             Price
                                         </th>
-
                                         <th>
                                             Quantity
                                         </th>
-
                                         <th>
                                             Total
                                         </th>
-
                                     </tr>
                                 </thead>
-
                                 <tbody>
-
                                     @forelse($order->items as $item)
-
                                     <tr>
-
                                         <td class="text-center">
                                             {{ $loop->iteration }}
                                         </td>
-
                                         <td>
                                             <strong>
                                                 {{ $item->product_name }}
                                             </strong>
                                         </td>
-
                                         <td>
                                             {{ $item->sku ?? '-' }}
                                         </td>
-
                                         <td>
                                             ₹{{ number_format($item->price, 2) }}
                                         </td>
-
                                         <td>
                                             {{ $item->quantity }}
                                         </td>
-
                                         <td>
                                             <strong>
                                                 ₹{{ number_format($item->total, 2) }}
                                             </strong>
                                         </td>
-
                                     </tr>
-
                                     @empty
-
                                     <tr>
                                         <td colspan="6" class="text-center">
                                             No order items found.
                                         </td>
                                     </tr>
-
                                     @endforelse
-
                                 </tbody>
-
                             </table>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
-
         <div class="row">
-
             <div class="col-md-6">
-                <div class="card">
-
+               <div class="card">
                     <div class="card-header">
                         <h4>
                             Order Notes
                         </h4>
                     </div>
-
                     <div class="card-body">
                         <p class="mb-0">
                             {{ $order->order_notes ?? 'No order notes.' }}
                         </p>
                     </div>
-
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="card">
-
                     <div class="card-header">
                         <h4>
                             Order Summary
                         </h4>
                     </div>
-
                     <div class="card-body">
-
                         @php
                             $gstType = $order->gst_type
                                 ?? (
@@ -428,7 +360,6 @@
                             $isInterState = $gstType === 'inter_state';
                             $hasGst = (float) $order->gst_amount > 0;
                         @endphp
-
                         <div class="d-flex justify-content-between mb-2">
                             <span>
                                 Subtotal
@@ -437,10 +368,8 @@
                                 ₹{{ number_format($order->subtotal, 2) }}
                             </strong>
                         </div>
-
                         @if($hasGst)
                             @if($isIntraState)
-
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>
                                         CGST
@@ -449,7 +378,6 @@
                                         ₹{{ number_format((float) $order->cgst_amount, 2) }}
                                     </strong>
                                 </div>
-
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>
                                         SGST
@@ -458,9 +386,7 @@
                                         ₹{{ number_format((float) $order->sgst_amount, 2) }}
                                     </strong>
                                 </div>
-
                             @else
-
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>
                                         IGST
@@ -469,10 +395,8 @@
                                         ₹{{ number_format((float) $order->igst_amount, 2) }}
                                     </strong>
                                 </div>
-
                             @endif
                         @endif
-
                         <div class="d-flex justify-content-between mb-2">
                             <span>
                                 Shipping
@@ -481,7 +405,6 @@
                                 ₹{{ number_format($order->shipping_amount, 2) }}
                             </strong>
                         </div>
-
                         <div class="d-flex justify-content-between mb-2">
                             <span>
                                 Discount
@@ -490,28 +413,19 @@
                                 - ₹{{ number_format($order->discount_amount, 2) }}
                             </strong>
                         </div>
-
                         <hr>
-
                         <div class="d-flex justify-content-between">
-
                             <strong>
                                 Total Amount
                             </strong>
-
                             <strong class="text-success">
                                 ₹{{ number_format($order->total_amount, 2) }}
                             </strong>
-
                         </div>
-
                     </div>
-
                 </div>
             </div>
-
         </div>
-
         @php
         $statuses = [
             0 => 'Pending',
@@ -520,7 +434,6 @@
             3 => 'Shipped',
             4 => 'Delivered',
         ];
-
         $currentStatus = (int) $order->status;
         $isCancelled = $currentStatus === 5;
         $isFailed = $currentStatus === 6;
@@ -528,79 +441,49 @@
         $isReturned = $currentStatus === 8;
         $canRefund = $isReturned || $isCancelled;
         @endphp
-
         <div class="row">
-
             <div class="col-12">
-
                 <div class="card">
-
                     <div class="card-header">
                         <h4>
                             Order Status
                         </h4>
                     </div>
-
                     <div class="card-body">
-
                         <div class="row text-center">
-
                             @foreach($statuses as $statusValue => $statusName)
-
                             <div class="col">
-
                                 <div class="mb-2">
-
                                     @if(!$isCancelled && !$isFailed && !$isRefunded && !$isReturned && $statusValue <= $currentStatus)
-
                                     <span
                                         class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
                                         style="width:45px;height:45px;">
-
                                         <i class="fas fa-check"></i>
-
                                     </span>
-
                                     @else
-
                                     <span
                                         class="rounded-circle bg-light text-muted d-inline-flex align-items-center justify-content-center"
                                         style="width:45px;height:45px;">
-
                                         <i class="fas fa-circle"></i>
-
                                     </span>
-
                                     @endif
-
                                 </div>
-
                                 <strong>
                                     {{ $statusName }}
                                 </strong>
-
                             </div>
-
                             @endforeach
-
                         </div>
-
                         <hr>
-
                         <div class="text-center mb-4">
-
                             <h5>
                                 Current Status
                             </h5>
-
                             @switch($currentStatus)
-
                             @case(0)
-
                             <span class="badge badge-warning" style="font-size:14px;">
                                 Pending
                             </span>
-
                             @break
 
                             @case(1)
@@ -1088,69 +971,42 @@
 
     </div>
 </section>
-
 @endsection
-
 @push('scripts')
-
 <script>
-
 $(document).ready(function() {
-
     $('.status-update-form').on('submit', function(e) {
-
         e.preventDefault();
-
         let form = this;
         let statusName = $(form).data('status-name');
         let message = '';
-
         if (statusName === 'Refunded') {
-
             message = 'This order will be marked as refunded. Are you sure you want to continue?';
-
         } else if (statusName === 'Failed') {
-
             message = 'This order will be marked as failed.';
-
         } else {
-
             message = 'The order status will be changed to ' + statusName + '.';
-
         }
-
         Swal.fire({
-
             title: 'Are you sure?',
-
             text: message,
-
             icon: 'warning',
-
             showCancelButton: true,
-
             confirmButtonColor: '#6777ef',
-
             cancelButtonColor: '#fc544b',
-
             confirmButtonText: 'Yes, continue',
-
             cancelButtonText: 'Cancel'
-
         }).then(function(result) {
-
             if (result.isConfirmed) {
-
                 form.submit();
-
             }
-
         });
-
     });
-
 });
-
 </script>
-
 @endpush
+@else
+    @php
+        abort(404);
+    @endphp
+@endcan
