@@ -102,6 +102,8 @@ Route::middleware(['auth'])->group(function () {
     //shippin
     Route::resource('shipping-charges', ShippingChargeController::class);
     Route::post('/checkout/shipping-charge', [ShippingChargeController::class, 'getShippingCharge'])->name('checkout.shipping-charge');
+
+    Route::post('/shipping-charges/bulk-upload', [ShippingChargeController::class, 'bulkUpload'])->name('shipping-charges.bulk-upload');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');

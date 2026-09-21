@@ -294,7 +294,7 @@
                                                 <div class="mega-menu">
                                                     <div class="mega-menu__inner">
                                                         <div class="mega-col mega-col--brands">
-                                                            <div class="mega-col__title">
+                                                            <div class="mega-col__title" style=" text-transform: capitalize;">
                                                                 Brands
                                                             </div>
                                                             <div class="mega-col__list">
@@ -309,7 +309,7 @@
                                                                                         {{ strtoupper(substr($brand->name, 0, 1)) }}
                                                                                     </div>
                                                                                 @endif
-                                                                                <span style="text-transform: none;">{{ ucfirst(strtolower($brand->name)) }}</span>
+                                                                                <span>{{ \Illuminate\Support\Str::title($brand->name) }}</span>
                                                                             </div>
                                                                             @if($brand->categories && $brand->categories->count())
                                                                                 <i class="fa fa-angle-right"></i>
@@ -320,7 +320,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="mega-col mega-col--categories">
-                                                            <div class="mega-col__title" id="category-title">
+                                                            <div class="mega-col__title" id="category-title" style=" text-transform: capitalize;">
                                                                 Categories
                                                             </div>
                                                             <div class="mega-col__list">
@@ -332,7 +332,9 @@
                                                                                 <a href="{{ route('our-category.show', ['slug' => $category->slug]) }}"
                                                                                     class="mega-row__link category-trigger"
                                                                                     data-category="{{ $category->id }}">
-                                                                                    <span style="text-transform: none;">{{ ucfirst(strtolower($category->name)) }}</span>
+                                                                                    <span>
+                                                                                        {{ \Illuminate\Support\Str::title($category->name) }}
+                                                                                    </span>
                                                                                     @if($category->subCategories && $category->subCategories->count())
                                                                                         <i class="fa fa-angle-right"></i>
                                                                                     @endif
@@ -344,7 +346,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="mega-col mega-col--subcategories">
-                                                            <div class="mega-col__title" id="subcategory-title">
+                                                            <div class="mega-col__title" id="subcategory-title" style=" text-transform: capitalize;">
                                                                 Sub Categories
                                                             </div>
                                                             <div class="mega-col__list">
@@ -372,7 +374,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="mega-col mega-col--products">
-                                                            <div class="mega-col__title" id="product-title">
+                                                            <div class="mega-col__title" id="product-title" style=" text-transform: capitalize;">
                                                                 Products
                                                             </div>
                                                             <div class="mega-col__list">
@@ -388,7 +390,7 @@
                                                                                                 data-subcategory="{{ $subCategory->id }}"
                                                                                                 style="display:none;">
                                                                                                 <span>
-                                                                                                    {{ $product->name }}
+                                                                                                    {{ \Illuminate\Support\Str::title($product->name) }}
                                                                                                 </span>
                                                                                                 <i class="fa fa-angle-right"></i>
                                                                                             </a>

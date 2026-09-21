@@ -12,6 +12,7 @@
         "laravel/socialite": "^5.31",
         "laravel/tinker": "^2.10.1",
         "laravel/ui": "^4.6",
+        "phpoffice/phpspreadsheet": "^5.10",
         "razorpay/razorpay": "^2.9",
         "spatie/laravel-permission": "^6.25"
     },
