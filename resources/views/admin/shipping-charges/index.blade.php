@@ -14,6 +14,9 @@
                                 <i class="fas fa-plus"></i> Add Shipping Charge
                             </a>
                         </div>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#bulkUploadModal">
+                            <i class="zmdi zmdi-upload"></i> Bulk Upload
+                        </button>
                     </div>
 
                     <div class="card-body">
@@ -106,6 +109,67 @@
         </div>
     </div>
 </section>
+<div class="modal fade" id="bulkUploadModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Bulk Upload Shipping Charges</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+
+            <form action="{{ route('shipping-charges.bulk-upload') }}"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+                @csrf
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>Excel File</label>
+                        <input type="file"
+                               name="file"
+                               class="form-control"
+                               accept=".xlsx,.xls,.csv"
+                               required>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Excel columns:</strong>
+                        <br>
+                        name, state, city, pincode, charges
+                    </div>
+
+                    <small class="text-muted">
+                        Example:
+                        <br>
+                        Maharashtra Shipping | Maharashtra | Pune | 411001 | 100
+                    </small>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        <i class="zmdi zmdi-upload"></i>
+                        Upload
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
