@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/bundles/summernote/summernote-bs4.css') }}">
     <!-- Template CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/style-new.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
@@ -586,6 +586,14 @@
                             <a href="{{ route('refunded-orders.index') }}" class="nav-link">
                                 <i data-feather="rotate-ccw"></i>
                                 <span>Refunded Orders</span>
+                            </a>
+                        </li>
+                        @endcan
+                        @can('my-refund')
+                        <li class="{{ request()->routeIs('customer-pc-builder-orders.refunded.*') ? 'active' : '' }}">
+                            <a href="{{ route('customer-pc-builder-orders.refunded') }}" class="nav-link">
+                                <i data-feather="dollar-sign"></i>
+                                <span>PC Builder Refunded</span>
                             </a>
                         </li>
                         @endcan

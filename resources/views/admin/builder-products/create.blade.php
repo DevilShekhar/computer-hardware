@@ -1,6 +1,46 @@
 @can('pc-builder-product-create')
 @extends('admin.layouts.app')
 @section('content')
+<style>
+    .product-search-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.product-search-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 250px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    z-index: 9999;
+}
+
+.product-search-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.product-search-item:hover {
+    background: #f5f5f5;
+}
+
+.product-search-item:last-child {
+    border-bottom: none;
+}
+
+.product-search-no-result {
+    padding: 10px 12px;
+    color: #777;
+}
+
+</style>
 <section class="section">
     <div class="section-header">
         <h1>Create PC Builder Product</h1>
@@ -100,19 +140,34 @@
                                         Product
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <select id="product_id" name="product_id" class="form-control @error('product_id') is-invalid @enderror" required  >
-                                        <option value="">
-                                            Select Product
-                                        </option>
+                                    <div class="product-search-dropdown" id="productSearchDropdown">
+
+                                    <input type="text"
+                                        id="productSearchInput"
+                                        class="form-control"
+                                        placeholder="Search Product..."
+                                        autocomplete="off">
+
+                                    <input type="hidden"
+                                        id="product_id"
+                                        name="product_id"
+                                        value="{{ old('product_id') }}">
+
+                                    <div class="product-search-list" id="productSearchList">
+
                                         @foreach($products as $product)
-                                            <option  value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }} >
+                                            <div class="product-search-item"
+                                                data-id="{{ $product->id }}"
+                                                data-search="{{ strtolower($product->name . ' ' . $product->sku) }}">
+
                                                 {{ $product->name }}
-                                                @if($product->sku)
-                                                    - {{ $product->sku }}
-                                                @endif
-                                            </option>
+
+                                            </div>
                                         @endforeach
-                                    </select>
+
+                                    </div>
+
+                                </div>
                                     @error('product_id')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -173,6 +228,15 @@
         </div>
     </div>
 </section>
+<script>
+    $(document).ready(function () {
+        $('#product_id').select2({
+            placeholder: 'Select Product',
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
 @endsection
 @push('scripts')
 <script>
@@ -204,6 +268,82 @@
                 '<i class="fas fa-spinner fa-spin"></i> Saving...'
             );
         });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const dropdown = document.getElementById('productSearchDropdown');
+        const input = document.getElementById('productSearchInput');
+        const hiddenInput = document.getElementById('product_id');
+        const list = document.getElementById('productSearchList');
+        const items = list.querySelectorAll('.product-search-item');
+
+        input.addEventListener('focus', function () {
+            list.style.display = 'block';
+        });
+
+        input.addEventListener('input', function () {
+
+            const search = this.value.toLowerCase().trim();
+            let found = false;
+
+            items.forEach(function (item) {
+
+                const text = item.getAttribute('data-search');
+
+                if (text.includes(search)) {
+                    item.style.display = 'block';
+                    found = true;
+                } else {
+                    item.style.display = 'none';
+                }
+
+            });
+
+            let noResult = list.querySelector('.product-search-no-result');
+
+            if (!found) {
+
+                if (!noResult) {
+                    noResult = document.createElement('div');
+                    noResult.className = 'product-search-no-result';
+                    noResult.textContent = 'No products found';
+                    list.appendChild(noResult);
+                }
+
+                noResult.style.display = 'block';
+
+            } else if (noResult) {
+
+                noResult.style.display = 'none';
+
+            }
+
+            list.style.display = 'block';
+        });
+
+        items.forEach(function (item) {
+
+            item.addEventListener('click', function () {
+
+                input.value = this.textContent.trim();
+                hiddenInput.value = this.dataset.id;
+
+                list.style.display = 'none';
+
+            });
+
+        });
+
+        document.addEventListener('click', function (event) {
+
+            if (!dropdown.contains(event.target)) {
+                list.style.display = 'none';
+            }
+
+        });
+
     });
 </script>
 @if(session('success'))

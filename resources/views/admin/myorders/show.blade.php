@@ -60,14 +60,18 @@
                                     Payment Status
                                 </strong>
                                 <p>
-                                    @if($order->payment_status == 1)
-                                    <span class="badge badge-success">
-                                        Paid
-                                    </span>
+                                    @if($order->payment_status === 'paid')
+                                        <span class="badge badge-success">
+                                            Paid
+                                        </span>
+                                    @elseif($order->payment_status === 'refunded')
+                                        <span class="badge badge-dark">
+                                            Refunded
+                                        </span>
                                     @else
-                                    <span class="badge badge-warning">
-                                        Pending
-                                    </span>
+                                        <span class="badge badge-warning">
+                                            Pending
+                                        </span>
                                     @endif
                                 </p>
                             </div>
@@ -107,21 +111,14 @@
                                     </p>
                                 </div>
 
-                                <div class="col-md-4">
-                                    <strong>
-                                        Razorpay Refund ID
-                                    </strong>
-                                    <p>
-                                        {{ $order->razorpay_refund_id ?? '-' }}
-                                    </p>
-                                </div>
+                                
 
                                 <div class="col-md-4">
                                     <strong>
                                         Payment Status
                                     </strong>
                                     <p>
-                                        @if($order->payment_status == 1)
+                                        @if($order->payment_status === 'paid')
                                             <span class="badge badge-success">
                                                 Paid
                                             </span>
@@ -136,7 +133,15 @@
                                         @endif
                                     </p>
                                 </div>
-
+                                @if(!empty($order->refund_status))
+                                <div class="col-md-4">
+                                    <strong>
+                                        Razorpay Refund ID
+                                    </strong>
+                                    <p>
+                                        {{ $order->razorpay_refund_id ?? '-' }}
+                                    </p>
+                                </div>
                                 <div class="col-md-4">
                                     <strong>
                                         Refund Status
@@ -172,7 +177,7 @@
                                         {{ $order->refunded_at ? $order->refunded_at->format('d-m-Y h:i A') : '-' }}
                                     </p>
                                 </div>
-
+                                @endif
                             </div>
                         </div>
                     </div>

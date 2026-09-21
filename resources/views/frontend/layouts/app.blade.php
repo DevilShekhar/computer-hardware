@@ -39,7 +39,7 @@
     <!-- Helper CSS -->
     <link rel="stylesheet" href="{{ asset('assets/frontend/assets/css/helper.css') }}">
     <!-- Main Style CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/frontend/assets/css/style-new.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/frontend/assets/css/style-custom.css') }}">
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="{{ asset('assets/frontend/assets/css/responsive.css') }}">
     <!-- Modernizr JS -->
@@ -151,32 +151,33 @@
                         <div class="col-lg-9 col-md-8">
                             <div class="header-top-right">
                                 <ul class="ht-menu">
-
                                     @if(auth()->check())
-                                    <!-- My Orders -->
-                                    <li>
-                                        <a href="{{ route('my-orders') }}" class="header-action-btn">
-                                            My Orders
-                                        </a>
-                                    </li>
-
-                                    <!-- PC Builder Orders -->
-                                    <li>
-                                        <a href="{{ route('my-pc-builder-orders') }}" class="header-action-btn">
-                                            PC Builder Order
-                                        </a>
-                                    </li>
-                                    @endif
-
-                                    <!-- Login -->
-                                    @guest
+                                        @if(auth()->user()->role_id == 2)
+                                            <li>
+                                                <a href="{{ route('my-orders') }}" class="header-action-btn">
+                                                    My Orders
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ route('my-pc-builder-orders') }}" class="header-action-btn">
+                                                    PC Builder Order
+                                                </a>
+                                            </li>
+                                        @elseif(in_array(auth()->user()->role_id, [1, 3]))
+                                            <li>
+                                                <a href="{{ route('dashboard') }}" class="header-action-btn">
+                                                    Dashboard
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @else
+                                        <!-- Login -->
                                         <li>
                                             <a href="{{ route('login') }}" class="header-action-btn">
                                                 Login
                                             </a>
                                         </li>
-                                    @endguest
-
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -359,9 +360,7 @@
                                                                                         <a href="{{ route('our-sub-category.show', ['slug' => $subCategory->slug]) }}"
                                                                                             class="mega-row__link subcategory-trigger"
                                                                                             data-subcategory="{{ $subCategory->id }}">
-                                                                                            <span>
-                                                                                                {{ $subCategory->name }}
-                                                                                            </span>
+                                                                                            <span style="text-transform: none;">{{ ucfirst(strtolower($subCategory->name)) }}</span>
                                                                                             @if($subCategory->products && $subCategory->products->count())
                                                                                                 <i class="fa fa-angle-right"></i>
                                                                                             @endif
